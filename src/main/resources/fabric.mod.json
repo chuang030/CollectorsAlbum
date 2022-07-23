@@ -10,13 +10,16 @@
   ],
   "contact": {
     "homepage": "",
-    "sources": "https://github.com/Toma1O6/CollectorAlbum"
+    "sources": "https://github.com/Toma1O6/CollectorsAlbum"
   },
   "license": "All Right Reserved",
   "environment": "*",
   "entrypoints": {
     "main": [
       "team.tnt.collectoralbum.CollectorsAlbum"
+    ],
+    "client": [
+      "team.tnt.collectoralbum.client.CollectorsAlbumClient"
     ]
   },
   "mixins": [
