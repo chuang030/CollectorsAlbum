@@ -909,13 +909,13 @@ public final class ItemRegistry {
 	public static final CardItem EPIC_ZOMBIE_CARD = new CardItem(CardRarity.EPIC, CardRegistry.ZOMBIE_CARD);
 	public static final CardItem LEGENDARY_ZOMBIE_CARD = new CardItem(CardRarity.LEGENDARY, CardRegistry.ZOMBIE_CARD);
 	public static final CardItem MYTHICAL_ZOMBIE_CARD = new CardItem(CardRarity.MYTHICAL, CardRegistry.ZOMBIE_CARD);
-	public static final Item ALBUM = new Item(new Item.Properties());
-	public static final Item COMMON_CARD_PACKAGE = new Item(new Item.Properties());
-	public static final Item UNCOMMON_CARD_PACKAGE = new Item(new Item.Properties());
-	public static final Item RARE_CARD_PACKAGE = new Item(new Item.Properties());
-	public static final Item EPIC_CARD_PACKAGE = new Item(new Item.Properties());
-	public static final Item LEGENDARY_CARD_PACKAGE = new Item(new Item.Properties());
-	public static final Item MYTHICAL_CARD_PACKAGE = new Item(new Item.Properties());
+	public static final Item ALBUM = new Item(new Item.Properties().tab(CollectorsAlbum.TAB));
+	public static final Item COMMON_CARD_PACKAGE = new Item(new Item.Properties().tab(CollectorsAlbum.TAB));
+	public static final Item UNCOMMON_CARD_PACKAGE = new Item(new Item.Properties().tab(CollectorsAlbum.TAB));
+	public static final Item RARE_CARD_PACKAGE = new Item(new Item.Properties().tab(CollectorsAlbum.TAB));
+	public static final Item EPIC_CARD_PACKAGE = new Item(new Item.Properties().tab(CollectorsAlbum.TAB));
+	public static final Item LEGENDARY_CARD_PACKAGE = new Item(new Item.Properties().tab(CollectorsAlbum.TAB));
+	public static final Item MYTHICAL_CARD_PACKAGE = new Item(new Item.Properties().tab(CollectorsAlbum.TAB));
 
 
 	public static void registerItems() {
@@ -1826,8 +1826,6 @@ public final class ItemRegistry {
 		registerItem("epic_card_package", EPIC_CARD_PACKAGE);
 		registerItem("legendary_card_package", LEGENDARY_CARD_PACKAGE);
 		registerItem("mythical_card_package", MYTHICAL_CARD_PACKAGE);
-
-
 	}
 
 	private static void registerItem(String localId, Item itemInstance) {

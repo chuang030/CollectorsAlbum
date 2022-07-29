@@ -1,7 +1,7 @@
 package team.tnt.collectoralbum.common.item;
 
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.common.CardDefinition;
 
 public class CardItem extends Item implements ICard {
@@ -10,7 +10,7 @@ public class CardItem extends Item implements ICard {
     private final CardRarity rarity;
 
     public CardItem(CardRarity rarity, CardDefinition card) {
-        super(new Properties().stacksTo(1).tab(CreativeModeTab.TAB_MATERIALS));
+        super(new Properties().stacksTo(1).tab(CollectorsAlbum.TAB));
         this.card = card;
         this.rarity = rarity;
     }

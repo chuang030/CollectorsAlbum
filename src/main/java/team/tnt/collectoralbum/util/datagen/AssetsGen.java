@@ -68,7 +68,7 @@ public class AssetsGen {
             try {
                 generator.generate(expectedIds);
             } catch (Exception e) {
-                LOG.fatal(e);
+                e.printStackTrace();
             }
         });
         // Localization export
