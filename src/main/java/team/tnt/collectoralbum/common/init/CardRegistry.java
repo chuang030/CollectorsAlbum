@@ -12,7 +12,6 @@ public final class CardRegistry {
 
 	private static final Map<ResourceLocation, CardDefinition> CARD_DEFINITION_MAP = new HashMap<>();
 
-	// TODO card initialization
 	public static final CardDefinition ACACIA_SAPLING_CARD = createAndRegisterCard("acacia_sapling_card", CardCategory.NATURE);
 	public static final CardDefinition ALLIUM_CARD = createAndRegisterCard("allium_card", CardCategory.NATURE);
 	public static final CardDefinition AMETHYST_SHARD_CARD = createAndRegisterCard("amethyst_shard_card", CardCategory.ITEMS);
@@ -168,11 +167,11 @@ public final class CardRegistry {
 
 
 	private static CardDefinition createAndRegisterCard(String id, CardCategory category) {
-		return createAndRegisterCard(new ResourceLocation(CollectorsAlbum.MODID, id), category);
+		return createAndRegisterCard(new ResourceLocation(CollectorsAlbum.MODID, id), category, 0);
 	}
 
-	public static CardDefinition createAndRegisterCard(ResourceLocation cardId, CardCategory category) {
-		CardDefinition definition = new CardDefinition(cardId, category);
+	public static CardDefinition createAndRegisterCard(ResourceLocation cardId, CardCategory category, int cardNumber) {
+		CardDefinition definition = new CardDefinition(cardId, category, cardNumber);
 		registerCard(definition);
 		return definition;
 	}
