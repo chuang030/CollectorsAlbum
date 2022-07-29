@@ -909,6 +909,13 @@ public final class ItemRegistry {
 	public static final CardItem EPIC_ZOMBIE_CARD = new CardItem(CardRarity.EPIC, CardRegistry.ZOMBIE_CARD);
 	public static final CardItem LEGENDARY_ZOMBIE_CARD = new CardItem(CardRarity.LEGENDARY, CardRegistry.ZOMBIE_CARD);
 	public static final CardItem MYTHICAL_ZOMBIE_CARD = new CardItem(CardRarity.MYTHICAL, CardRegistry.ZOMBIE_CARD);
+	public static final Item ALBUM = new Item(new Item.Properties());
+	public static final Item COMMON_CARD_PACKAGE = new Item(new Item.Properties());
+	public static final Item UNCOMMON_CARD_PACKAGE = new Item(new Item.Properties());
+	public static final Item RARE_CARD_PACKAGE = new Item(new Item.Properties());
+	public static final Item EPIC_CARD_PACKAGE = new Item(new Item.Properties());
+	public static final Item LEGENDARY_CARD_PACKAGE = new Item(new Item.Properties());
+	public static final Item MYTHICAL_CARD_PACKAGE = new Item(new Item.Properties());
 
 
 	public static void registerItems() {
@@ -1812,6 +1819,13 @@ public final class ItemRegistry {
 		registerItem("epic_zombie_card", EPIC_ZOMBIE_CARD);
 		registerItem("legendary_zombie_card", LEGENDARY_ZOMBIE_CARD);
 		registerItem("mythical_zombie_card", MYTHICAL_ZOMBIE_CARD);
+		registerItem("album", ALBUM);
+		registerItem("common_card_package", COMMON_CARD_PACKAGE);
+		registerItem("uncommon_card_package", UNCOMMON_CARD_PACKAGE);
+		registerItem("rare_card_package", RARE_CARD_PACKAGE);
+		registerItem("epic_card_package", EPIC_CARD_PACKAGE);
+		registerItem("legendary_card_package", LEGENDARY_CARD_PACKAGE);
+		registerItem("mythical_card_package", MYTHICAL_CARD_PACKAGE);
 
 
 	}

@@ -898,5 +898,12 @@
   "item.collectorsalbum.uncommon_wooden_pickaxe_card": "Uncommon Wooden Pickaxe Card",
   "item.collectorsalbum.uncommon_wooden_shovel_card": "Uncommon Wooden Shovel Card",
   "item.collectorsalbum.uncommon_wooden_sword_card": "Uncommon Wooden Sword Card",
-  "item.collectorsalbum.uncommon_zombie_card": "Uncommon Zombie Card"
+  "item.collectorsalbum.uncommon_zombie_card": "Uncommon Zombie Card",
+  "item.collectorsalbum.album": "Album",
+  "item.collectorsalbum.common_card_package": "Common Card Package",
+  "item.collectorsalbum.epic_card_package": "Epic Card Package",
+  "item.collectorsalbum.legendary_card_package": "Legendary Card Package",
+  "item.collectorsalbum.mythical_card_package": "Mythical Card Package",
+  "item.collectorsalbum.rare_card_package": "Rare Card Package",
+  "item.collectorsalbum.uncommon_card_package": "Uncommon Card Package"
 }
