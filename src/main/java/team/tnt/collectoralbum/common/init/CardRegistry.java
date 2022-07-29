@@ -1,7 +1,9 @@
 package team.tnt.collectoralbum.common.init;
 
 import net.minecraft.resources.ResourceLocation;
+import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.common.CardDefinition;
+import team.tnt.collectoralbum.common.item.CardCategory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +18,12 @@ public final class CardRegistry {
 
 	}
 
-	public static CardDefinition createAndRegisterCard(ResourceLocation cardId) {
-		CardDefinition definition = new CardDefinition(cardId);
+	private static CardDefinition createAndRegisterCard(String id, CardCategory category) {
+		return createAndRegisterCard(new ResourceLocation(CollectorsAlbum.MODID, id), category);
+	}
+
+	public static CardDefinition createAndRegisterCard(ResourceLocation cardId, CardCategory category) {
+		CardDefinition definition = new CardDefinition(cardId, category);
 		registerCard(definition);
 		return definition;
 	}

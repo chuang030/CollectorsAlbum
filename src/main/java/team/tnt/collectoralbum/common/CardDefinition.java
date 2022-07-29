@@ -1,9 +1,7 @@
 package team.tnt.collectoralbum.common;
 
 import net.minecraft.resources.ResourceLocation;
+import team.tnt.collectoralbum.common.item.CardCategory;
 
-// TODO card category
-// TODO card rarity
-public record CardDefinition(ResourceLocation cardId) {
-
+public record CardDefinition(ResourceLocation cardId, CardCategory category) {
 }
