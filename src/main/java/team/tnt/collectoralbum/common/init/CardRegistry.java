@@ -166,8 +166,8 @@ public final class CardRegistry {
 
 
 
-	private static CardDefinition createAndRegisterCard(String id, CardCategory category) {
-		return createAndRegisterCard(new ResourceLocation(CollectorsAlbum.MODID, id), category, 0);
+	private static CardDefinition createAndRegisterCard(String id, CardCategory category, int cardNumber) {
+		return createAndRegisterCard(new ResourceLocation(CollectorsAlbum.MODID, id), category, cardNumber);
 	}
 
 	public static CardDefinition createAndRegisterCard(ResourceLocation cardId, CardCategory category, int cardNumber) {
