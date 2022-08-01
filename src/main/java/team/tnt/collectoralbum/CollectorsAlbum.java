@@ -9,15 +9,15 @@ import team.tnt.collectoralbum.common.init.ItemRegistry;
 
 public class CollectorsAlbum implements ModInitializer {
 
-	public static final String MODID = "collectorsalbum";
+    public static final String MODID = "collectorsalbum";
 
-	public static final CreativeModeTab TAB = FabricItemGroupBuilder.build(
-			new ResourceLocation(MODID, "tab"),
-			() -> new ItemStack(ItemRegistry.ALBUM)
-	);
+    public static final CreativeModeTab TAB = FabricItemGroupBuilder.build(
+            new ResourceLocation(MODID, "tab"),
+            () -> new ItemStack(ItemRegistry.ALBUM)
+    );
 
-	@Override
-	public void onInitialize() {
-		ItemRegistry.registerItems();
-	}
+    @Override
+    public void onInitialize() {
+        ItemRegistry.registerItems();
+    }
 }

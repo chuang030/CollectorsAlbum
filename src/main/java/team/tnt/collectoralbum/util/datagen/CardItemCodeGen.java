@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import team.tnt.collectoralbum.common.init.CardRegistry;
 import team.tnt.collectoralbum.common.item.CardRarity;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;

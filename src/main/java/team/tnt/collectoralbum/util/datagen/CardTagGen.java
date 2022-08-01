@@ -9,7 +9,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.common.init.ItemRegistry;
-import team.tnt.collectoralbum.common.item.CardCategory;
 import team.tnt.collectoralbum.common.item.CardRarity;
 import team.tnt.collectoralbum.common.item.ICard;
 
