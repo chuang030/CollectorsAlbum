@@ -25,7 +25,7 @@ public class CardItem extends Item implements ICard {
     private final CardRarity rarity;
 
     public CardItem(CardRarity rarity, CardDefinition card) {
-        super(new Properties().stacksTo(1).tab(CollectorsAlbum.TAB));
+        super(new Properties().tab(CollectorsAlbum.TAB));
         this.card = card;
         this.rarity = rarity;
     }

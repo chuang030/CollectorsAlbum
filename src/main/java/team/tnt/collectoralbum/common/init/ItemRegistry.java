@@ -912,11 +912,11 @@ public final class ItemRegistry {
     public static final CardItem MYTHICAL_ZOMBIE_CARD = new CardItem(CardRarity.MYTHICAL, CardRegistry.ZOMBIE_CARD);
     public static final Item ALBUM = new Item(new Item.Properties().tab(CollectorsAlbum.TAB));
     public static final CardPackItem COMMON_CARD_PACKAGE = new CardPackItem(new ResourceLocation(CollectorsAlbum.MODID, "common_card_pack"));
-    public static final Item UNCOMMON_CARD_PACKAGE = new Item(new Item.Properties().tab(CollectorsAlbum.TAB));
-    public static final Item RARE_CARD_PACKAGE = new Item(new Item.Properties().tab(CollectorsAlbum.TAB));
-    public static final Item EPIC_CARD_PACKAGE = new Item(new Item.Properties().tab(CollectorsAlbum.TAB));
-    public static final Item LEGENDARY_CARD_PACKAGE = new Item(new Item.Properties().tab(CollectorsAlbum.TAB));
-    public static final Item MYTHICAL_CARD_PACKAGE = new Item(new Item.Properties().tab(CollectorsAlbum.TAB));
+    public static final Item UNCOMMON_CARD_PACKAGE = new CardPackItem(new ResourceLocation(CollectorsAlbum.MODID, "uncommon_card_pack"));
+    public static final Item RARE_CARD_PACKAGE = new CardPackItem(new ResourceLocation(CollectorsAlbum.MODID, "rare_card_pack"));
+    public static final Item EPIC_CARD_PACKAGE = new CardPackItem(new ResourceLocation(CollectorsAlbum.MODID, "epic_card_pack"));
+    public static final Item LEGENDARY_CARD_PACKAGE = new CardPackItem(new ResourceLocation(CollectorsAlbum.MODID, "legendary_card_pack"));
+    public static final Item MYTHICAL_CARD_PACKAGE = new CardPackItem(new ResourceLocation(CollectorsAlbum.MODID, "mythical_card_pack"));
 
 
     public static void registerItems() {

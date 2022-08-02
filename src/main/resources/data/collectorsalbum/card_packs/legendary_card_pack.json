@@ -2,44 +2,48 @@
   "type": "collectorsalbum:multiple",
   "providers": [
     {
+      "type": "collectorsalbum:tag",
+      "tag": "collectorsalbum:cards_legendary"
+    },
+    {
       "type": "collectorsalbum:repeat",
-      "min": 5,
+      "min": 4,
       "provider": {
         "type": "collectorsalbum:weighted",
         "providers": [
           {
-            "weight": 70,
-            "provider": {
-              "type": "collectorsalbum:tag",
-              "tag": "collectorsalbum:cards_common"
-            }
-          },
-          {
-            "weight": 30,
+            "weight": 15,
             "provider": {
               "type": "collectorsalbum:tag",
               "tag": "collectorsalbum:cards_uncommon"
             }
           },
           {
-            "weight": 10,
+            "weight": 50,
             "provider": {
               "type": "collectorsalbum:tag",
               "tag": "collectorsalbum:cards_rare"
             }
           },
           {
-            "weight": 5,
+            "weight": 35,
             "provider": {
               "type": "collectorsalbum:tag",
               "tag": "collectorsalbum:cards_epic"
             }
           },
           {
-            "weight": 2,
+            "weight": 15,
             "provider": {
               "type": "collectorsalbum:tag",
               "tag": "collectorsalbum:cards_legendary"
+            }
+          },
+          {
+            "weight": 10,
+            "provider": {
+              "type": "collectorsalbum:tag",
+              "tag": "collectorsalbum:cards_mythical"
             }
           }
         ]
