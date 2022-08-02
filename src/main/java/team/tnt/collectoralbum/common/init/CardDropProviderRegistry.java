@@ -15,6 +15,7 @@ public final class CardDropProviderRegistry {
     public static final CardDropProviderType<TagCardProvider> TAG = register("tag", new TagCardProvider.Serializer());
     public static final CardDropProviderType<MultiDropProvider> MULTI = register("multiple", new MultiDropProvider.Serializer());
     public static final CardDropProviderType<WeightedDropProvider> WEIGHTED = register("weighted", new WeightedDropProvider.Serializer());
+    public static final CardDropProviderType<RepeatedDropProvider> REPEATED = register("repeat", new RepeatedDropProvider.Serializer());
 
     public static <P extends ICardDropProvider> CardDropProviderType<P> registerProviderType(CardDropProviderType<P> providerType) {
         REGISTRY.put(providerType.identifier(), providerType);
