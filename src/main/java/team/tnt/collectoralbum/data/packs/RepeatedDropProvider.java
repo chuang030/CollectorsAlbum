@@ -38,7 +38,7 @@ public class RepeatedDropProvider implements ICardDropProvider {
         public RepeatedDropProvider fromJson(JsonElement data) throws JsonParseException {
             JsonObject object = JsonHelper.asObject(data);
             int min = GsonHelper.getAsInt(object, "min", 1);
-            int max = GsonHelper.getAsInt(object, "max", 1);
+            int max = GsonHelper.getAsInt(object, "max", min);
             JsonObject providerJson = GsonHelper.getAsJsonObject(object, "provider");
             ICardDropProvider provider = CardDropProviderType.fromJson(providerJson);
             if (min <= 0) {
