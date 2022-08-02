@@ -1,0 +1,8 @@
+{
+  "type": "collectorsalbum:repeat",
+  "min": 5,
+  "provider": {
+    "type": "collectorsalbum:tag",
+    "tag": "collectorsalbum:cards_common"
+  }
+}
