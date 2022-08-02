@@ -1,0 +1,45 @@
+package team.tnt.collectoralbum.data.packs;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import team.tnt.collectoralbum.util.JsonHelper;
+import team.tnt.collectoralbum.util.PlayerHelper;
+
+public class ItemCardProvider implements ICardDropProvider {
+
+    private final Item item;
+
+    private ItemCardProvider(Item item) {
+        this.item = item;
+    }
+
+    @Override
+    public void provideDrops(Player player, Level level) {
+        ItemStack itemStack = new ItemStack(item);
+        PlayerHelper.giveItem(player, itemStack);
+    }
+
+    public static class Serializer implements ICardDropSerializer<ItemCardProvider> {
+
+        @Override
+        public ItemCardProvider fromJson(JsonElement data) throws JsonParseException {
+            JsonObject object = JsonHelper.asObject(data);
+            ResourceLocation identifier = new ResourceLocation(GsonHelper.getAsString(object, "item"));
+            Item item = Registry.ITEM.get(identifier);
+            if (item == Items.AIR) {
+                throw new JsonSyntaxException("Unknown item: " + identifier);
+            }
+            return new ItemCardProvider(item);
+        }
+    }
+}
