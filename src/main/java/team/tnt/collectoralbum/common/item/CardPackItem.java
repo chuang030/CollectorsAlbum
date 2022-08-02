@@ -30,7 +30,7 @@ public class CardPackItem extends Item {
             if (!player.isCreative()) {
                 stack.shrink(1);
             }
-            return InteractionResultHolder.success(stack);
+            return InteractionResultHolder.consume(stack);
         }
         return InteractionResultHolder.consume(stack);
     }

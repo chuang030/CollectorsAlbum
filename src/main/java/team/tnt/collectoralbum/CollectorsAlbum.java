@@ -7,11 +7,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import team.tnt.collectoralbum.common.init.ItemRegistry;
 import team.tnt.collectoralbum.data.packs.CardPackLootManager;
 
 public class CollectorsAlbum implements ModInitializer {
 
+    public static final Logger LOGGER = LogManager.getLogger(CollectorsAlbum.class);
     public static final String MODID = "collectorsalbum";
 
     public static final CreativeModeTab TAB = FabricItemGroupBuilder.build(
