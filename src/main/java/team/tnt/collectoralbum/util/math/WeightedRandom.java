@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
@@ -109,11 +110,11 @@ public class WeightedRandom<T> implements Supplier<T> {
             return this;
         }
 
-        public WeightedRandom<T> build(Supplier<T[]> arrayFactory) {
+        public WeightedRandom<T> build(Function<Integer, T[]> arrayFactory) {
             Preconditions.checkNotNull(rngSupplier);
             Preconditions.checkNotNull(provider);
             Preconditions.checkState(!entries.isEmpty());
-            return new WeightedRandom<>(rngSupplier.get(), entries.toArray(arrayFactory.get()), provider);
+            return new WeightedRandom<>(rngSupplier.get(), entries.toArray(arrayFactory.apply(0)), provider);
         }
     }
 }
