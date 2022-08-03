@@ -1,5 +1,8 @@
 package team.tnt.collectoralbum.util.math;
 
+import com.google.common.base.Preconditions;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -76,10 +79,11 @@ public class WeightedRandom<T> implements Supplier<T> {
 
         private Supplier<Random> rngSupplier;
         private ToIntFunction<T> provider;
-        private List<T> entries;
+        private final List<T> entries;
 
         private Builder() {
             this.rngSupplier = Random::new;
+            this.entries = new ArrayList<>();
         }
 
         public static <T> Builder<T> create() {
@@ -106,6 +110,9 @@ public class WeightedRandom<T> implements Supplier<T> {
         }
 
         public WeightedRandom<T> build(Supplier<T[]> arrayFactory) {
+            Preconditions.checkNotNull(rngSupplier);
+            Preconditions.checkNotNull(provider);
+            Preconditions.checkState(!entries.isEmpty());
             return new WeightedRandom<>(rngSupplier.get(), entries.toArray(arrayFactory.get()), provider);
         }
     }
