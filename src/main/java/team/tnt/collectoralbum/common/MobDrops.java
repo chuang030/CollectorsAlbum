@@ -14,10 +14,10 @@ public final class MobDrops implements Supplier<Item> {
     private static final WeightedRandom<DropEntry> ENTRIES = WeightedRandom.Builder.<DropEntry>create()
             .provider(DropEntry::weight)
             .append(new DropEntry(() -> Items.AIR, 3500))
-            .append(new DropEntry(() -> ItemRegistry.COMMON_CARD_PACKAGE, 340))
+            .append(new DropEntry(() -> ItemRegistry.COMMON_CARD_PACKAGE, 355))
             .append(new DropEntry(() -> ItemRegistry.UNCOMMON_CARD_PACKAGE, 235))
             .append(new DropEntry(() -> ItemRegistry.RARE_CARD_PACKAGE, 170))
-            .append(new DropEntry(() -> ItemRegistry.EPIC_CARD_PACKAGE, 135))
+            .append(new DropEntry(() -> ItemRegistry.EPIC_CARD_PACKAGE, 120))
             .append(new DropEntry(() -> ItemRegistry.LEGENDARY_CARD_PACKAGE, 80))
             .append(new DropEntry(() -> ItemRegistry.MYTHICAL_CARD_PACKAGE, 60))
             .build(DropEntry[]::new);
