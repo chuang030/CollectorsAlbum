@@ -23,6 +23,7 @@
     ]
   },
   "mixins": [
+    "collectorsalbum.mixins.json"
   ],
 
   "depends": {
