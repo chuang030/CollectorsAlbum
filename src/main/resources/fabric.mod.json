@@ -20,6 +20,9 @@
     ],
     "client": [
       "team.tnt.collectoralbum.client.CollectorsAlbumClient"
+    ],
+    "modmenu": [
+      "team.tnt.collectoralbum.integration.ModMenuIntegration"
     ]
   },
   "mixins": [
