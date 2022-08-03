@@ -1,6 +1,7 @@
 package team.tnt.collectoralbum.util.math;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
@@ -68,6 +69,44 @@ public class WeightedRandom<T> implements Supplier<T> {
         @Override
         default Integer get() {
             return this.getWeight();
+        }
+    }
+
+    public static class Builder<T> {
+
+        private Supplier<Random> rngSupplier;
+        private ToIntFunction<T> provider;
+        private List<T> entries;
+
+        private Builder() {
+            this.rngSupplier = Random::new;
+        }
+
+        public static <T> Builder<T> create() {
+            return new Builder<>();
+        }
+
+        public Builder<T> rng(Supplier<Random> supplier) {
+            this.rngSupplier = supplier;
+            return this;
+        }
+
+        public Builder<T> withSeed(long seed) {
+            return this.rng(() -> new Random(seed));
+        }
+
+        public Builder<T> provider(ToIntFunction<T> provider) {
+            this.provider = provider;
+            return this;
+        }
+
+        public Builder<T> append(T value) {
+            this.entries.add(value);
+            return this;
+        }
+
+        public WeightedRandom<T> build(Supplier<T[]> arrayFactory) {
+            return new WeightedRandom<>(rngSupplier.get(), entries.toArray(arrayFactory.get()), provider);
         }
     }
 }
