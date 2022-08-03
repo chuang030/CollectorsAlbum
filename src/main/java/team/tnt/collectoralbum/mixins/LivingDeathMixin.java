@@ -1,5 +1,7 @@
 package team.tnt.collectoralbum.mixins;
 
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -13,6 +15,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import team.tnt.collectoralbum.common.MobDrops;
 
+import java.util.Comparator;
+import java.util.IdentityHashMap;
+import java.util.Map;
+
 @Mixin(LivingEntity.class)
 public abstract class LivingDeathMixin {
 
@@ -22,6 +28,24 @@ public abstract class LivingDeathMixin {
         if (!livingEntity.level.isClientSide && livingEntity instanceof Monster monster) {
             MobDrops drops = MobDrops.instance();
             Item item = drops.get();
+
+            // drop testing start
+            int runs = 1000000;
+            Map<Item, Integer> countCache = new IdentityHashMap<>();
+            for (int i = 0; i < runs; i++) {
+                Item it = drops.get();
+                int value = countCache.computeIfAbsent(it, k -> 0);
+                countCache.put(it, value + 1);
+            }
+            System.out.println("Total: " + runs);
+            countCache.entrySet().stream()
+                    .sorted(Comparator.<Map.Entry<Item, Integer>>comparingInt(Map.Entry::getValue).reversed())
+                    .forEach((e) -> {
+                        ResourceLocation id = Registry.ITEM.getKey(e.getKey());
+                        System.out.printf("%s: %d\n", id, e.getValue());
+                    });
+            // drop testing end
+
             if (item == Items.AIR) {
                 return;
             }
