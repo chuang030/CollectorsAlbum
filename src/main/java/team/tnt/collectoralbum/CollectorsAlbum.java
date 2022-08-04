@@ -15,6 +15,7 @@ import team.tnt.collectoralbum.common.init.ItemRegistry;
 import team.tnt.collectoralbum.common.init.SoundRegistry;
 import team.tnt.collectoralbum.config.ModConfig;
 import team.tnt.collectoralbum.data.packs.CardPackLootManager;
+import team.tnt.collectoralbum.network.Networking;
 
 public class CollectorsAlbum implements ModInitializer {
 
@@ -37,5 +38,6 @@ public class CollectorsAlbum implements ModInitializer {
         ItemRegistry.registerItems();
         SoundRegistry.registerSounds();
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(CARD_PACK_MANAGER);
+        Networking.registerServerReceivers();
     }
 }
