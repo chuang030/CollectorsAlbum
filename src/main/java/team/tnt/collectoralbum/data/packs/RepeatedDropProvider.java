@@ -5,10 +5,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.ItemStack;
 import team.tnt.collectoralbum.util.JsonHelper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class RepeatedDropProvider implements ICardDropProvider {
@@ -24,12 +25,14 @@ public class RepeatedDropProvider implements ICardDropProvider {
     }
 
     @Override
-    public void provideDrops(Player player, Level level) {
+    public List<ItemStack> provideDrops() {
         Random random = new Random();
         int count = minRuns + random.nextInt(maxRuns - minRuns + 1);
+        List<ItemStack> items = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            provider.provideDrops(player, level);
+            items.addAll(provider.provideDrops());
         }
+        return items;
     }
 
     public static final class Serializer implements ICardDropSerializer<RepeatedDropProvider> {

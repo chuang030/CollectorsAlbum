@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.data.packs.ICardDropProvider;
 
+import java.util.List;
 import java.util.Optional;
 
 public class CardPackItem extends Item {
@@ -26,7 +27,10 @@ public class CardPackItem extends Item {
         ItemStack stack = player.getItemInHand(usedHand);
         if (!level.isClientSide) {
             Optional<ICardDropProvider> optional = CollectorsAlbum.CARD_PACK_MANAGER.getProvider(dropsProviderPath);
-            optional.ifPresent(provider -> provider.provideDrops(player, level));
+            optional.ifPresent(provider -> {
+                List<ItemStack> itemStacks = provider.provideDrops();
+                // TODO open screen with these predefined drops
+            });
             if (!player.isCreative()) {
                 stack.shrink(1);
             }
