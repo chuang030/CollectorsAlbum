@@ -11,6 +11,7 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -21,36 +22,40 @@ import team.tnt.collectoralbum.network.packet.RequestCardPackDropPacket;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CardOpenScreen extends Screen {
 
     private static final ResourceLocation CARD_BACK = new ResourceLocation(CollectorsAlbum.MODID, "textures/screen/card_back.png");
     private final List<ITickableWidget> tickableWidgets = new ArrayList<>();
     private final List<ItemStack> drops;
-    private boolean openedAll;
+    private int flipsRemaining;
 
     public CardOpenScreen(List<ItemStack> drops) {
         super(new TextComponent("Card Open Screen"));
         this.drops = drops;
+        this.flipsRemaining = drops.size();
     }
 
     @Override
     protected void init() {
         tickableWidgets.clear();
         int total = drops.size();
-        int left = (width - total * 70) / 2;
+        int deckWidth = (total - 1) * 65 + 64;
+        int left = (width - deckWidth) / 2;
         int top = (height - 64) / 2;
         for (int i = 0; i < total; i++) {
-            int desiredX = left + i * 70;
-            CardWidget widget = addRenderableWidget(new CardWidget(width - 70 - i * 7, height - 70, 64, 64, desiredX, top));
-            widget.setAnimTime(100);
+            int desiredX = left + i * 65;
+            CardWidget widget = addRenderableWidget(new CardWidget(width - 70 + i * 7, height - 70, 64, 64, desiredX, top, drops.get(i)));
+            widget.setAnimTime(40);
+            widget.setClickResponder(this::cardFlipped);
         }
     }
 
     @Override
     public void onClose() {
         super.onClose();
-        if (openedAll) {
+        if (flipsRemaining == 0) {
             Networking.dispatchServerPacket(new RequestCardPackDropPacket());
         }
     }
@@ -79,25 +84,49 @@ public class CardOpenScreen extends Screen {
         return super.addRenderableWidget(widget);
     }
 
+    private void cardFlipped(CardWidget widget) {
+        --flipsRemaining;
+    }
+
     private static final class CardWidget extends AbstractWidget implements ITickableWidget {
 
         private final int targetX;
         private final int targetY;
         private final int startX;
         private final int startY;
+        private final ResourceLocation itemTexture;
         private int animTime = 30;
         private int timer, prevTimer;
+        private Consumer<CardWidget> widgetConsumer = widget -> {};
+        private boolean flipped;
 
-        public CardWidget(int x, int y, int width, int height, int targetX, int targetY) {
+        public CardWidget(int x, int y, int width, int height, int targetX, int targetY, ItemStack stack) {
             super(x, y, width, height, TextComponent.EMPTY);
             this.startX = x;
             this.startY = y;
             this.targetX = targetX;
             this.targetY = targetY;
+            ResourceLocation itemId = Registry.ITEM.getKey(stack.getItem());
+            this.itemTexture = new ResourceLocation(itemId.getNamespace(), "textures/item/" + itemId.getPath() + ".png");
         }
 
         public void setAnimTime(int time) {
             this.animTime = time;
+        }
+
+        public void setClickResponder(Consumer<CardWidget> widgetConsumer) {
+            this.widgetConsumer = widgetConsumer;
+        }
+
+        @Override
+        public void onClick(double mouseX, double mouseY) {
+            widgetConsumer.accept(this);
+            flipped = true;
+        }
+
+        @Override
+        protected boolean clicked(double mouseX, double mouseY) {
+            return !flipped && super.clicked(mouseX, mouseY);
         }
 
         @Override
@@ -111,6 +140,7 @@ public class CardOpenScreen extends Screen {
 
         @Override
         public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+            int scale = isHovered ? 8 : 0;
             float actual = timer / (float) animTime;
             float old = prevTimer / (float) animTime;
             float rawProgress = Mth.lerp(partialTick, actual, old);
@@ -124,8 +154,8 @@ public class CardOpenScreen extends Screen {
             Lighting.setupForFlatItems();
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, CARD_BACK);
-            renderTexture(poseStack.last().pose(), renderX, renderY, renderX + width, renderY + height);
+            RenderSystem.setShaderTexture(0, flipped ? itemTexture : CARD_BACK);
+            renderTexture(poseStack.last().pose(), renderX - scale, renderY - scale, renderX + width + scale, renderY + height + scale);
         }
 
         @Override

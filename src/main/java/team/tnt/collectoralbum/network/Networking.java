@@ -16,8 +16,6 @@ import team.tnt.collectoralbum.network.packet.RequestCardPackDropPacket;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.BiConsumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Networking {
 

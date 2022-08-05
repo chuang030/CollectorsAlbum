@@ -43,7 +43,7 @@ public class RequestCardPackDropPacket implements IServerPacket<EmptyPacketData>
 
     @Override
     public void handleServersidePacket(MinecraftServer server, ServerPlayer player, ServerPacketListener listener, EmptyPacketData packetData, PacketSender dispatcher) {
-        Optional<List<ItemStack>> optional = OpenCardPackContextHolder.getContext(player);
+        Optional<List<ItemStack>> optional = OpenCardPackContextHolder.getContextAndClear(player);
         optional.ifPresent(list -> {
             for (ItemStack stack : list) {
                 PlayerHelper.giveItem(player, stack);

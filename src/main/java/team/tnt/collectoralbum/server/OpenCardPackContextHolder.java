@@ -13,7 +13,7 @@ public class OpenCardPackContextHolder {
         PLAYER_DROPS_MAP.put(player.getUUID(), drops);
     }
 
-    public static Optional<List<ItemStack>> getContext(ServerPlayer player) {
+    public static Optional<List<ItemStack>> getContextAndClear(ServerPlayer player) {
         List<ItemStack> value = PLAYER_DROPS_MAP.remove(player.getUUID());
         return Optional.ofNullable(value);
     }
