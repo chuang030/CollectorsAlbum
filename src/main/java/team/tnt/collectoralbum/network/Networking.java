@@ -11,9 +11,13 @@ import net.minecraft.server.level.ServerPlayer;
 import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.client.CollectorsAlbumClient;
 import team.tnt.collectoralbum.network.api.*;
+import team.tnt.collectoralbum.network.packet.OpenCardScreenPacket;
+import team.tnt.collectoralbum.network.packet.RequestCardPackDropPacket;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.BiConsumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Networking {
 
@@ -32,9 +36,21 @@ public class Networking {
     // --------------------------------------------------------------------------
 
     @Environment(EnvType.CLIENT)
-    public static void registerClientReceivers() {}
+    public static void registerClientReceivers() {
+        registerServer2ClientReceiver(OpenCardScreenPacket.class);
+    }
 
-    public static void registerServerReceivers() {}
+    public static void registerServerReceivers() {
+        registerClient2ServerReceiver(RequestCardPackDropPacket.class);
+    }
+
+    // Utils
+    // --------------------------------------------------------------------------
+
+    public static ResourceLocation generateUniquePacketId(Class<? extends IPacket<?>> packetClass) {
+        String packetClassName = packetClass.getSimpleName();
+        return new ResourceLocation(CollectorsAlbum.MODID, packetClassName.replaceAll("\\B([A-Z])", "_$1").toLowerCase());
+    }
 
     // Internal
     // --------------------------------------------------------------------------
