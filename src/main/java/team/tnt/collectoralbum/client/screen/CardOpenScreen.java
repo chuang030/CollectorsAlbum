@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -11,16 +12,21 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import team.tnt.collectoralbum.CollectorsAlbum;
+import team.tnt.collectoralbum.common.item.ICard;
 import team.tnt.collectoralbum.network.Networking;
 import team.tnt.collectoralbum.network.packet.RequestCardPackDropPacket;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -34,20 +40,22 @@ public class CardOpenScreen extends Screen {
     public CardOpenScreen(List<ItemStack> drops) {
         super(new TextComponent("Card Open Screen"));
         this.drops = drops;
-        this.flipsRemaining = drops.size();
+        Collections.shuffle(this.drops);
     }
 
     @Override
     protected void init() {
         tickableWidgets.clear();
         int total = drops.size();
+        this.flipsRemaining = total;
         int deckWidth = (total - 1) * 65 + 64;
         int left = (width - deckWidth) / 2;
         int top = (height - 64) / 2;
         for (int i = 0; i < total; i++) {
             int desiredX = left + i * 65;
             CardWidget widget = addRenderableWidget(new CardWidget(width - 70 + i * 7, height - 70, 64, 64, desiredX, top, drops.get(i)));
-            widget.setAnimTime(40);
+            widget.setAnimTime(15);
+            widget.setFlipTime(15);
             widget.setClickResponder(this::cardFlipped);
         }
     }
@@ -95,10 +103,13 @@ public class CardOpenScreen extends Screen {
         private final int startX;
         private final int startY;
         private final ResourceLocation itemTexture;
+        private final SoundEvent discoverySound;
         private int animTime = 30;
         private int timer, prevTimer;
         private Consumer<CardWidget> widgetConsumer = widget -> {};
         private boolean flipped;
+        private boolean flipping;
+        private int flipTimer, flipTimerOld, flipTimeTotal = 20;
 
         public CardWidget(int x, int y, int width, int height, int targetX, int targetY, ItemStack stack) {
             super(x, y, width, height, TextComponent.EMPTY);
@@ -108,10 +119,19 @@ public class CardOpenScreen extends Screen {
             this.targetY = targetY;
             ResourceLocation itemId = Registry.ITEM.getKey(stack.getItem());
             this.itemTexture = new ResourceLocation(itemId.getNamespace(), "textures/item/" + itemId.getPath() + ".png");
+            if (stack.getItem() instanceof ICard card) {
+                this.discoverySound = card.getCardRarity().getDiscoverySound();
+            } else {
+                this.discoverySound = null;
+            }
         }
 
         public void setAnimTime(int time) {
             this.animTime = time;
+        }
+
+        public void setFlipTime(int time) {
+            this.flipTimeTotal = time;
         }
 
         public void setClickResponder(Consumer<CardWidget> widgetConsumer) {
@@ -121,21 +141,25 @@ public class CardOpenScreen extends Screen {
         @Override
         public void onClick(double mouseX, double mouseY) {
             widgetConsumer.accept(this);
-            flipped = true;
+            flipping = true;
+            if (discoverySound != null) {
+                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(discoverySound, 1.0F));
+            }
+        }
+
+        @Override
+        public void playDownSound(SoundManager handler) {
         }
 
         @Override
         protected boolean clicked(double mouseX, double mouseY) {
-            return !flipped && super.clicked(mouseX, mouseY);
+            return !flipped && !flipping && super.clicked(mouseX, mouseY);
         }
 
         @Override
         public void tickWidget() {
-            prevTimer = timer;
-            if (timer >= animTime) {
-                return;
-            }
-            ++timer;
+            updateMovementAnimationTimer();
+            doFlipProcessTick();
         }
 
         @Override
@@ -143,7 +167,7 @@ public class CardOpenScreen extends Screen {
             int scale = isHovered ? 8 : 0;
             float actual = timer / (float) animTime;
             float old = prevTimer / (float) animTime;
-            float rawProgress = Mth.lerp(partialTick, actual, old);
+            float rawProgress = Mth.lerp(partialTick, old, actual);
             float progress = 1.0F - (float) Math.pow(1 - rawProgress, 3);
             int diffX = targetX - startX;
             int diffY = targetY - startY;
@@ -155,11 +179,47 @@ public class CardOpenScreen extends Screen {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShaderTexture(0, flipped ? itemTexture : CARD_BACK);
-            renderTexture(poseStack.last().pose(), renderX - scale, renderY - scale, renderX + width + scale, renderY + height + scale);
+            actuallyRender(poseStack, renderX - scale, renderY - scale, renderX + width + scale, renderY + height + scale, partialTick);
+        }
+
+        private void actuallyRender(PoseStack stack, float x1, float y1, float x2, float y2, float partialTicks) {
+            if (flipping) {
+                float flipActual = flipTimer / (float) flipTimeTotal;
+                float flipOld = flipTimerOld / (float) flipTimeTotal;
+                float flipProgressRaw = Mth.lerp(partialTicks, flipOld, flipActual);
+                float flipProgress = flipProgressRaw < 0.5 ? 4 * flipProgressRaw * flipProgressRaw * flipProgressRaw : 1 - (float) Math.pow(-2 * flipProgressRaw + 2, 3) / 2;
+                if (flipProgress >= 0.5) {
+                    flipped = true;
+                }
+                float halfX = (x2 - x1) / 2.0F;
+                float centerX = x1 + halfX;
+                float progress = flipProgress < 0.5 ? 1.0F - (flipProgress / 0.5F) : (flipProgress - 0.5F) / 0.5F;
+                x1 = centerX - halfX * progress;
+                x2 = centerX + halfX * progress;
+            }
+            Matrix4f pose = stack.last().pose();
+            renderTexture(pose, x1, y1, x2, y2);
         }
 
         @Override
         public void updateNarration(NarrationElementOutput narrationElementOutput) {
+        }
+
+        private void updateMovementAnimationTimer() {
+            prevTimer = timer;
+            if (timer >= animTime) {
+                return;
+            }
+            ++timer;
+        }
+
+        private void doFlipProcessTick() {
+            if (!flipping) return;
+            flipTimerOld = flipTimer;
+            if (flipTimer >= flipTimeTotal) {
+                return;
+            }
+            ++flipTimer;
         }
     }
 

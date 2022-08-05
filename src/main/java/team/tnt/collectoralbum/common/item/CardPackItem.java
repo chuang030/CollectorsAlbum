@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import team.tnt.collectoralbum.CollectorsAlbum;
+import team.tnt.collectoralbum.common.init.SoundRegistry;
 import team.tnt.collectoralbum.data.packs.ICardDropProvider;
 import team.tnt.collectoralbum.network.Networking;
 import team.tnt.collectoralbum.network.packet.OpenCardScreenPacket;
@@ -50,6 +51,8 @@ public class CardPackItem extends Item {
                 OpenCardPackContextHolder.store(player, itemStacks);
                 Networking.dispatchClientPacket(player, new OpenCardScreenPacket(itemStacks));
             });
+        } else {
+            // TODO play open sound
         }
         return stack;
     }
