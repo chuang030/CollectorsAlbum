@@ -4,12 +4,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.Nullable;
+import team.tnt.collectoralbum.common.init.MenuTypes;
 
 public class AlbumMenu extends AbstractContainerMenu {
 
-    public AlbumMenu(@Nullable MenuType<?> menuType, int id) {
-        super(menuType, id);
-
+    public AlbumMenu(int id) {
+        super(MenuTypes.ALBUM, id);
     }
 
     @Override

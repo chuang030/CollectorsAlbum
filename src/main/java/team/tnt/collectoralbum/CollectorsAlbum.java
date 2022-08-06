@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import team.tnt.collectoralbum.common.init.ItemRegistry;
+import team.tnt.collectoralbum.common.init.MenuTypes;
 import team.tnt.collectoralbum.common.init.SoundRegistry;
 import team.tnt.collectoralbum.config.ModConfig;
 import team.tnt.collectoralbum.data.packs.CardPackLootManager;
@@ -37,6 +38,7 @@ public class CollectorsAlbum implements ModInitializer {
         config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
         ItemRegistry.registerItems();
         SoundRegistry.registerSounds();
+        MenuTypes.registerMenus();
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(CARD_PACK_MANAGER);
         Networking.registerServerReceivers();
     }
