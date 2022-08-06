@@ -6,11 +6,11 @@ public class MobDropConfig {
 
     @ConfigEntry.Category("main")
     @ConfigEntry.BoundedDiscrete(min = 1L, max = Long.MAX_VALUE)
-    public int noDropWeight = 3500;
+    public int noDropWeight = 4000;
 
     @ConfigEntry.Category("main")
     @ConfigEntry.BoundedDiscrete(min = 1L, max = Long.MAX_VALUE)
-    public int commonDropWeight = 355;
+    public int commonDropWeight = 400;
 
     @ConfigEntry.Category("main")
     @ConfigEntry.BoundedDiscrete(min = 1L, max = Long.MAX_VALUE)

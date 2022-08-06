@@ -5,7 +5,7 @@
     "type": "collectorsalbum:weighted",
     "providers": [
       {
-        "weight": 70,
+        "weight": 90,
         "provider": {
           "type": "collectorsalbum:tag",
           "tag": "collectorsalbum:cards_common"

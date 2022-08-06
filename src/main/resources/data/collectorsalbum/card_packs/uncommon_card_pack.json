@@ -12,7 +12,7 @@
         "type": "collectorsalbum:weighted",
         "providers": [
           {
-            "weight": 50,
+            "weight": 60,
             "provider": {
               "type": "collectorsalbum:tag",
               "tag": "collectorsalbum:cards_common"
@@ -26,14 +26,14 @@
             }
           },
           {
-            "weight": 20,
+            "weight": 15,
             "provider": {
               "type": "collectorsalbum:tag",
               "tag": "collectorsalbum:cards_rare"
             }
           },
           {
-            "weight": 10,
+            "weight": 8,
             "provider": {
               "type": "collectorsalbum:tag",
               "tag": "collectorsalbum:cards_epic"

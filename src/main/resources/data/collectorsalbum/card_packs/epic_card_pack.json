@@ -19,14 +19,14 @@
             }
           },
           {
-            "weight": 35,
+            "weight": 45,
             "provider": {
               "type": "collectorsalbum:tag",
               "tag": "collectorsalbum:cards_uncommon"
             }
           },
           {
-            "weight": 45,
+            "weight": 40,
             "provider": {
               "type": "collectorsalbum:tag",
               "tag": "collectorsalbum:cards_rare"
