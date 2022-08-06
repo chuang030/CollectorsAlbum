@@ -61,6 +61,15 @@ public class CardOpenScreen extends Screen {
     }
 
     @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (flipsRemaining == 0) {
+            this.onClose();
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
     public void onClose() {
         super.onClose();
         if (flipsRemaining == 0) {
