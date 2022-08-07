@@ -9,6 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import team.tnt.collectoralbum.CollectorsAlbum;
+import team.tnt.collectoralbum.common.container.AlbumContainer;
 import team.tnt.collectoralbum.common.menu.AlbumMenu;
 
 public class AlbumItem extends Item {
@@ -21,7 +22,8 @@ public class AlbumItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack itemStack = player.getItemInHand(usedHand);
         if (!level.isClientSide) {
-            player.openMenu(new SimpleMenuProvider((i, inventory, player1) -> new AlbumMenu(i), TextComponent.EMPTY));
+            AlbumContainer container = new AlbumContainer(itemStack);
+            player.openMenu(new SimpleMenuProvider((i, inventory, player1) -> new AlbumMenu(container, inventory, i, CardCategory.ARMOR), TextComponent.EMPTY));
         }
         return InteractionResultHolder.pass(itemStack);
     }
