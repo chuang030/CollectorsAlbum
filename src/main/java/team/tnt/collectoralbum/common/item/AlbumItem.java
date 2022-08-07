@@ -23,7 +23,7 @@ public class AlbumItem extends Item {
         ItemStack itemStack = player.getItemInHand(usedHand);
         if (!level.isClientSide) {
             AlbumContainer container = new AlbumContainer(itemStack);
-            player.openMenu(new SimpleMenuProvider((i, inventory, player1) -> new AlbumMenu(container, inventory, i, CardCategory.ARMOR), TextComponent.EMPTY));
+            player.openMenu(new SimpleMenuProvider((i, inventory, player1) -> new AlbumMenu(container, inventory, i), TextComponent.EMPTY));
         }
         return InteractionResultHolder.pass(itemStack);
     }

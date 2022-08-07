@@ -9,6 +9,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import team.tnt.collectoralbum.common.item.CardCategory;
 
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -17,9 +18,13 @@ public class AlbumContainer extends SimpleContainer {
     private final Map<CardCategory, SimpleContainer> inventoriesByCategory = new EnumMap<>(CardCategory.class);
 
     public AlbumContainer(ItemStack stack) {
-        this.addListener(new Listener(stack, inventoriesByCategory::get));
         CompoundTag tag = stack.getOrCreateTag();
         CompoundTag inventories = tag.getCompound("inventories");
+        Arrays.stream(CardCategory.values()).forEach(category -> {
+            SimpleContainer container = new SimpleContainer(30);
+            container.addListener(ref -> this.setChanged());
+            inventoriesByCategory.put(category, container);
+        });
         for (CardCategory category : CardCategory.values()) {
             ListTag slots = inventories.getList(category.name(), Tag.TAG_COMPOUND);
             for (int i = 0; i < slots.size(); i++) {
@@ -27,13 +32,10 @@ public class AlbumContainer extends SimpleContainer {
                 int slotIndex = slotDef.getInt("slotIndex");
                 CompoundTag itemTag = slotDef.getCompound("itemStack");
                 ItemStack item = ItemStack.of(itemTag);
-                inventoriesByCategory.computeIfAbsent(category, k -> {
-                    SimpleContainer container = new SimpleContainer(30);
-                    container.addListener(ref -> this.setChanged());
-                    return container;
-                }).setItem(slotIndex, item);
+                inventoriesByCategory.get(category).setItem(slotIndex, item);
             }
         }
+        this.addListener(new Listener(stack, inventoriesByCategory::get));
     }
 
     public SimpleContainer forCategory(CardCategory category) {
