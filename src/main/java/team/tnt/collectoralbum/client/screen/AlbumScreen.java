@@ -106,7 +106,7 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
             for (CardRarity rarity : CardRarity.values()) {
                 int value = byRarity.getOrDefault(rarity, 0);
                 String name = rarity.name();
-                String pct = Math.round(value / 30.0F * 100) + "%";
+                String pct = Math.round(value / (float)stats.getCardsCollected() * 100) + "%";
                 String text = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase() + ": " + pct;
                 font.draw(poseStack, text, 30, 67 + i++ * 10, 0x7C5D4D);
             }

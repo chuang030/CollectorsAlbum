@@ -6,29 +6,29 @@ public class MobDropConfig {
 
     @ConfigEntry.Category("main")
     @ConfigEntry.BoundedDiscrete(min = 1L, max = Long.MAX_VALUE)
-    public int noDropWeight = 4000;
+    public int noDropWeight = 5500;
 
     @ConfigEntry.Category("main")
     @ConfigEntry.BoundedDiscrete(min = 1L, max = Long.MAX_VALUE)
-    public int commonDropWeight = 400;
+    public int commonDropWeight = 600;
 
     @ConfigEntry.Category("main")
     @ConfigEntry.BoundedDiscrete(min = 1L, max = Long.MAX_VALUE)
-    public int uncommonDropWeight = 235;
+    public int uncommonDropWeight = 285;
 
     @ConfigEntry.Category("main")
     @ConfigEntry.BoundedDiscrete(min = 1L, max = Long.MAX_VALUE)
-    public int rareDropWeight = 170;
+    public int rareDropWeight = 200;
 
     @ConfigEntry.Category("main")
     @ConfigEntry.BoundedDiscrete(min = 1L, max = Long.MAX_VALUE)
-    public int epicDropWeight = 120;
+    public int epicDropWeight = 135;
 
     @ConfigEntry.Category("main")
     @ConfigEntry.BoundedDiscrete(min = 1L, max = Long.MAX_VALUE)
-    public int legendaryDropWeight = 80;
+    public int legendaryDropWeight = 90;
 
     @ConfigEntry.Category("main")
     @ConfigEntry.BoundedDiscrete(min = 1L, max = Long.MAX_VALUE)
-    public int mythicalDropWeight = 60;
+    public int mythicalDropWeight = 70;
 }

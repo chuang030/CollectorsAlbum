@@ -24,6 +24,7 @@ public class AlbumBoostHandler {
     }
 
     private void tickPlayer(ServerPlayer player) {
+        if (player.level.getGameTime() % 25L != 0L) return;
         AbstractContainerMenu inventory = player.containerMenu;
         for (ItemStack stack : inventory.getItems()) {
             if (stack.getItem() == ItemRegistry.ALBUM) {
@@ -52,15 +53,15 @@ public class AlbumBoostHandler {
             healthBoostModifier = 0;
         }
         if (healthBoostModifier >= 0) {
-            player.addEffect(new MobEffectInstance(MobEffects.HEALTH_BOOST, 20, healthBoostModifier));
+            player.addEffect(new MobEffectInstance(MobEffects.HEALTH_BOOST, 30, healthBoostModifier, false, false));
         }
         int potionModifier = points >= 900 ? 1 : 0;
         Map<CardCategory, Integer> byCategories = stats.getCardsByCategory();
-        applyBoosts(byCategories, CardCategory.TOOLS, player, serverPlayer -> serverPlayer.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 20, potionModifier)));
-        applyBoosts(byCategories, CardCategory.ARMOR, player, serverPlayer -> serverPlayer.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20, potionModifier)));
-        applyBoosts(byCategories, CardCategory.MOBS, player, serverPlayer -> serverPlayer.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 20, potionModifier)));
-        applyBoosts(byCategories, CardCategory.NATURE, player, serverPlayer -> serverPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 20, potionModifier)));
-        applyBoosts(byCategories, CardCategory.ITEMS, player, serverPlayer -> serverPlayer.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20, potionModifier)));
+        applyBoosts(byCategories, CardCategory.TOOLS, player, serverPlayer -> serverPlayer.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 30, potionModifier, false, false)));
+        applyBoosts(byCategories, CardCategory.ARMOR, player, serverPlayer -> serverPlayer.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 30, potionModifier, false, false)));
+        applyBoosts(byCategories, CardCategory.MOBS, player, serverPlayer -> serverPlayer.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 30, potionModifier, false, false)));
+        applyBoosts(byCategories, CardCategory.NATURE, player, serverPlayer -> serverPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 30, potionModifier, false, false)));
+        applyBoosts(byCategories, CardCategory.ITEMS, player, serverPlayer -> serverPlayer.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 30, potionModifier, false, false)));
     }
 
     private void applyBoosts(Map<CardCategory, Integer> data, CardCategory category, ServerPlayer player, Consumer<ServerPlayer> event) {
