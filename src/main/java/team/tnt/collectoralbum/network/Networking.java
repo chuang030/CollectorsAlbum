@@ -12,6 +12,7 @@ import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.client.CollectorsAlbumClient;
 import team.tnt.collectoralbum.network.api.*;
 import team.tnt.collectoralbum.network.packet.OpenCardScreenPacket;
+import team.tnt.collectoralbum.network.packet.RequestAlbumPagePacket;
 import team.tnt.collectoralbum.network.packet.RequestCardPackDropPacket;
 
 import java.lang.reflect.InvocationTargetException;
@@ -40,6 +41,7 @@ public class Networking {
 
     public static void registerServerReceivers() {
         registerClient2ServerReceiver(RequestCardPackDropPacket.class);
+        registerClient2ServerReceiver(RequestAlbumPagePacket.class);
     }
 
     // Utils

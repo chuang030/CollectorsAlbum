@@ -180,4 +180,8 @@ public final class CardRegistry {
             throw new IllegalStateException("Duplicate card entry found: " + cardId);
         }
     }
+
+    public static int count() {
+        return CARD_DEFINITION_MAP.size();
+    }
 }

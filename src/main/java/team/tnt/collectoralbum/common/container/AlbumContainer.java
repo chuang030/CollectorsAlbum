@@ -7,12 +7,14 @@ import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
+import team.tnt.collectoralbum.common.AlbumStats;
 import team.tnt.collectoralbum.common.item.CardCategory;
 
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class AlbumContainer extends SimpleContainer {
     private final Map<CardCategory, SimpleContainer> inventoriesByCategory = new EnumMap<>(CardCategory.class);
@@ -44,6 +46,10 @@ public class AlbumContainer extends SimpleContainer {
 
     public int getCategoryIndexOffset(CardCategory category) {
         return category.ordinal() * 30;
+    }
+
+    public AlbumStats getStats() {
+        return new AlbumStats(this);
     }
 
     private record Listener(ItemStack itemRef, Function<CardCategory, SimpleContainer> containerFetcher) implements ContainerListener {

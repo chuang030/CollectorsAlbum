@@ -49,7 +49,6 @@ public class AlbumMenu extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        // TODO
         return ItemStack.EMPTY;
     }
 
@@ -60,6 +59,14 @@ public class AlbumMenu extends AbstractContainerMenu {
 
     public boolean isTitle() {
         return category == null;
+    }
+
+    public int getCategoryIndex() {
+        return this.category.ordinal() + 1;
+    }
+
+    public AlbumContainer getContainer() {
+        return this.container;
     }
 
     public static class CardSlot extends Slot {
