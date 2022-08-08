@@ -22,6 +22,7 @@ import team.tnt.collectoralbum.network.Networking;
 import team.tnt.collectoralbum.network.packet.RequestAlbumPagePacket;
 
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
@@ -36,6 +37,7 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
     private static final TranslatableComponent TEXT_CATEGORIES = new TranslatableComponent("text.collectorsalbum.album.categories");
     private static final TranslatableComponent TEXT_RARITIES = new TranslatableComponent("text.collectorsalbum.album.rarities");
     private static final Function<Integer, TranslatableComponent> TEXT_POINTS = points -> new TranslatableComponent("text.collectorsalbum.album.points", points);
+    private static final BiFunction<Integer, Integer, TranslatableComponent> TEXT_TOTAL_CARDS = (cards, total) -> new TranslatableComponent("text.collectorsalbum.album.total_cards", cards, total);
 
     private final int pageIndex;
     private AlbumStats stats;
@@ -93,10 +95,6 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
     @Override
     protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
         int page = (pageIndex * 2) + 1;
-        String page1 = String.valueOf(page);
-        String page2 = String.valueOf(page + 1);
-        font.draw(poseStack, page1, 26 - font.width(page1) / 2.0f, 157, 0x7C5D4D);
-        font.draw(poseStack, page2, 277 - font.width(page2) / 2.0f, 157, 0x7C5D4D);
         if (this.menu.isTitle()) {
             // left page
             // header
@@ -114,6 +112,10 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
             // points
             int points = stats.getPoints();
             font.draw(poseStack, TEXT_POINTS.apply(points), 23, 65 + i * 10, 0x7C5D4D);
+            // total cards
+            int collected = stats.getCardsCollected();
+            int total = stats.getTotalCards();
+            font.draw(poseStack, TEXT_TOTAL_CARDS.apply(collected, total), 23, 75 + i * 10, 0x7C5D4D);
 
             // right page
             font.draw(poseStack, TEXT_CATEGORIES, 160, 35, 0x7C5D4D);

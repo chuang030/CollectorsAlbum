@@ -917,5 +917,6 @@
   "text.collectorsalbum.album.header": "Collector's album",
   "text.collectorsalbum.album.categories": "Categories",
   "text.collectorsalbum.album.rarities": "Rarities",
-  "text.collectorsalbum.album.points": "Points: %s"
+  "text.collectorsalbum.album.points": "Points: %s",
+  "text.collectorsalbum.album.total_cards": "Cards collected: %s/%s"
 }
