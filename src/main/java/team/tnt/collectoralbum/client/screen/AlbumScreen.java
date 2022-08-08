@@ -34,8 +34,8 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
 
     // Localizations
     private static final MutableComponent TEXT_HEADER = new TranslatableComponent("text.collectorsalbum.album.header").withStyle(ChatFormatting.BOLD);
-    private static final TranslatableComponent TEXT_CATEGORIES = new TranslatableComponent("text.collectorsalbum.album.categories");
-    private static final TranslatableComponent TEXT_RARITIES = new TranslatableComponent("text.collectorsalbum.album.rarities");
+    private static final MutableComponent TEXT_CATEGORIES = new TranslatableComponent("text.collectorsalbum.album.categories").withStyle(ChatFormatting.UNDERLINE);
+    private static final MutableComponent TEXT_RARITIES = new TranslatableComponent("text.collectorsalbum.album.rarities").withStyle(ChatFormatting.UNDERLINE);
     private static final Function<Integer, TranslatableComponent> TEXT_POINTS = points -> new TranslatableComponent("text.collectorsalbum.album.points", points);
     private static final BiFunction<Integer, Integer, TranslatableComponent> TEXT_TOTAL_CARDS = (cards, total) -> new TranslatableComponent("text.collectorsalbum.album.total_cards", cards, total);
 
@@ -94,31 +94,32 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
 
     @Override
     protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
-        int page = (pageIndex * 2) + 1;
         if (this.menu.isTitle()) {
             // left page
             // header
             int headerWidth = font.width(TEXT_HEADER);
             font.draw(poseStack, TEXT_HEADER, 20 + (130 - headerWidth) / 2.0F, 13, 0x7C5D4D);
             // rarity pcts
-            font.draw(poseStack, TEXT_RARITIES, 23, 35, 0x7C5D4D);
+            font.draw(poseStack, TEXT_RARITIES, 27, 55, 0x7C5D4D);
             int i = 0;
-            for (Map.Entry<CardRarity, Integer> entry : stats.getCardsByRarity().entrySet()) {
-                String rarity = entry.getKey().name();
-                String pct = Math.round(entry.getValue() / 30.0F * 100) + "%";
-                String text = rarity.substring(0, 1).toUpperCase() + rarity.substring(1).toLowerCase() + ": " + pct;
-                font.draw(poseStack, text, 26, 45 + i++ * 10, 0x7C5D4D);
+            Map<CardRarity, Integer> byRarity = stats.getCardsByRarity();
+            for (CardRarity rarity : CardRarity.values()) {
+                int value = byRarity.getOrDefault(rarity, 0);
+                String name = rarity.name();
+                String pct = Math.round(value / 30.0F * 100) + "%";
+                String text = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase() + ": " + pct;
+                font.draw(poseStack, text, 30, 67 + i++ * 10, 0x7C5D4D);
             }
-            // points
-            int points = stats.getPoints();
-            font.draw(poseStack, TEXT_POINTS.apply(points), 23, 65 + i * 10, 0x7C5D4D);
             // total cards
             int collected = stats.getCardsCollected();
             int total = stats.getTotalCards();
-            font.draw(poseStack, TEXT_TOTAL_CARDS.apply(collected, total), 23, 75 + i * 10, 0x7C5D4D);
+            font.draw(poseStack, TEXT_TOTAL_CARDS.apply(collected, total), 27, 35, 0x7C5D4D);
+            // points
+            int points = stats.getPoints();
+            font.draw(poseStack, TEXT_POINTS.apply(points), 27, 80 + i * 10, 0x7C5D4D);
 
             // right page
-            font.draw(poseStack, TEXT_CATEGORIES, 160, 35, 0x7C5D4D);
+            font.draw(poseStack, TEXT_CATEGORIES, 164, 35, 0x7C5D4D);
             int j = 0;
             Map<CardCategory, Integer> map = stats.getCardsByCategory();
             for (CardCategory category : CardCategory.values()) {
@@ -126,7 +127,7 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
                 String categoryText = category.name();
                 String count = value + " / 30";
                 String text = categoryText.substring(0, 1).toUpperCase() + categoryText.substring(1).toLowerCase() + " - " + count;
-                font.draw(poseStack, text, 163, 45 + j++ * 10, 0x7C5D4D);
+                font.draw(poseStack, text, 167, 47 + j++ * 10, 0x7C5D4D);
             }
             return;
         }
@@ -137,6 +138,9 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
                 font.draw(poseStack, text, slot.x + (18 - font.width(text)) / 2.0F - 1, slot.y + 18, 0x7C5D4D);
             }
         }
+        CardCategory category = menu.getCategory();
+        MutableComponent component = new TextComponent(category.name()).withStyle(ChatFormatting.ITALIC);
+        font.draw(poseStack, component, 40, 10, 0x7C5D4D);
     }
 
     @Override

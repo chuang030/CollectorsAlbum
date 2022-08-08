@@ -69,6 +69,10 @@ public class AlbumMenu extends AbstractContainerMenu {
         return this.container;
     }
 
+    public CardCategory getCategory() {
+        return category;
+    }
+
     public static class CardSlot extends Slot {
 
         private final int cardNumber;
