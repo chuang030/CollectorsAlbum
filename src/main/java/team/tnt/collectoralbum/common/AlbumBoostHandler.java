@@ -35,8 +35,7 @@ public class AlbumBoostHandler {
     }
 
     private void applyBoosts(ItemStack album, ServerPlayer player) {
-        AlbumContainer container = new AlbumContainer(album);
-        AlbumStats stats = container.getStats();
+        AlbumStats stats = AlbumStats.createSimplifiedWithoutContainer(album);
         int points = stats.getPoints();
         int healthBoostModifier = -1;
         if (points >= 900) {
