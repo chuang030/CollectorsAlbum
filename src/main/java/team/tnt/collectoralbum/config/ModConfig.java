@@ -10,4 +10,9 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Category("main")
     @ConfigEntry.Gui.CollapsibleObject
     public MobDropConfig mobDrops = new MobDropConfig();
+
+    @Override
+    public void validatePostLoad() throws ValidationException {
+        mobDrops.validatePostLoad();
+    }
 }
