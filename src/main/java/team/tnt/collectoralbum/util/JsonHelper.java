@@ -26,5 +26,6 @@ public final class JsonHelper {
         return result;
     }
 
-    private JsonHelper() {}
+    private JsonHelper() {
+    }
 }

@@ -14,5 +14,6 @@ public final class PlayerHelper {
         }
     }
 
-    private PlayerHelper() {}
+    private PlayerHelper() {
+    }
 }

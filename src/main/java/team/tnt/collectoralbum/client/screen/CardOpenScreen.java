@@ -115,7 +115,8 @@ public class CardOpenScreen extends Screen {
         private final SoundEvent discoverySound;
         private int animTime = 30;
         private int timer, prevTimer;
-        private Consumer<CardWidget> widgetConsumer = widget -> {};
+        private Consumer<CardWidget> widgetConsumer = widget -> {
+        };
         private boolean flipped;
         private boolean flipping;
         private int flipTimer, flipTimerOld, flipTimeTotal = 20;

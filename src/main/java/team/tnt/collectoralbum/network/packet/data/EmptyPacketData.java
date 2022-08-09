@@ -8,7 +8,8 @@ public final class EmptyPacketData implements IPacketEncoder<EmptyPacketData>, I
 
     public static final EmptyPacketData EMPTY = new EmptyPacketData();
 
-    private EmptyPacketData() {}
+    private EmptyPacketData() {
+    }
 
     @Override
     public void encode(EmptyPacketData data, FriendlyByteBuf buffer) {

@@ -71,5 +71,6 @@ public class OpenCardScreenPacket implements IClientPacket<OpenCardScreenPacket.
         client.setScreen(screen);
     }
 
-    record Data(List<ItemStack> drops) {}
+    record Data(List<ItemStack> drops) {
+    }
 }

@@ -74,7 +74,8 @@ public class Networking {
                 T packetData = decoder.decode(buffer);
                 client.execute(() -> packet.handleClientsidePacket(client, handler, packetData, responseDispatcher));
             });
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException exc) {
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException exc) {
             CollectorsAlbumClient.LOGGER.fatal("Couldn't instantiate new client packet from class {}, make sure it declares public default constructor", clientPacketClass.getSimpleName());
             throw new RuntimeException(exc);
         }
@@ -89,7 +90,8 @@ public class Networking {
                 T packetData = decoder.decode(buffer);
                 server.execute(() -> packet.handleServersidePacket(server, player, handler, packetData, responseDispatcher));
             });
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException exc) {
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException exc) {
             CollectorsAlbum.LOGGER.fatal("Couldn't instantiate new server packet from class {}, make sure it declares public default constructor", serverPacketClass.getSimpleName());
             throw new RuntimeException(exc);
         }

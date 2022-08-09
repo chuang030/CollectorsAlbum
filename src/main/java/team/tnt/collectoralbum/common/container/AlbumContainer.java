@@ -51,7 +51,8 @@ public class AlbumContainer extends SimpleContainer {
         return new AlbumStats(this);
     }
 
-    private record Listener(ItemStack itemRef, Function<CardCategory, SimpleContainer> containerFetcher) implements ContainerListener {
+    private record Listener(ItemStack itemRef,
+                            Function<CardCategory, SimpleContainer> containerFetcher) implements ContainerListener {
 
         @Override
         public void containerChanged(Container invBasic) {

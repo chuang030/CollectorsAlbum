@@ -109,7 +109,7 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
             for (CardRarity rarity : CardRarity.values()) {
                 int value = byRarity.getOrDefault(rarity, 0);
                 String name = rarity.name();
-                String pct = Math.round(value / (float)stats.getCardsCollected() * 100) + "%";
+                String pct = Math.round(value / (float) stats.getCardsCollected() * 100) + "%";
                 String text = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase() + ": " + pct;
                 font.draw(poseStack, text, 30, 67 + i++ * 10, 0x7C5D4D);
             }
@@ -171,7 +171,8 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
     private static final class ArrowWidget extends AbstractWidget {
 
         private final ResourceLocation location;
-        private ClickResponder clickResponder = widget -> {};
+        private ClickResponder clickResponder = widget -> {
+        };
 
         public ArrowWidget(int x, int y, int width, int height, ResourceLocation location) {
             super(x, y, width, height, TextComponent.EMPTY);
