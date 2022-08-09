@@ -7,7 +7,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import team.tnt.collectoralbum.common.container.AlbumContainer;
 import team.tnt.collectoralbum.common.init.ItemRegistry;
 import team.tnt.collectoralbum.common.item.CardCategory;
 
