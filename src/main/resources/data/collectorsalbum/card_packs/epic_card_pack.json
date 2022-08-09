@@ -19,7 +19,7 @@
             }
           },
           {
-            "weight": 45,
+            "weight": 35,
             "provider": {
               "type": "collectorsalbum:tag",
               "tag": "collectorsalbum:cards_uncommon"
