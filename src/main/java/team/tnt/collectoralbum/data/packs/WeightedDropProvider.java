@@ -5,10 +5,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.ItemStack;
 import team.tnt.collectoralbum.util.JsonHelper;
 import team.tnt.collectoralbum.util.math.WeightedRandom;
+
+import java.util.List;
 
 public class WeightedDropProvider implements ICardDropProvider {
 
@@ -19,10 +20,10 @@ public class WeightedDropProvider implements ICardDropProvider {
     }
 
     @Override
-    public void provideDrops(Player player, Level level) {
+    public List<ItemStack> provideDrops() {
         Entry providerEntry = randomProvider.get();
         ICardDropProvider provider = providerEntry.provider();
-        provider.provideDrops(player, level);
+        return provider.provideDrops();
     }
 
     private record Entry(int value, ICardDropProvider provider) implements WeightedRandom.IWeighted {

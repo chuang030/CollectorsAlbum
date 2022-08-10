@@ -4,6 +4,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import team.tnt.collectoralbum.CollectorsAlbum;
+import team.tnt.collectoralbum.common.item.AlbumItem;
 import team.tnt.collectoralbum.common.item.CardItem;
 import team.tnt.collectoralbum.common.item.CardPackItem;
 import team.tnt.collectoralbum.common.item.CardRarity;
@@ -910,7 +911,7 @@ public final class ItemRegistry {
     public static final CardItem EPIC_ZOMBIE_CARD = new CardItem(CardRarity.EPIC, CardRegistry.ZOMBIE_CARD);
     public static final CardItem LEGENDARY_ZOMBIE_CARD = new CardItem(CardRarity.LEGENDARY, CardRegistry.ZOMBIE_CARD);
     public static final CardItem MYTHICAL_ZOMBIE_CARD = new CardItem(CardRarity.MYTHICAL, CardRegistry.ZOMBIE_CARD);
-    public static final Item ALBUM = new Item(new Item.Properties().tab(CollectorsAlbum.TAB));
+    public static final Item ALBUM = new AlbumItem();
     public static final CardPackItem COMMON_CARD_PACKAGE = new CardPackItem(new ResourceLocation(CollectorsAlbum.MODID, "common_card_pack"));
     public static final Item UNCOMMON_CARD_PACKAGE = new CardPackItem(new ResourceLocation(CollectorsAlbum.MODID, "uncommon_card_pack"));
     public static final Item RARE_CARD_PACKAGE = new CardPackItem(new ResourceLocation(CollectorsAlbum.MODID, "rare_card_pack"));

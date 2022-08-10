@@ -5,21 +5,21 @@
     "type": "collectorsalbum:weighted",
     "providers": [
       {
-        "weight": 70,
+        "weight": 90,
         "provider": {
           "type": "collectorsalbum:tag",
           "tag": "collectorsalbum:cards_common"
         }
       },
       {
-        "weight": 30,
+        "weight": 25,
         "provider": {
           "type": "collectorsalbum:tag",
           "tag": "collectorsalbum:cards_uncommon"
         }
       },
       {
-        "weight": 10,
+        "weight": 8,
         "provider": {
           "type": "collectorsalbum:tag",
           "tag": "collectorsalbum:cards_rare"

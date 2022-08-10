@@ -3,7 +3,8 @@
   "id": "collectorsalbum",
   "version": "${version}",
   "name": "Collector's Album",
-  "description": "",
+  "description": "Collect 150 custom cards to your album and gain extra bonuses",
+  "icon": "logo.png",
   "authors": [
     "Toma",
     "Tomano"

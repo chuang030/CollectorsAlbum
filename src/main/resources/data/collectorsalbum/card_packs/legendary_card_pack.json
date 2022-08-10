@@ -12,14 +12,14 @@
         "type": "collectorsalbum:weighted",
         "providers": [
           {
-            "weight": 15,
+            "weight": 25,
             "provider": {
               "type": "collectorsalbum:tag",
               "tag": "collectorsalbum:cards_uncommon"
             }
           },
           {
-            "weight": 50,
+            "weight": 45,
             "provider": {
               "type": "collectorsalbum:tag",
               "tag": "collectorsalbum:cards_rare"

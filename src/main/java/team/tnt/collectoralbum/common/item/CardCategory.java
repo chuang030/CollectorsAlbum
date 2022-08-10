@@ -3,10 +3,11 @@ package team.tnt.collectoralbum.common.item;
 import net.minecraft.ChatFormatting;
 
 public enum CardCategory {
-    ARMOR(ChatFormatting.BLUE),
+
     TOOLS(ChatFormatting.YELLOW),
-    NATURE(ChatFormatting.GREEN),
+    ARMOR(ChatFormatting.BLUE),
     MOBS(ChatFormatting.RED),
+    NATURE(ChatFormatting.GREEN),
     ITEMS(ChatFormatting.WHITE);
 
     private final ChatFormatting color;

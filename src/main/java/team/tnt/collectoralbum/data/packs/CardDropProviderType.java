@@ -9,7 +9,8 @@ import net.minecraft.util.GsonHelper;
 import team.tnt.collectoralbum.common.init.CardDropProviderRegistry;
 import team.tnt.collectoralbum.util.JsonHelper;
 
-public record CardDropProviderType<P extends ICardDropProvider>(ResourceLocation identifier, ICardDropSerializer<P> serializer) {
+public record CardDropProviderType<P extends ICardDropProvider>(ResourceLocation identifier,
+                                                                ICardDropSerializer<P> serializer) {
 
     public static <P extends ICardDropProvider> P fromJson(JsonElement entry) throws JsonParseException {
         JsonObject object = JsonHelper.asObject(entry);

@@ -1,21 +1,29 @@
 package team.tnt.collectoralbum.common.item;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.sounds.SoundEvent;
+import team.tnt.collectoralbum.common.init.SoundRegistry;
 
 public enum CardRarity {
-    COMMON(ChatFormatting.WHITE),
-    UNCOMMON(ChatFormatting.GREEN),
-    RARE(ChatFormatting.BLUE),
-    EPIC(ChatFormatting.DARK_PURPLE),
-    LEGENDARY(ChatFormatting.GOLD),
-    MYTHICAL(ChatFormatting.RED);
+    COMMON(ChatFormatting.WHITE, SoundRegistry.FLIP_COMMON),
+    UNCOMMON(ChatFormatting.GREEN, SoundRegistry.FLIP_UNCOMMON),
+    RARE(ChatFormatting.BLUE, SoundRegistry.FLIP_RARE),
+    EPIC(ChatFormatting.DARK_PURPLE, SoundRegistry.FLIP_EPIC),
+    LEGENDARY(ChatFormatting.GOLD, SoundRegistry.FLIP_LEGENDARY),
+    MYTHICAL(ChatFormatting.RED, SoundRegistry.FLIP_MYTHICAL);
 
     final int value;
     final ChatFormatting color;
+    final SoundEvent discoverySound;
 
-    CardRarity(ChatFormatting color) {
+    CardRarity(ChatFormatting color, SoundEvent discoverySound) {
         this.value = this.ordinal() + 1;
         this.color = color;
+        this.discoverySound = discoverySound;
+    }
+
+    public SoundEvent getDiscoverySound() {
+        return discoverySound;
     }
 
     public int getValue() {

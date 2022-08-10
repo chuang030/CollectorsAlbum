@@ -5,9 +5,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.ItemStack;
 import team.tnt.collectoralbum.util.JsonHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MultiDropProvider implements ICardDropProvider {
 
@@ -18,10 +20,12 @@ public class MultiDropProvider implements ICardDropProvider {
     }
 
     @Override
-    public void provideDrops(Player player, Level level) {
+    public List<ItemStack> provideDrops() {
+        List<ItemStack> list = new ArrayList<>();
         for (ICardDropProvider provider : nestedProviders) {
-            provider.provideDrops(player, level);
+            list.addAll(provider.provideDrops());
         }
+        return list;
     }
 
     public static final class Serializer implements ICardDropSerializer<MultiDropProvider> {
