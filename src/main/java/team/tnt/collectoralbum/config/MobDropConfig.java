@@ -13,10 +13,10 @@ public class MobDropConfig {
     public int commonDropWeight = 450;
 
     @ConfigEntry.Category("main")
-    public int uncommonDropWeight = 325;
+    public int uncommonDropWeight = 315;
 
     @ConfigEntry.Category("main")
-    public int rareDropWeight = 215;
+    public int rareDropWeight = 225;
 
     @ConfigEntry.Category("main")
     public int epicDropWeight = 140;
@@ -25,7 +25,7 @@ public class MobDropConfig {
     public int legendaryDropWeight = 90;
 
     @ConfigEntry.Category("main")
-    public int mythicalDropWeight = 65;
+    public int mythicalDropWeight = 70;
 
     void validatePostLoad() throws ConfigData.ValidationException {
         if (noDropWeight <= 0) {
