@@ -7,19 +7,19 @@ import team.tnt.collectoralbum.CollectorsAlbum;
 public class MobDropConfig {
 
     @ConfigEntry.Category("main")
-    public int noDropWeight = 5500;
+    public int noDropWeight = 5700;
 
     @ConfigEntry.Category("main")
-    public int commonDropWeight = 450;
+    public int commonDropWeight = 460;
 
     @ConfigEntry.Category("main")
-    public int uncommonDropWeight = 315;
+    public int uncommonDropWeight = 320;
 
     @ConfigEntry.Category("main")
-    public int rareDropWeight = 225;
+    public int rareDropWeight = 230;
 
     @ConfigEntry.Category("main")
-    public int epicDropWeight = 140;
+    public int epicDropWeight = 145;
 
     @ConfigEntry.Category("main")
     public int legendaryDropWeight = 90;
