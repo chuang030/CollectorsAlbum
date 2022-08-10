@@ -59,7 +59,7 @@ public class AlbumBoostHandler {
         MobEffectInstance instance = player.getEffect(MobEffects.HEALTH_BOOST);
         if (instance != null && healthBoostModifier < 0) {
             player.removeEffect(MobEffects.HEALTH_BOOST);
-        } else if (healthBoostModifier >= 0 && (instance != null && instance.getAmplifier() != healthBoostModifier)) {
+        } else if (healthBoostModifier >= 0 && (instance == null || instance.getAmplifier() != healthBoostModifier)) {
             player.removeEffect(MobEffects.HEALTH_BOOST);
             player.addEffect(new MobEffectInstance(MobEffects.HEALTH_BOOST, Integer.MAX_VALUE, healthBoostModifier, false, false));
         }
