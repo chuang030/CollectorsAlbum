@@ -13,6 +13,7 @@ public final class SoundRegistry {
     public static final SoundEvent FLIP_EPIC = new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "flip_epic"));
     public static final SoundEvent FLIP_LEGENDARY = new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "flip_legendary"));
     public static final SoundEvent FLIP_MYTHICAL = new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "flip_mythical"));
+    public static final SoundEvent OPEN = new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "open"));
 
     public static void registerSounds() {
         registerSound(FLIP_COMMON);
@@ -21,6 +22,7 @@ public final class SoundRegistry {
         registerSound(FLIP_EPIC);
         registerSound(FLIP_LEGENDARY);
         registerSound(FLIP_MYTHICAL);
+        registerSound(OPEN);
     }
 
     private static void registerSound(SoundEvent event) {

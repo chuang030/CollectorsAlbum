@@ -46,5 +46,13 @@
         "stream": true
       }
     ]
+  },
+  "open": {
+    "sounds": [
+      {
+        "name": "collectorsalbum:open",
+        "stream": true
+      }
+    ]
   }
 }

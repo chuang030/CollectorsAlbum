@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import team.tnt.collectoralbum.CollectorsAlbum;
+import team.tnt.collectoralbum.common.init.SoundRegistry;
 import team.tnt.collectoralbum.data.packs.ICardDropProvider;
 import team.tnt.collectoralbum.network.Networking;
 import team.tnt.collectoralbum.network.packet.OpenCardScreenPacket;
@@ -51,7 +52,7 @@ public class CardPackItem extends Item {
                 Networking.dispatchClientPacket(player, new OpenCardScreenPacket(itemStacks));
             });
         } else {
-            // TODO play open sound
+            livingEntity.playSound(SoundRegistry.OPEN, 0.8f, 1.0f);
         }
         return stack;
     }
@@ -60,6 +61,7 @@ public class CardPackItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
         player.startUsingItem(usedHand);
+
         return InteractionResultHolder.consume(stack);
     }
 }

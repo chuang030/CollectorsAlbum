@@ -10,7 +10,7 @@ public class MobDropConfig {
     public int noDropWeight = 5700;
 
     @ConfigEntry.Category("main")
-    public int commonDropWeight = 460;
+    public int commonDropWeight = 480;
 
     @ConfigEntry.Category("main")
     public int uncommonDropWeight = 320;
