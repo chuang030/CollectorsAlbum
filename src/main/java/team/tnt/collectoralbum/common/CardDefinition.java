@@ -9,7 +9,11 @@ public record CardDefinition(ResourceLocation cardId, ICardCategory category, in
     private static final Int2ObjectMap<CardDefinition> CARD_BY_ID = new Int2ObjectOpenHashMap<>();
 
     public CardDefinition {
-        if (CARD_BY_ID.put(cardNumber, this) != null) {
+        if (cardNumber > category.getCapacity()) {
+            throw new IndexOutOfBoundsException("Category card index overflow! Got " + cardNumber + ", capacity: " + category.getCapacity() + " for card " + cardId);
+        }
+        int idValue = CardCategoryIndexPool.getIndexOffset(category) + cardNumber;
+        if (CARD_BY_ID.put(idValue, this) != null) {
             throw new IllegalStateException("Duplicate card number " + cardNumber);
         }
     }
