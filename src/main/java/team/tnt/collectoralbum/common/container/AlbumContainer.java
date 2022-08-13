@@ -23,7 +23,7 @@ public class AlbumContainer extends SimpleContainer {
         CompoundTag tag = stack.getOrCreateTag();
         CompoundTag inventories = tag.getCompound("inventories");
         CardCategoryRegistry.getValues().forEach(category -> {
-            SimpleContainer container = new SimpleContainer(30);
+            SimpleContainer container = new SimpleContainer(category.getCapacity());
             container.addListener(ref -> this.setChanged());
             inventoriesByCategory.put(category, container);
         });
