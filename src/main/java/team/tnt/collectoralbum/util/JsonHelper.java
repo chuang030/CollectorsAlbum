@@ -11,6 +11,17 @@ import java.util.function.Function;
 
 public final class JsonHelper {
 
+    public static <T> T resolveNullable(JsonObject data, String key, Function<JsonElement, T> typeResolver) {
+        if (!data.has(key)) {
+            return null;
+        }
+        JsonElement res = data.get(key);
+        if (res.isJsonNull()) {
+            return null;
+        }
+        return typeResolver.apply(res);
+    }
+
     public static JsonObject asObject(JsonElement in) {
         if (in.isJsonObject()) {
             return in.getAsJsonObject();

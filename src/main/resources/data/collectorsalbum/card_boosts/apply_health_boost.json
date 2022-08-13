@@ -4,9 +4,12 @@
     "type": "collectorsalbum:first_valid",
     "values": [
       {
-        "require": "collectorsalbum:points",
-        "function": "collectorsalbum:greater_or_equal",
-        "value": 900,
+        "conditions": [
+          {
+            "type": "collectorsalbum:points",
+            "points": 900
+          }
+        ],
         "apply": {
           "type": "collectorsalbum:give_effects",
           "effects": [
@@ -20,9 +23,12 @@
         }
       },
       {
-        "require": "collectorsalbum:points",
-        "function": "collectorsalbum:greater_or_equal",
-        "value": 700,
+        "conditions": [
+          {
+            "type": "collectorsalbum:points",
+            "points": 700
+          }
+        ],
         "apply": {
           "type": "collectorsalbum:give_effects",
           "effects": [
@@ -36,9 +42,12 @@
         }
       },
       {
-        "require": "collectorsalbum:points",
-        "function": "collectorsalbum:greater_or_equal",
-        "value": 600,
+        "conditions": [
+          {
+            "type": "collectorsalbum:points",
+            "points": 600
+          }
+        ],
         "apply": {
           "type": "collectorsalbum:give_effects",
           "effects": [
@@ -52,9 +61,12 @@
         }
       },
       {
-        "require": "collectorsalbum:points",
-        "function": "collectorsalbum:greater_or_equal",
-        "value": 500,
+        "conditions": [
+          {
+            "type": "collectorsalbum:points",
+            "points": 500
+          }
+        ],
         "apply": {
           "type": "collectorsalbum:give_effects",
           "effects": [
@@ -68,9 +80,12 @@
         }
       },
       {
-        "require": "collectorsalbum:points",
-        "function": "collectorsalbum:greater_or_equal",
-        "value": 400,
+        "conditions": [
+          {
+            "type": "collectorsalbum:points",
+            "points": 400
+          }
+        ],
         "apply": {
           "type": "collectorsalbum:give_effects",
           "effects": [
@@ -84,9 +99,12 @@
         }
       },
       {
-        "require": "collectorsalbum:points",
-        "function": "collectorsalbum:greater_or_equal",
-        "value": 300,
+        "conditions": [
+          {
+            "type": "collectorsalbum:points",
+            "points": 300
+          }
+        ],
         "apply": {
           "type": "collectorsalbum:give_effects",
           "effects": [

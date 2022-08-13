@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import team.tnt.collectoralbum.util.JsonHelper;
 
@@ -20,6 +19,7 @@ public class FirstValidAction implements IAction {
     public void apply(IBoostContext context) {
         for (Entry entry : entries) {
             if (entry.accepts(context)) {
+                entry.apply(context);
                 break;
             }
         }
@@ -37,16 +37,16 @@ public class FirstValidAction implements IAction {
 
     public static final class Entry {
 
-        private final IEntryCondition[] conditions;
+        private final ICardBoostCondition[] conditions;
         private final IAction action;
 
-        public Entry(IEntryCondition[] conditions, IAction action) {
+        public Entry(ICardBoostCondition[] conditions, IAction action) {
             this.conditions = conditions;
             this.action = action;
         }
 
         public boolean accepts(IBoostContext ctx) {
-            for (IEntryCondition condition : conditions) {
+            for (ICardBoostCondition condition : conditions) {
                 if (!condition.isValid(ctx)) {
                     return false;
                 }
@@ -63,31 +63,8 @@ public class FirstValidAction implements IAction {
             JsonObject applyAction = GsonHelper.getAsJsonObject(object, "apply");
             JsonArray conditionsArray = GsonHelper.getAsJsonArray(object, "conditions", new JsonArray());
             IAction action = ActionType.fromJson(opType, applyAction);
-            // TODO conditions
-            return new Entry(new IEntryCondition[0], action);
+            ICardBoostCondition[] conditions = JsonHelper.resolveArray(conditionsArray, ICardBoostCondition[]::new, CardBoostConditionType::fromJson);
+            return new Entry(conditions, action);
         }
-    }
-
-    @FunctionalInterface
-    public interface IEntryCondition {
-
-        boolean isValid(IBoostContext context);
-    }
-
-    public static final class EntryConditionType<C extends IEntryCondition> {
-
-        private final ResourceLocation identifier;
-        private final IEntryConditionSerializer<C> serializer;
-
-        public EntryConditionType(ResourceLocation identifier, IEntryConditionSerializer<C> serializer) {
-            this.identifier = identifier;
-            this.serializer = serializer;
-        }
-    }
-
-    @FunctionalInterface
-    public interface IEntryConditionSerializer<C extends IEntryCondition> {
-
-        C fromJson(JsonElement data) throws JsonParseException;
     }
 }
