@@ -45,7 +45,7 @@ public class CardItem extends Item implements ICard {
         CardItem cardItem = (CardItem) stack.getItem();
         CardDefinition definition = cardItem.getCard();
         Component numberComponent = new TextComponent("#" + definition.cardNumber()).withStyle(ChatFormatting.YELLOW);
-        Component categoryComponent = new TextComponent(definition.category().name()).withStyle(definition.category().getColor());
+        Component categoryComponent = new TextComponent(definition.category().getTranslatedName().getString()).withStyle(definition.category().getTooltipFormat());
         Component rarityComponent = new TextComponent(rarity.name()).withStyle(rarity.getColor());
         Component valueComponent = new TextComponent(rarity.getValue() + " pts").withStyle(ChatFormatting.WHITE);
         tooltipComponents.add(new TranslatableComponent(TEXT_CARD_NUMBER, numberComponent).withStyle(ChatFormatting.GRAY));

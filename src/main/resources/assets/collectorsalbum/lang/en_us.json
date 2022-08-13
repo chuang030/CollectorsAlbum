@@ -913,6 +913,11 @@
   "card.tooltip.rarity": "Rarity: %s",
   "card.tooltip.category": "Category: %s",
   "card.tooltip.value": "Value: %s",
+  "card.category.collectorsalbum.tools": "Tools",
+  "card.category.collectorsalbum.armor": "Armor",
+  "card.category.collectorsalbum.mobs": "Mobs",
+  "card.category.collectorsalbum.nature": "Nature",
+  "card.category.collectorsalbum.items": "Items",
 
   "text.collectorsalbum.album.header": "Collector's album",
   "text.collectorsalbum.album.categories": "Categories",

@@ -3,9 +3,8 @@ package team.tnt.collectoralbum.common;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
-import team.tnt.collectoralbum.common.item.CardCategory;
 
-public record CardDefinition(ResourceLocation cardId, CardCategory category, int cardNumber) {
+public record CardDefinition(ResourceLocation cardId, ICardCategory category, int cardNumber) {
 
     private static final Int2ObjectMap<CardDefinition> CARD_BY_ID = new Int2ObjectOpenHashMap<>();
 

@@ -1,0 +1,9 @@
+{
+  "op": "CLEANUP",
+  "action": {
+    "type": "collectorsalbum:clear_effects",
+    "effects": [
+      "minecraft:health_boost"
+    ]
+  }
+}

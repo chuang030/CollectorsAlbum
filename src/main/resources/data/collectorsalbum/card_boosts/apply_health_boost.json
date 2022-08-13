@@ -1,0 +1,104 @@
+{
+  "op": "ACTIVE",
+  "action": {
+    "type": "collectorsalbum:first_valid",
+    "values": [
+      {
+        "require": "collectorsalbum:points",
+        "function": "collectorsalbum:greater_or_equal",
+        "value": 900,
+        "apply": {
+          "type": "collectorsalbum:give_effects",
+          "effects": [
+            {
+              "effect": "minecraft:health_boost",
+              "duration": 2147483647,
+              "amplifier": 9,
+              "visible": false
+            }
+          ]
+        }
+      },
+      {
+        "require": "collectorsalbum:points",
+        "function": "collectorsalbum:greater_or_equal",
+        "value": 700,
+        "apply": {
+          "type": "collectorsalbum:give_effects",
+          "effects": [
+            {
+              "effect": "minecraft:health_boost",
+              "duration": 2147483647,
+              "amplifier": 4,
+              "visible": false
+            }
+          ]
+        }
+      },
+      {
+        "require": "collectorsalbum:points",
+        "function": "collectorsalbum:greater_or_equal",
+        "value": 600,
+        "apply": {
+          "type": "collectorsalbum:give_effects",
+          "effects": [
+            {
+              "effect": "minecraft:health_boost",
+              "duration": 2147483647,
+              "amplifier": 3,
+              "visible": false
+            }
+          ]
+        }
+      },
+      {
+        "require": "collectorsalbum:points",
+        "function": "collectorsalbum:greater_or_equal",
+        "value": 500,
+        "apply": {
+          "type": "collectorsalbum:give_effects",
+          "effects": [
+            {
+              "effect": "minecraft:health_boost",
+              "duration": 2147483647,
+              "amplifier": 2,
+              "visible": false
+            }
+          ]
+        }
+      },
+      {
+        "require": "collectorsalbum:points",
+        "function": "collectorsalbum:greater_or_equal",
+        "value": 400,
+        "apply": {
+          "type": "collectorsalbum:give_effects",
+          "effects": [
+            {
+              "effect": "minecraft:health_boost",
+              "duration": 2147483647,
+              "amplifier": 1,
+              "visible": false
+            }
+          ]
+        }
+      },
+      {
+        "require": "collectorsalbum:points",
+        "function": "collectorsalbum:greater_or_equal",
+        "value": 300,
+        "apply": {
+          "type": "collectorsalbum:give_effects",
+          "effects": [
+            {
+              "effect": "minecraft:health_boost",
+              "duration": 2147483647,
+              "amplifier": 0,
+              "visible": false
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

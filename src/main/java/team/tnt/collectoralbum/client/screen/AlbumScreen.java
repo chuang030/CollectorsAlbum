@@ -18,13 +18,17 @@ import net.minecraft.world.inventory.Slot;
 import org.lwjgl.glfw.GLFW;
 import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.common.AlbumStats;
-import team.tnt.collectoralbum.common.item.CardCategory;
+import team.tnt.collectoralbum.common.ICardCategory;
+import team.tnt.collectoralbum.common.init.CardCategoryRegistry;
 import team.tnt.collectoralbum.common.item.CardRarity;
+import team.tnt.collectoralbum.common.item.ICard;
 import team.tnt.collectoralbum.common.menu.AlbumMenu;
 import team.tnt.collectoralbum.network.Networking;
 import team.tnt.collectoralbum.network.packet.RequestAlbumPagePacket;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -59,7 +63,7 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
             ArrowWidget widget = addRenderableWidget(new ArrowWidget(leftPos + 18, topPos + 5, 16, 16, ARROW_LEFT));
             widget.setOnClickResponder(this::clickPrevPage);
         }
-        if (pageIndex < CardCategory.values().length) {
+        if (pageIndex < CardCategoryRegistry.getCount()) {
             ArrowWidget widget = addRenderableWidget(new ArrowWidget(leftPos + 265, topPos + 4, 16, 16, ARROW_RIGHT));
             widget.setOnClickResponder(this::clickNextPage);
         }
@@ -124,12 +128,12 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
             // right page
             font.draw(poseStack, TEXT_CATEGORIES, 164, 35, 0x7C5D4D);
             int j = 0;
-            Map<CardCategory, Integer> map = stats.getCardsByCategory();
-            for (CardCategory category : CardCategory.values()) {
-                int value = map.getOrDefault(category, 0);
-                String categoryText = category.name();
+            Map<ICardCategory, List<ICard>> map = stats.getCardsByCategory();
+            for (ICardCategory category : CardCategoryRegistry.getValues()) {
+                int value = Optional.ofNullable(map.get(category)).map(List::size).orElse(0);
+                Component displayName = category.getTranslatedName();
                 String count = value + " / 30";
-                String text = categoryText.substring(0, 1).toUpperCase() + categoryText.substring(1).toLowerCase() + " - " + count;
+                String text = displayName.getString() + " - " + count;
                 font.draw(poseStack, text, 167, 47 + j++ * 10, 0x7C5D4D);
             }
             return;
@@ -141,8 +145,8 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
                 font.draw(poseStack, text, slot.x + (18 - font.width(text)) / 2.0F - 1, slot.y + 18, 0x7C5D4D);
             }
         }
-        CardCategory category = menu.getCategory();
-        MutableComponent component = new TextComponent(category.name()).withStyle(ChatFormatting.ITALIC);
+        ICardCategory category = menu.getCategory();
+        MutableComponent component = new TextComponent(category.getTranslatedName().getString()).withStyle(ChatFormatting.ITALIC);
         font.draw(poseStack, component, 40, 10, 0x7C5D4D);
     }
 
@@ -153,22 +157,22 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
         renderTooltip(poseStack, mouseX, mouseY);
     }
 
-    private void clickPrevPage(ArrowWidget widget) {
+    protected void clickPrevPage(ArrowWidget widget) {
         changePage(-1);
     }
 
-    private void clickNextPage(ArrowWidget widget) {
+    protected void clickNextPage(ArrowWidget widget) {
         changePage(1);
     }
 
-    private void changePage(int indexOffset) {
+    protected void changePage(int indexOffset) {
         int nextIndex = this.pageIndex + indexOffset;
-        if (nextIndex < 0 || nextIndex > CardCategory.values().length) return;
-        CardCategory category = nextIndex == 0 ? null : CardCategory.values()[nextIndex - 1];
+        if (nextIndex < 0 || nextIndex > CardCategoryRegistry.getCount()) return;
+        ICardCategory category = nextIndex == 0 ? null : CardCategoryRegistry.byIndex(nextIndex - 1);
         Networking.dispatchServerPacket(new RequestAlbumPagePacket(category));
     }
 
-    private static final class ArrowWidget extends AbstractWidget {
+    protected static final class ArrowWidget extends AbstractWidget {
 
         private final ResourceLocation location;
         private ClickResponder clickResponder = widget -> {

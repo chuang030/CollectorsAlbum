@@ -17,6 +17,7 @@ import team.tnt.collectoralbum.common.init.ItemRegistry;
 import team.tnt.collectoralbum.common.init.MenuTypes;
 import team.tnt.collectoralbum.common.init.SoundRegistry;
 import team.tnt.collectoralbum.config.ModConfig;
+import team.tnt.collectoralbum.data.boosts.AlbumCardBoostManager;
 import team.tnt.collectoralbum.data.packs.CardPackLootManager;
 import team.tnt.collectoralbum.network.Networking;
 
@@ -33,19 +34,27 @@ public class CollectorsAlbum implements ModInitializer {
     );
 
     public static final CardPackLootManager CARD_PACK_MANAGER = new CardPackLootManager();
+    public static final AlbumCardBoostManager ALBUM_CARD_BOOST_MANAGER = new AlbumCardBoostManager();
 
     // event handlers
     private final AlbumBoostHandler boostHandler = new AlbumBoostHandler();
 
     @Override
     public void onInitialize() {
+        // config
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
         config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+        // registries
         ItemRegistry.registerItems();
         SoundRegistry.registerSounds();
         MenuTypes.registerMenus();
-        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(CARD_PACK_MANAGER);
+        // datapacks
+        ResourceManagerHelper resourceManagerHelper = ResourceManagerHelper.get(PackType.SERVER_DATA);
+        resourceManagerHelper.registerReloadListener(CARD_PACK_MANAGER);
+        resourceManagerHelper.registerReloadListener(ALBUM_CARD_BOOST_MANAGER);
+        // network
         Networking.registerServerReceivers();
+        // callbacks
         ServerTickEvents.END_SERVER_TICK.register(boostHandler::onServerTick);
     }
 }

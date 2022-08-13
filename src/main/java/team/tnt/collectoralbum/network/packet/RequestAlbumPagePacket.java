@@ -14,9 +14,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
+import team.tnt.collectoralbum.common.ICardCategory;
 import team.tnt.collectoralbum.common.container.AlbumContainer;
+import team.tnt.collectoralbum.common.init.CardCategoryRegistry;
 import team.tnt.collectoralbum.common.init.ItemRegistry;
-import team.tnt.collectoralbum.common.item.CardCategory;
 import team.tnt.collectoralbum.common.menu.AlbumMenu;
 import team.tnt.collectoralbum.network.Networking;
 import team.tnt.collectoralbum.network.api.IPacketDecoder;
@@ -32,7 +33,7 @@ public class RequestAlbumPagePacket implements IServerPacket<RequestAlbumPagePac
         this(null);
     }
 
-    public RequestAlbumPagePacket(CardCategory category) {
+    public RequestAlbumPagePacket(ICardCategory category) {
         this.data = new AlbumPacketData(category);
     }
 
@@ -48,14 +49,23 @@ public class RequestAlbumPagePacket implements IServerPacket<RequestAlbumPagePac
 
     @Override
     public IPacketEncoder<AlbumPacketData> getEncoder() {
-        return (packetData, buffer) -> buffer.writeInt(packetData.category == null ? 0 : 1 + packetData.category.ordinal());
+        return (packetData, buffer) -> {
+            ICardCategory category = packetData.category;
+            buffer.writeBoolean(category != null);
+            if (category != null) {
+                buffer.writeResourceLocation(category.getId());
+            }
+        };
     }
 
     @Override
     public IPacketDecoder<AlbumPacketData> getDecoder() {
         return (buffer) -> {
-            int i = buffer.readInt();
-            CardCategory category = i == 0 ? null : CardCategory.values()[i - 1];
+            boolean flag = buffer.readBoolean();
+            ICardCategory category = null;
+            if (flag) {
+                category = CardCategoryRegistry.getByKey(buffer.readResourceLocation());
+            }
             return new AlbumPacketData(category);
         };
     }
@@ -67,12 +77,15 @@ public class RequestAlbumPagePacket implements IServerPacket<RequestAlbumPagePac
             return;
         }
         AlbumContainer container = new AlbumContainer(stack);
-        int index = packetData.category == null ? 0 : packetData.category.ordinal() + 1;
+        ICardCategory category = packetData.category;
         player.openMenu(new ExtendedScreenHandlerFactory() {
             @Override
             public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
                 buf.writeItem(stack);
-                buf.writeInt(index);
+                buf.writeBoolean(category != null);
+                if (category != null) {
+                    buf.writeResourceLocation(category.getId());
+                }
             }
 
             @Override
@@ -90,9 +103,9 @@ public class RequestAlbumPagePacket implements IServerPacket<RequestAlbumPagePac
 
     static class AlbumPacketData {
 
-        private final CardCategory category;
+        private final ICardCategory category;
 
-        AlbumPacketData(CardCategory category) {
+        AlbumPacketData(ICardCategory category) {
             this.category = category;
         }
     }

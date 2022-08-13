@@ -8,42 +8,39 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
+import team.tnt.collectoralbum.api.CardSlotDefinition;
+import team.tnt.collectoralbum.api.ICategorySlotDistributor;
+import team.tnt.collectoralbum.api.ISlotAppender;
+import team.tnt.collectoralbum.common.CardCategory;
+import team.tnt.collectoralbum.common.ICardCategory;
 import team.tnt.collectoralbum.common.container.AlbumContainer;
 import team.tnt.collectoralbum.common.init.MenuTypes;
-import team.tnt.collectoralbum.common.item.CardCategory;
 import team.tnt.collectoralbum.common.item.ICard;
 
 public class AlbumMenu extends AbstractContainerMenu {
 
     private final AlbumContainer container;
     @Nullable
-    private final CardCategory category;
+    private final ICardCategory category;
 
     public AlbumMenu(AlbumContainer container, Inventory playerInventory, int id) {
         this(container, playerInventory, id, null);
     }
 
-    public AlbumMenu(AlbumContainer container, Inventory playerInventory, int id, @Nullable CardCategory category) {
+    public AlbumMenu(AlbumContainer container, Inventory playerInventory, int id, @Nullable ICardCategory category) {
         super(MenuTypes.ALBUM, id);
         this.container = container;
         this.category = category;
 
         SimpleContainer categoryContainer = container.forCategory(category);
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 9; x++) {
-                int slotId = x + (y * 9) + 9;
-                addSlot(new Slot(playerInventory, slotId, 73 + x * 18, 176 + y * 18));
-            }
-        }
-        for (int x = 0; x < 9; x++) {
-            addSlot(new Slot(playerInventory, x, 73 + x * 18, 234));
-        }
+        ICategorySlotDistributor slotDistributor = category != null ? category.getMenuSlotDistributor() : CardCategory.DISTRIBUTOR;
+        ISlotAppender<Slot> playerSlotAppender = this::addSlot;
+        slotDistributor.addPlayerSlots(playerSlotAppender, playerInventory);
         if (category == null) return;
-        for (int i = 0; i < 30; i++) {
-            int slotX = i < 15 ? 31 + (i % 3) * 41 : 170 + ((i - 15) % 3) * 41;
-            int slotY = 21 + ((i % 15) / 3) * 29;
-            int cardNumber = container.getCategoryIndexOffset(category) + i;
-            addSlot(new CardSlot(categoryContainer, i, slotX, slotY, cardNumber + 1));
+        int offset = 1 + container.getCategoryIndexOffset(category);
+        ISlotAppender<CardSlotDefinition> appender = definition -> addSlot(new CardSlot(categoryContainer, definition.slotIndex(), definition.slotX(), definition.slotY(), definition.cardNumber()));
+        for (int i = 0; i < category.getCapacity(); i++) {
+            slotDistributor.distributeSlot(appender, i, offset);
         }
     }
 
@@ -62,14 +59,14 @@ public class AlbumMenu extends AbstractContainerMenu {
     }
 
     public int getCategoryIndex() {
-        return this.category.ordinal() + 1;
+        return this.category.getIndex() + 1;
     }
 
     public AlbumContainer getContainer() {
         return this.container;
     }
 
-    public CardCategory getCategory() {
+    public ICardCategory getCategory() {
         return category;
     }
 

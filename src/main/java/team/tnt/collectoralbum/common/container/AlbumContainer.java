@@ -8,26 +8,27 @@ import net.minecraft.world.ContainerListener;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import team.tnt.collectoralbum.common.AlbumStats;
-import team.tnt.collectoralbum.common.item.CardCategory;
+import team.tnt.collectoralbum.common.CardCategoryIndexPool;
+import team.tnt.collectoralbum.common.ICardCategory;
+import team.tnt.collectoralbum.common.init.CardCategoryRegistry;
 
-import java.util.Arrays;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 public class AlbumContainer extends SimpleContainer {
-    private final Map<CardCategory, SimpleContainer> inventoriesByCategory = new EnumMap<>(CardCategory.class);
+    private final Map<ICardCategory, SimpleContainer> inventoriesByCategory = new HashMap<>();
 
     public AlbumContainer(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         CompoundTag inventories = tag.getCompound("inventories");
-        Arrays.stream(CardCategory.values()).forEach(category -> {
+        CardCategoryRegistry.getValues().forEach(category -> {
             SimpleContainer container = new SimpleContainer(30);
             container.addListener(ref -> this.setChanged());
             inventoriesByCategory.put(category, container);
         });
-        for (CardCategory category : CardCategory.values()) {
-            ListTag slots = inventories.getList(category.name(), Tag.TAG_COMPOUND);
+        for (ICardCategory category : CardCategoryRegistry.getValues()) {
+            ListTag slots = inventories.getList(category.getId().toString(), Tag.TAG_COMPOUND);
             for (int i = 0; i < slots.size(); i++) {
                 CompoundTag slotDef = slots.getCompound(i);
                 int slotIndex = slotDef.getInt("slotIndex");
@@ -39,12 +40,12 @@ public class AlbumContainer extends SimpleContainer {
         this.addListener(new Listener(stack, inventoriesByCategory::get));
     }
 
-    public SimpleContainer forCategory(CardCategory category) {
+    public SimpleContainer forCategory(ICardCategory category) {
         return inventoriesByCategory.get(category);
     }
 
-    public int getCategoryIndexOffset(CardCategory category) {
-        return category.ordinal() * 30;
+    public int getCategoryIndexOffset(ICardCategory category) {
+        return CardCategoryIndexPool.getIndexOffset(category);
     }
 
     public AlbumStats getStats() {
@@ -52,13 +53,13 @@ public class AlbumContainer extends SimpleContainer {
     }
 
     private record Listener(ItemStack itemRef,
-                            Function<CardCategory, SimpleContainer> containerFetcher) implements ContainerListener {
+                            Function<ICardCategory, SimpleContainer> containerFetcher) implements ContainerListener {
 
         @Override
         public void containerChanged(Container invBasic) {
             CompoundTag tag = itemRef.getOrCreateTag();
             CompoundTag inventoryTag = new CompoundTag();
-            for (CardCategory category : CardCategory.values()) {
+            for (ICardCategory category : CardCategoryRegistry.getValues()) {
                 ListTag listTag = new ListTag();
                 SimpleContainer container = containerFetcher.apply(category);
                 for (int i = 0; i < container.getContainerSize(); i++) {
@@ -69,7 +70,7 @@ public class AlbumContainer extends SimpleContainer {
                     slotDef.put("itemStack", stack.save(new CompoundTag()));
                     listTag.add(slotDef);
                 }
-                inventoryTag.put(category.name(), listTag);
+                inventoryTag.put(category.getId().toString(), listTag);
             }
             tag.put("inventories", inventoryTag);
             itemRef.setTag(tag);
