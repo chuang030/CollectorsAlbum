@@ -12,6 +12,7 @@ import team.tnt.collectoralbum.api.CardSlotDefinition;
 import team.tnt.collectoralbum.api.ICategorySlotDistributor;
 import team.tnt.collectoralbum.api.ISlotAppender;
 import team.tnt.collectoralbum.common.CardCategory;
+import team.tnt.collectoralbum.common.CardCategoryIndexPool;
 import team.tnt.collectoralbum.common.ICardCategory;
 import team.tnt.collectoralbum.common.container.AlbumContainer;
 import team.tnt.collectoralbum.common.init.MenuTypes;
@@ -91,7 +92,8 @@ public class AlbumMenu extends AbstractContainerMenu {
         @Override
         public boolean mayPlace(ItemStack stack) {
             if (stack.getItem() instanceof ICard card) {
-                return card.getCard().cardNumber() == this.cardNumber;
+                int offset = CardCategoryIndexPool.getIndexOffset(card.getCard().category());
+                return card.getCard().cardNumber() == (this.cardNumber - offset);
             }
             return false;
         }

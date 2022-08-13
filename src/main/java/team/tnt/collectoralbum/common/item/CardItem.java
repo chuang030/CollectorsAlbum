@@ -10,6 +10,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import team.tnt.collectoralbum.CollectorsAlbum;
+import team.tnt.collectoralbum.common.CardCategoryIndexPool;
 import team.tnt.collectoralbum.common.CardDefinition;
 
 import java.util.List;
@@ -23,11 +24,13 @@ public class CardItem extends Item implements ICard {
 
     private final CardDefinition card;
     private final CardRarity rarity;
+    private final int cardNumber;
 
     public CardItem(CardRarity rarity, CardDefinition card) {
         super(new Properties().tab(CollectorsAlbum.TAB));
         this.card = card;
         this.rarity = rarity;
+        this.cardNumber = CardCategoryIndexPool.getIndexOffset(card.category()) + card.cardNumber();
     }
 
     @Override
@@ -44,7 +47,7 @@ public class CardItem extends Item implements ICard {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
         CardItem cardItem = (CardItem) stack.getItem();
         CardDefinition definition = cardItem.getCard();
-        Component numberComponent = new TextComponent("#" + definition.cardNumber()).withStyle(ChatFormatting.YELLOW);
+        Component numberComponent = new TextComponent("#" + cardNumber).withStyle(ChatFormatting.YELLOW);
         Component categoryComponent = new TextComponent(definition.category().getTranslatedName().getString()).withStyle(definition.category().getTooltipFormat());
         Component rarityComponent = new TextComponent(rarity.name()).withStyle(rarity.getColor());
         Component valueComponent = new TextComponent(rarity.getValue() + " pts").withStyle(ChatFormatting.WHITE);

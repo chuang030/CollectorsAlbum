@@ -18,7 +18,7 @@ public class SimpleBoostContext implements IBoostContext {
     @Override
     public <T> T get(String paramName, Class<T> tClass) {
         Object obj = paramMap.get(paramName);
-        if (obj != null && obj.getClass().equals(tClass)) {
+        if (obj != null && tClass.isAssignableFrom(obj.getClass())) {
             return (T) obj;
         }
         return null;
