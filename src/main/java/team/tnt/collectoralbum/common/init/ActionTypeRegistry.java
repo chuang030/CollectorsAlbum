@@ -14,6 +14,7 @@ public final class ActionTypeRegistry {
 
     public static final ActionType<ClearEffectsAction> CLEAR_EFFECTS = internalRegister("clear_effects", OpType.any(), new ClearEffectsAction.Serializer());
     public static final ActionType<GiveEffectsAction> GIVE_EFFECTS = internalRegister("give_effects", OpType.specific(OpType.ACTIVE), new GiveEffectsAction.Serializer());
+    public static final ActionType<GiveMissingEffectAction> GIVE_MISSING_EFFECTS = internalRegister("give_missing_effects", OpType.specific(OpType.ACTIVE), new GiveMissingEffectAction.Serializer());
     public static final ActionType<FirstValidAction> FIRST_VALID = internalRegister("first_valid", OpType.any(), new FirstValidAction.Serializer());
 
     public static void register(ActionType<?> type) {

@@ -10,34 +10,33 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import team.tnt.collectoralbum.util.JsonHelper;
 
-public class GiveEffectsAction implements IAction {
+public class GiveMissingEffectAction implements IAction {
 
-    private final IEffectFactory[] effects;
+    private final GiveEffectsAction.IEffectFactory[] factories;
 
-    private GiveEffectsAction(IEffectFactory[] effects) {
-        this.effects = effects;
+    public GiveMissingEffectAction(GiveEffectsAction.IEffectFactory[] factories) {
+        this.factories = factories;
     }
 
     @Override
     public void apply(IBoostContext context) {
         Player player = context.get(SimpleBoostContext.PLAYER, Player.class);
-        for (IEffectFactory factory : effects) {
+        for (GiveEffectsAction.IEffectFactory factory : factories) {
             MobEffectInstance instance = factory.makeEffect();
-            player.addEffect(instance);
+            MobEffectInstance old = player.getEffect(instance.getEffect());
+            if (old == null || old.getAmplifier() != instance.getAmplifier()) {
+                player.removeEffect(instance.getEffect());
+                player.addEffect(instance);
+            }
         }
     }
 
-    @FunctionalInterface
-    interface IEffectFactory {
-        MobEffectInstance makeEffect();
-    }
-
-    public static final class Serializer implements IActionSerializer<GiveEffectsAction> {
+    public static final class Serializer implements IActionSerializer<GiveMissingEffectAction> {
 
         @Override
-        public GiveEffectsAction fromJson(JsonObject data, OpType opType) throws JsonParseException {
+        public GiveMissingEffectAction fromJson(JsonObject data, OpType opType) throws JsonParseException {
             JsonArray array = GsonHelper.getAsJsonArray(data, "effects");
-            IEffectFactory[] factories = new IEffectFactory[array.size()];
+            GiveEffectsAction.IEffectFactory[] factories = new GiveEffectsAction.IEffectFactory[array.size()];
             int i = 0;
             for (JsonElement element : array) {
                 JsonObject effectJson = JsonHelper.asObject(element);
@@ -53,7 +52,7 @@ public class GiveEffectsAction implements IAction {
                 boolean showIcon = GsonHelper.getAsBoolean(effectJson, "showIcon", true);
                 factories[i++] = () -> new MobEffectInstance(effect, duration, amplifier, ambient, visible, showIcon);
             }
-            return new GiveEffectsAction(factories);
+            return new GiveMissingEffectAction(factories);
         }
     }
 }

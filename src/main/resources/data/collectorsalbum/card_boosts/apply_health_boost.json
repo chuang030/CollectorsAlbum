@@ -11,7 +11,7 @@
           }
         ],
         "apply": {
-          "type": "collectorsalbum:give_effects",
+          "type": "collectorsalbum:give_missing_effects",
           "effects": [
             {
               "effect": "minecraft:health_boost",
@@ -30,7 +30,7 @@
           }
         ],
         "apply": {
-          "type": "collectorsalbum:give_effects",
+          "type": "collectorsalbum:give_missing_effects",
           "effects": [
             {
               "effect": "minecraft:health_boost",
@@ -49,7 +49,7 @@
           }
         ],
         "apply": {
-          "type": "collectorsalbum:give_effects",
+          "type": "collectorsalbum:give_missing_effects",
           "effects": [
             {
               "effect": "minecraft:health_boost",
@@ -68,7 +68,7 @@
           }
         ],
         "apply": {
-          "type": "collectorsalbum:give_effects",
+          "type": "collectorsalbum:give_missing_effects",
           "effects": [
             {
               "effect": "minecraft:health_boost",
@@ -87,7 +87,7 @@
           }
         ],
         "apply": {
-          "type": "collectorsalbum:give_effects",
+          "type": "collectorsalbum:give_missing_effects",
           "effects": [
             {
               "effect": "minecraft:health_boost",
@@ -106,7 +106,7 @@
           }
         ],
         "apply": {
-          "type": "collectorsalbum:give_effects",
+          "type": "collectorsalbum:give_missing_effects",
           "effects": [
             {
               "effect": "minecraft:health_boost",
