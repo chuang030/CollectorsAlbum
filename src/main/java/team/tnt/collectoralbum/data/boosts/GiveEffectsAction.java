@@ -26,8 +26,8 @@ public class GiveEffectsAction implements IAction {
             MobEffectInstance old = player.getEffect(instance.getEffect());
             if (old == null || old.getAmplifier() != instance.getAmplifier()) {
                 player.removeEffect(instance.getEffect());
+                player.addEffect(instance);
             }
-            player.addEffect(instance);
         }
     }
 
