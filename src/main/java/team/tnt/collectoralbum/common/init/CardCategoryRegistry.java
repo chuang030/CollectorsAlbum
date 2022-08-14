@@ -7,12 +7,12 @@ import team.tnt.collectoralbum.common.CardCategory;
 import team.tnt.collectoralbum.common.ICardCategory;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class CardCategoryRegistry {
 
-    private static final Map<ResourceLocation, ICardCategory> REGISTRY = new HashMap<>();
+    private static final Map<ResourceLocation, ICardCategory> REGISTRY = new TreeMap<>();
 
     public static final ICardCategory TOOLS = internalRegister("tools", ChatFormatting.YELLOW);
     public static final ICardCategory ARMOR = internalRegister("armor", ChatFormatting.BLUE);

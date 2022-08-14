@@ -6,11 +6,14 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import org.jetbrains.annotations.NotNull;
 import team.tnt.collectoralbum.api.CardSlotDefinition;
 import team.tnt.collectoralbum.api.ICategorySlotDistributor;
 import team.tnt.collectoralbum.api.ISlotAppender;
 
-public class CardCategory implements ICardCategory {
+import java.util.Objects;
+
+public class CardCategory implements ICardCategory, Comparable<ICardCategory> {
 
     public static final ICategorySlotDistributor DISTRIBUTOR = new SlotDistributor();
     private final int categoryIndex = CardCategoryIndexPool.assignUniqueIndex();
@@ -53,6 +56,24 @@ public class CardCategory implements ICardCategory {
     @Override
     public Component getTranslatedName() {
         return translatedName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CardCategory that = (CardCategory) o;
+        return categoryIndex == that.categoryIndex;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(categoryIndex);
+    }
+
+    @Override
+    public int compareTo(@NotNull ICardCategory o) {
+        return o.getIndex() - categoryIndex;
     }
 
     private static final class SlotDistributor implements ICategorySlotDistributor {
