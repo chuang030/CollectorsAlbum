@@ -19,7 +19,8 @@
               "effect": "minecraft:strength",
               "duration": 60,
               "amplifier": 1,
-              "visible": false
+              "visible": false,
+              "showIcon": false
             }
           ]
         }
@@ -39,7 +40,8 @@
             {
               "effect": "minecraft:strength",
               "duration": 60,
-              "visible": false
+              "visible": false,
+              "showIcon": false
             }
           ]
         }

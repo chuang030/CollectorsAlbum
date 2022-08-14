@@ -17,7 +17,8 @@
               "effect": "minecraft:health_boost",
               "duration": 2147483647,
               "amplifier": 9,
-              "visible": false
+              "visible": false,
+              "showIcon": false
             }
           ]
         }
@@ -36,7 +37,8 @@
               "effect": "minecraft:health_boost",
               "duration": 2147483647,
               "amplifier": 4,
-              "visible": false
+              "visible": false,
+              "showIcon": false
             }
           ]
         }
@@ -55,7 +57,8 @@
               "effect": "minecraft:health_boost",
               "duration": 2147483647,
               "amplifier": 3,
-              "visible": false
+              "visible": false,
+              "showIcon": false
             }
           ]
         }
@@ -74,7 +77,8 @@
               "effect": "minecraft:health_boost",
               "duration": 2147483647,
               "amplifier": 2,
-              "visible": false
+              "visible": false,
+              "showIcon": false
             }
           ]
         }
@@ -93,7 +97,8 @@
               "effect": "minecraft:health_boost",
               "duration": 2147483647,
               "amplifier": 1,
-              "visible": false
+              "visible": false,
+              "showIcon": false
             }
           ]
         }
@@ -112,7 +117,8 @@
               "effect": "minecraft:health_boost",
               "duration": 2147483647,
               "amplifier": 0,
-              "visible": false
+              "visible": false,
+              "showIcon": false
             }
           ]
         }
