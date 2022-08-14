@@ -129,7 +129,7 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
             font.draw(poseStack, TEXT_CATEGORIES, 164, 35, 0x7C5D4D);
             int j = 0;
             Map<ICardCategory, List<ICard>> map = stats.getCardsByCategory();
-            for (ICardCategory category : CardCategoryRegistry.getValues()) {
+            for (ICardCategory category : CardCategoryRegistry.getValues().stream().sorted().toArray(ICardCategory[]::new)) {
                 int value = Optional.ofNullable(map.get(category)).map(List::size).orElse(0);
                 Component displayName = category.getTranslatedName();
                 String count = value + " / " + category.getCapacity();

@@ -73,7 +73,7 @@ public class CardCategory implements ICardCategory, Comparable<ICardCategory> {
 
     @Override
     public int compareTo(@NotNull ICardCategory o) {
-        return o.getIndex() - categoryIndex;
+        return categoryIndex - o.getIndex();
     }
 
     private static final class SlotDistributor implements ICategorySlotDistributor {
