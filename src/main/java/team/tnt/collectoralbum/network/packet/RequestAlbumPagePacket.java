@@ -3,8 +3,8 @@ package team.tnt.collectoralbum.network.packet;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ServerPacketListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -90,7 +90,7 @@ public class RequestAlbumPagePacket implements IServerPacket<RequestAlbumPagePac
 
             @Override
             public Component getDisplayName() {
-                return TextComponent.EMPTY;
+                return CommonComponents.EMPTY;
             }
 
             @Nullable

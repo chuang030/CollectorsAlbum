@@ -8,10 +8,9 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
@@ -40,11 +39,11 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
     private static final ResourceLocation ARROW_RIGHT = new ResourceLocation(CollectorsAlbum.MODID, "textures/screen/album_next.png");
 
     // Localizations
-    private static final MutableComponent TEXT_HEADER = new TranslatableComponent("text.collectorsalbum.album.header").withStyle(ChatFormatting.BOLD);
-    private static final MutableComponent TEXT_CATEGORIES = new TranslatableComponent("text.collectorsalbum.album.categories").withStyle(ChatFormatting.UNDERLINE);
-    private static final MutableComponent TEXT_RARITIES = new TranslatableComponent("text.collectorsalbum.album.rarities").withStyle(ChatFormatting.UNDERLINE);
-    private static final Function<Integer, TranslatableComponent> TEXT_POINTS = points -> new TranslatableComponent("text.collectorsalbum.album.points", points);
-    private static final BiFunction<Integer, Integer, TranslatableComponent> TEXT_TOTAL_CARDS = (cards, total) -> new TranslatableComponent("text.collectorsalbum.album.total_cards", cards, total);
+    private static final MutableComponent TEXT_HEADER = Component.translatable("text.collectorsalbum.album.header").withStyle(ChatFormatting.BOLD);
+    private static final MutableComponent TEXT_CATEGORIES = Component.translatable("text.collectorsalbum.album.categories").withStyle(ChatFormatting.UNDERLINE);
+    private static final MutableComponent TEXT_RARITIES = Component.translatable("text.collectorsalbum.album.rarities").withStyle(ChatFormatting.UNDERLINE);
+    private static final Function<Integer, MutableComponent> TEXT_POINTS = points -> Component.translatable("text.collectorsalbum.album.points", points);
+    private static final BiFunction<Integer, Integer, MutableComponent> TEXT_TOTAL_CARDS = (cards, total) -> Component.translatable("text.collectorsalbum.album.total_cards", cards, total);
 
     private final int pageIndex;
     private AlbumStats stats;
@@ -146,7 +145,7 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
             }
         }
         ICardCategory category = menu.getCategory();
-        MutableComponent component = new TextComponent(category.getTranslatedName().getString()).withStyle(ChatFormatting.ITALIC);
+        MutableComponent component = Component.literal(category.getTranslatedName().getString()).withStyle(ChatFormatting.ITALIC);
         font.draw(poseStack, component, 40, 10, 0x7C5D4D);
     }
 
@@ -179,7 +178,7 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
         };
 
         public ArrowWidget(int x, int y, int width, int height, ResourceLocation location) {
-            super(x, y, width, height, TextComponent.EMPTY);
+            super(x, y, width, height, CommonComponents.EMPTY);
             this.location = location;
         }
 

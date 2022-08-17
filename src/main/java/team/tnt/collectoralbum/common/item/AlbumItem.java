@@ -2,8 +2,8 @@ package team.tnt.collectoralbum.common.item;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -38,7 +38,7 @@ public class AlbumItem extends Item {
 
                 @Override
                 public Component getDisplayName() {
-                    return TextComponent.EMPTY;
+                    return CommonComponents.EMPTY;
                 }
 
                 @Nullable
