@@ -11,6 +11,9 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.CollapsibleObject
     public MobDropConfig mobDrops = new MobDropConfig();
 
+    @ConfigEntry.Category("main")
+    public boolean persistAlbumThroughDeath = true;
+
     @Override
     public void validatePostLoad() throws ValidationException {
         mobDrops.validatePostLoad();

@@ -926,6 +926,7 @@
   "text.collectorsalbum.album.total_cards": "Cards: %s/%s",
 
   "text.autoconfig.CollectorsAlbum.title": "Collector's Album Config",
+  "text.autoconfig.CollectorsAlbum.option.persistAlbumThroughDeath": "Persist album through death",
   "text.autoconfig.CollectorsAlbum.option.mobDrops": "Mob Card Pack Drops",
   "text.autoconfig.CollectorsAlbum.option.mobDrops.noDropWeight": "No Item Drop Weight",
   "text.autoconfig.CollectorsAlbum.option.mobDrops.commonDropWeight": "Common Drop Weight",

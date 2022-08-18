@@ -4,7 +4,9 @@
   "refmap": "collectorsalbum.refmap.json",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "LivingDeathMixin"
+    "LivingDeathMixin",
+    "PlayerMixin",
+    "ServerPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
