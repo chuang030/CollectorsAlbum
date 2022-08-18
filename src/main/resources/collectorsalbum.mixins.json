@@ -2,7 +2,7 @@
   "required": true,
   "package": "team.tnt.collectoralbum.mixins",
   "refmap": "collectorsalbum.refmap.json",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_8",
   "mixins": [
     "LivingDeathMixin",
     "PlayerMixin",
