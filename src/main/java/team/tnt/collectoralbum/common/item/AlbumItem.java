@@ -18,10 +18,15 @@ import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.common.container.AlbumContainer;
 import team.tnt.collectoralbum.common.menu.AlbumMenu;
 
-public class AlbumItem extends Item {
+public class AlbumItem extends Item implements IDeathPersistableItem {
 
     public AlbumItem() {
         super(new Properties().tab(CollectorsAlbum.TAB).stacksTo(1));
+    }
+
+    @Override
+    public boolean shouldKeepItem(Player player, ItemStack stack) {
+        return CollectorsAlbum.config.persistAlbumThroughDeath;
     }
 
     @Override
