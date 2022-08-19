@@ -1,10 +1,10 @@
 package team.tnt.collectoralbum.network.packet;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.network.protocol.game.ServerPacketListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.item.ItemStack;
 import team.tnt.collectoralbum.network.Networking;
 import team.tnt.collectoralbum.network.api.IPacketDecoder;
@@ -42,7 +42,7 @@ public class RequestCardPackDropPacket implements IServerPacket<EmptyPacketData>
     }
 
     @Override
-    public void handleServersidePacket(MinecraftServer server, ServerPlayer player, ServerPacketListener listener, EmptyPacketData packetData, PacketSender dispatcher) {
+    public void handleServersidePacket(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl listener, EmptyPacketData packetData, PacketSender dispatcher) {
         Optional<List<ItemStack>> optional = OpenCardPackContextHolder.getContextAndClear(player);
         optional.ifPresent(list -> {
             for (ItemStack stack : list) {

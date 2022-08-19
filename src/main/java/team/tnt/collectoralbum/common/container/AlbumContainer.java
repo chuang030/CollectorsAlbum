@@ -1,8 +1,8 @@
 package team.tnt.collectoralbum.common.container;
 
+import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
 import net.minecraft.world.SimpleContainer;
@@ -28,7 +28,7 @@ public class AlbumContainer extends SimpleContainer {
             inventoriesByCategory.put(category, container);
         });
         for (ICardCategory category : CardCategoryRegistry.getValues()) {
-            ListTag slots = inventories.getList(category.getId().toString(), Tag.TAG_COMPOUND);
+            ListTag slots = inventories.getList(category.getId().toString(), NbtType.COMPOUND);
             for (int i = 0; i < slots.size(); i++) {
                 CompoundTag slotDef = slots.getCompound(i);
                 int slotIndex = slotDef.getInt("slotIndex");
@@ -52,8 +52,15 @@ public class AlbumContainer extends SimpleContainer {
         return new AlbumStats(this);
     }
 
-    private record Listener(ItemStack itemRef,
-                            Function<ICardCategory, SimpleContainer> containerFetcher) implements ContainerListener {
+    private static class Listener implements ContainerListener {
+
+        private final ItemStack itemRef;
+        private final Function<ICardCategory, SimpleContainer> containerFetcher;
+
+        public Listener(ItemStack itemRef, Function<ICardCategory, SimpleContainer> containerFetcher) {
+            this.itemRef = itemRef;
+            this.containerFetcher = containerFetcher;
+        }
 
         @Override
         public void containerChanged(Container invBasic) {

@@ -19,7 +19,8 @@ public abstract class LivingDeathMixin {
     @Inject(method = "die", at = @At("TAIL"))
     private void collectorsalbum$onDeathInject(DamageSource cause, CallbackInfo ci) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
-        if (!livingEntity.level.isClientSide && livingEntity instanceof Monster monster) {
+        if (!livingEntity.level.isClientSide && livingEntity instanceof Monster) {
+            Monster monster = (Monster) livingEntity;
             MobDrops drops = MobDrops.instance();
             Item item = drops.get();
             if (item == Items.AIR) {

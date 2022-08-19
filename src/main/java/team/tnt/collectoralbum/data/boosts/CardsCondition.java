@@ -14,6 +14,7 @@ import team.tnt.collectoralbum.common.item.ICard;
 import team.tnt.collectoralbum.util.JsonHelper;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CardsCondition implements ICardBoostCondition {
 
@@ -33,15 +34,18 @@ public class CardsCondition implements ICardBoostCondition {
         Map<ICardCategory, List<ICard>> map = stats.getCardsByCategory();
         List<ICard> cardList;
         if (category == null) {
-            cardList = CardCategoryRegistry.getValues().stream()
-                    .flatMap(cat -> Optional.ofNullable(map.get(cat)).stream())
-                    .flatMap(Collection::stream)
-                    .toList();
+            cardList = new ArrayList<>();
+            for (ICardCategory cardCategory : CardCategoryRegistry.getValues()) {
+                List<ICard> list = map.get(cardCategory);
+                if (list != null) {
+                    cardList.addAll(list);
+                }
+            }
         } else {
             cardList = Optional.ofNullable(map.get(category)).orElse(Collections.emptyList());
         }
         if (rarity != null) {
-            cardList = cardList.stream().filter(card -> card.getCardRarity() == rarity).toList();
+            cardList = cardList.stream().filter(card -> card.getCardRarity() == rarity).collect(Collectors.toList());
         }
         return cardList.size() >= count;
     }

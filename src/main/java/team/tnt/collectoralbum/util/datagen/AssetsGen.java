@@ -211,6 +211,22 @@ public class AssetsGen {
         void generate(String[] objectIds) throws Exception;
     }
 
-    private record Entry(Class<?> type, IDataGenerator generator) {
+    private static class Entry {
+
+        private final Class<?> type;
+        private final IDataGenerator generator;
+
+        public Entry(Class<?> type, IDataGenerator generator) {
+            this.type = type;
+            this.generator = generator;
+        }
+
+        public Class<?> type() {
+            return type;
+        }
+
+        public IDataGenerator generator() {
+            return generator;
+        }
     }
 }

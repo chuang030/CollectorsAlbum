@@ -56,7 +56,7 @@ public class AlbumCardBoostManager extends SimpleJsonResourceReloadListener impl
                 LOGGER.error("Error loading {} file: {}", filePath, e);
             }
         }
-        this.collection = new AlbumCardBoostCollection(loaded.get(OpType.CLEANUP).toArray(IAction[]::new), loaded.get(OpType.ACTIVE).toArray(IAction[]::new));
+        this.collection = new AlbumCardBoostCollection(loaded.get(OpType.CLEANUP).toArray(new IAction[0]), loaded.get(OpType.ACTIVE).toArray(new IAction[0]));
         LOGGER.info("Album boosts loaded");
     }
 }

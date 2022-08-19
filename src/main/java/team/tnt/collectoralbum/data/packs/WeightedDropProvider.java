@@ -26,7 +26,19 @@ public class WeightedDropProvider implements ICardDropProvider {
         return provider.provideDrops();
     }
 
-    private record Entry(int value, ICardDropProvider provider) implements WeightedRandom.IWeighted {
+    private static class Entry implements WeightedRandom.IWeighted {
+
+        private final int value;
+        private final ICardDropProvider provider;
+
+        public Entry(int value, ICardDropProvider provider) {
+            this.value = value;
+            this.provider = provider;
+        }
+
+        public ICardDropProvider provider() {
+            return provider;
+        }
 
         @Override
         public int getWeight() {

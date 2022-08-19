@@ -1,8 +1,8 @@
 package team.tnt.collectoralbum.common;
 
+import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import team.tnt.collectoralbum.common.container.AlbumContainer;
@@ -29,7 +29,8 @@ public class AlbumStats {
             SimpleContainer categoryContainer = container.forCategory(category);
             for (int i = 0; i < categoryContainer.getContainerSize(); i++) {
                 ItemStack stack = categoryContainer.getItem(i);
-                if (stack.getItem() instanceof ICard card) {
+                if (stack.getItem() instanceof ICard) {
+                    ICard card = (ICard) stack.getItem();
                     ++collected;
                     cardsByCategory.computeIfAbsent(category, k -> new ArrayList<>()).add(card);
                     CardRarity rarity = card.getCardRarity();
@@ -57,11 +58,12 @@ public class AlbumStats {
         int pointCounter = 0;
         Map<ICardCategory, List<ICard>> byCategory = new HashMap<>();
         for (ICardCategory category : CardCategoryRegistry.getValues()) {
-            ListTag slots = inventories.getList(category.getId().toString(), Tag.TAG_COMPOUND);
+            ListTag slots = inventories.getList(category.getId().toString(), NbtType.COMPOUND);
             for (int i = 0; i < slots.size(); i++) {
                 CompoundTag slotDef = slots.getCompound(i);
                 ItemStack item = ItemStack.of(slotDef.getCompound("itemStack"));
-                if (item.getItem() instanceof ICard card) {
+                if (item.getItem() instanceof ICard) {
+                    ICard card = (ICard) item.getItem();
                     cardCounter++;
                     pointCounter += card.getCardRarity().getValue();
                     byCategory.computeIfAbsent(category, k -> new ArrayList<>()).add(card);

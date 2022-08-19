@@ -34,6 +34,22 @@ public final class MobDrops implements Supplier<Item> {
         return itemReferenceHolder.get();
     }
 
-    private record DropEntry(Supplier<Item> itemRef, int weight) {
+    private static class DropEntry {
+
+        private final Supplier<Item> itemRef;
+        private final int weight;
+
+        public DropEntry(Supplier<Item> itemRef, int weight) {
+            this.itemRef = itemRef;
+            this.weight = weight;
+        }
+
+        public Supplier<Item> itemRef() {
+            return itemRef;
+        }
+
+        public int weight() {
+            return weight;
+        }
     }
 }

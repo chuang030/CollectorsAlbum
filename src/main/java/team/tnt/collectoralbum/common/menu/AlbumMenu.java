@@ -91,7 +91,8 @@ public class AlbumMenu extends AbstractContainerMenu {
 
         @Override
         public boolean mayPlace(ItemStack stack) {
-            if (stack.getItem() instanceof ICard card) {
+            if (stack.getItem() instanceof ICard) {
+                ICard card = (ICard) stack.getItem();
                 int offset = CardCategoryIndexPool.getIndexOffset(card.getCard().category());
                 return card.getCard().cardNumber() == (this.cardNumber - offset);
             }

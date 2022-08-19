@@ -2,16 +2,14 @@ package team.tnt.collectoralbum.client.screen;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Widget;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.narration.NarratableEntry;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.Registry;
@@ -20,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import org.lwjgl.opengl.GL11;
 import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.common.item.ICard;
 import team.tnt.collectoralbum.network.Networking;
@@ -53,7 +52,7 @@ public class CardOpenScreen extends Screen {
         int top = (height - 64) / 2;
         for (int i = 0; i < total; i++) {
             int desiredX = left + i * 65;
-            CardWidget widget = addRenderableWidget(new CardWidget(width - 70 + i * 7, height - 70, 64, 64, desiredX, top, drops.get(i)));
+            CardWidget widget = addButton(new CardWidget(width - 70 + i * 7, height - 70, 64, 64, desiredX, top, drops.get(i)));
             widget.setAnimTime(15);
             widget.setFlipTime(15);
             widget.setClickResponder(this::cardFlipped);
@@ -94,11 +93,11 @@ public class CardOpenScreen extends Screen {
     }
 
     @Override
-    protected <T extends GuiEventListener & Widget & NarratableEntry> T addRenderableWidget(T widget) {
-        if (widget instanceof ITickableWidget tickable) {
-            tickableWidgets.add(tickable);
+    protected <T extends AbstractWidget> T addButton(T widget) {
+        if (widget instanceof ITickableWidget) {
+            tickableWidgets.add((ITickableWidget) widget);
         }
-        return super.addRenderableWidget(widget);
+        return super.addButton(widget);
     }
 
     private void cardFlipped(CardWidget widget) {
@@ -129,7 +128,8 @@ public class CardOpenScreen extends Screen {
             this.targetY = targetY;
             ResourceLocation itemId = Registry.ITEM.getKey(stack.getItem());
             this.itemTexture = new ResourceLocation(itemId.getNamespace(), "textures/item/" + itemId.getPath() + ".png");
-            if (stack.getItem() instanceof ICard card) {
+            if (stack.getItem() instanceof ICard) {
+                ICard card = (ICard) stack.getItem();
                 this.discoverySound = card.getCardRarity().getDiscoverySound();
             } else {
                 this.discoverySound = null;
@@ -186,9 +186,7 @@ public class CardOpenScreen extends Screen {
             this.x = (int) renderX;
             this.y = (int) renderY;
             Lighting.setupForFlatItems();
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, flipped ? itemTexture : CARD_BACK);
+            Minecraft.getInstance().getTextureManager().bind(flipped ? itemTexture : CARD_BACK);
             actuallyRender(poseStack, renderX - scale, renderY - scale, renderX + width + scale, renderY + height + scale, partialTick);
         }
 
@@ -209,10 +207,6 @@ public class CardOpenScreen extends Screen {
             }
             Matrix4f pose = stack.last().pose();
             renderTexture(pose, x1, y1, x2, y2);
-        }
-
-        @Override
-        public void updateNarration(NarrationElementOutput narrationElementOutput) {
         }
 
         private void updateMovementAnimationTimer() {
@@ -238,7 +232,7 @@ public class CardOpenScreen extends Screen {
         BufferBuilder bufferBuilder = tesselator.getBuilder();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
         bufferBuilder.vertex(pose, x1, y1, 0).uv(0.0F, 0.0F).endVertex();
         bufferBuilder.vertex(pose, x1, y2, 0).uv(0.0F, 1.0F).endVertex();
         bufferBuilder.vertex(pose, x2, y2, 0).uv(1.0F, 1.0F).endVertex();

@@ -16,7 +16,7 @@ public class PlayerMixin {
         Player player = (Player) (Object) this;
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             ItemStack stack = inventory.getItem(i);
-            if (!(stack.getItem() instanceof IDeathPersistableItem persistableItem) || !persistableItem.shouldKeepItem(player, stack)) {
+            if (!(stack.getItem() instanceof IDeathPersistableItem) || !((IDeathPersistableItem) stack.getItem()).shouldKeepItem(player, stack)) {
                 if (!stack.isEmpty()) {
                     player.drop(stack, true, false);
                     inventory.setItem(i, ItemStack.EMPTY);

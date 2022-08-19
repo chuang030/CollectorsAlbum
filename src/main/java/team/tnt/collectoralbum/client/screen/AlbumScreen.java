@@ -1,13 +1,14 @@
 package team.tnt.collectoralbum.client.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Matrix4f;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
@@ -16,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
 import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.common.AlbumStats;
 import team.tnt.collectoralbum.common.ICardCategory;
@@ -60,11 +62,11 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
     protected void init() {
         super.init();
         if (pageIndex > 0) {
-            ArrowWidget widget = addRenderableWidget(new ArrowWidget(leftPos + 18, topPos + 5, 16, 16, ARROW_LEFT));
+            ArrowWidget widget = addButton(new ArrowWidget(leftPos + 18, topPos + 5, 16, 16, ARROW_LEFT));
             widget.setOnClickResponder(this::clickPrevPage);
         }
         if (pageIndex < CardCategoryRegistry.getCount()) {
-            ArrowWidget widget = addRenderableWidget(new ArrowWidget(leftPos + 265, topPos + 4, 16, 16, ARROW_RIGHT));
+            ArrowWidget widget = addButton(new ArrowWidget(leftPos + 265, topPos + 4, 16, 16, ARROW_RIGHT));
             widget.setOnClickResponder(this::clickNextPage);
         }
         this.stats = menu.getContainer().getStats();
@@ -85,13 +87,11 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
 
     @Override
     protected void renderBg(PoseStack poseStack, float partialTick, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, this.menu.isTitle() ? TITLE : BACKGROUND);
+        minecraft.getTextureManager().bind(menu.isTitle() ? TITLE : BACKGROUND);
         Matrix4f pose = poseStack.last().pose();
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tesselator.getBuilder();
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
         bufferBuilder.vertex(pose, leftPos, topPos, 0).uv(0.0F, 0.0F).endVertex();
         bufferBuilder.vertex(pose, leftPos, topPos + imageHeight, 0).uv(0.0F, 1.0F).endVertex();
         bufferBuilder.vertex(pose, leftPos + imageWidth, topPos + imageHeight, 0).uv(1.0F, 1.0F).endVertex();
@@ -139,7 +139,8 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
             return;
         }
         for (Slot slot : this.menu.slots) {
-            if (slot instanceof AlbumMenu.CardSlot cardSlot) {
+            if (slot instanceof AlbumMenu.CardSlot) {
+                AlbumMenu.CardSlot cardSlot = (AlbumMenu.CardSlot) slot;
                 int cardNumber = cardSlot.getCardNumber();
                 String text = "#" + cardNumber;
                 font.draw(poseStack, text, slot.x + (18 - font.width(text)) / 2.0F - 1, slot.y + 18, 0x7C5D4D);
@@ -189,13 +190,11 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
 
         @Override
         public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-            RenderSystem.setShaderTexture(0, location);
+            Minecraft.getInstance().getTextureManager().bind(location);
             Matrix4f pose = poseStack.last().pose();
             Tesselator tesselator = Tesselator.getInstance();
             BufferBuilder bufferBuilder = tesselator.getBuilder();
-            bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+            bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
             bufferBuilder.vertex(pose, x, y, 0).uv(0.0F, 0.0F).endVertex();
             bufferBuilder.vertex(pose, x, y + width, 0).uv(0.0F, 1.0F).endVertex();
             bufferBuilder.vertex(pose, x + height, y + width, 0).uv(1.0F, 1.0F).endVertex();
@@ -206,10 +205,6 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
         @Override
         public void onClick(double mouseX, double mouseY) {
             clickResponder.onClick(this);
-        }
-
-        @Override
-        public void updateNarration(NarrationElementOutput narrationElementOutput) {
         }
 
         @FunctionalInterface

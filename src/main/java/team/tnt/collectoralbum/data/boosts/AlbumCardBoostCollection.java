@@ -1,9 +1,7 @@
 package team.tnt.collectoralbum.data.boosts;
 
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Optional;
 
 public final class AlbumCardBoostCollection {
 
@@ -15,9 +13,11 @@ public final class AlbumCardBoostCollection {
     }
 
     public void processOp(OpType type, IBoostContext ctx) {
-        Optional.ofNullable(byOps.get(type))
-                .stream()
-                .flatMap(Arrays::stream)
-                .forEach(action -> action.apply(ctx));
+        IAction[] actions = byOps.get(type);
+        if (actions != null) {
+            for (IAction action : actions) {
+                action.apply(ctx);
+            }
+        }
     }
 }

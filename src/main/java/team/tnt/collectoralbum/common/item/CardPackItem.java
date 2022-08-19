@@ -41,7 +41,8 @@ public class CardPackItem extends Item {
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
-        if (livingEntity instanceof ServerPlayer player) {
+        if (livingEntity instanceof ServerPlayer) {
+            ServerPlayer player = (ServerPlayer) livingEntity;
             if (!player.isCreative()) {
                 stack.shrink(1);
             }

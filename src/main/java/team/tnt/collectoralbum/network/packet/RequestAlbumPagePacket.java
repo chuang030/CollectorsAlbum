@@ -5,10 +5,10 @@ import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.protocol.game.ServerPacketListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -71,7 +71,7 @@ public class RequestAlbumPagePacket implements IServerPacket<RequestAlbumPagePac
     }
 
     @Override
-    public void handleServersidePacket(MinecraftServer server, ServerPlayer player, ServerPacketListener listener, AlbumPacketData packetData, PacketSender dispatcher) {
+    public void handleServersidePacket(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl listener, AlbumPacketData packetData, PacketSender dispatcher) {
         ItemStack stack = player.getMainHandItem();
         if (stack.getItem() != ItemRegistry.ALBUM) {
             return;
