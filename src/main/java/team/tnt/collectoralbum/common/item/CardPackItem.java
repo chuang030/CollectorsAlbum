@@ -7,6 +7,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
@@ -51,6 +52,8 @@ public class CardPackItem extends Item {
                 OpenCardPackContextHolder.store(player, itemStacks);
                 Networking.dispatchClientPacket(player, new OpenCardScreenPacket(itemStacks));
             });
+            ItemCooldowns cooldowns = player.getCooldowns();
+            cooldowns.addCooldown(stack.getItem(), 10);
         } else {
             livingEntity.playSound(SoundRegistry.OPEN, 0.8f, 1.0f);
         }
@@ -60,8 +63,11 @@ public class CardPackItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
+        ItemCooldowns cooldowns = player.getCooldowns();
+        if (cooldowns.isOnCooldown(stack.getItem())) {
+            return InteractionResultHolder.pass(stack);
+        }
         player.startUsingItem(usedHand);
-
         return InteractionResultHolder.consume(stack);
     }
 }
