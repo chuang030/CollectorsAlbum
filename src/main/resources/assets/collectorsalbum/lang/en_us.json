@@ -906,6 +906,12 @@
   "item.collectorsalbum.mythical_card_package": "Mythical Card Package",
   "item.collectorsalbum.rare_card_package": "Rare Card Package",
   "item.collectorsalbum.uncommon_card_package": "Uncommon Card Package",
+  "item.collectorsalbum.common_repacked_card_package": "Common Repacked Card Package",
+  "item.collectorsalbum.epic_repacked_card_package": "Epic Repacked Card Package",
+  "item.collectorsalbum.legendary_repacked_card_package": "Legendary Repacked Card Package",
+  "item.collectorsalbum.mythical_repacked_card_package": "Mythical Repacked Card Package",
+  "item.collectorsalbum.rare_repacked_card_package": "Rare Repacked Card Package",
+  "item.collectorsalbum.uncommon_repacked_card_package": "Uncommon Repacked Card Package",
 
   "itemGroup.collectorsalbum.tab": "Cards",
 
