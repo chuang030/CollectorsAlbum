@@ -7,6 +7,7 @@
     "PlayerMixin",
     "ServerPlayerMixin"
   ],
+  "plugin": "team.tnt.collectoralbum.mixins.MixinPlugin",
   "injectors": {
     "defaultRequire": 1
   },
