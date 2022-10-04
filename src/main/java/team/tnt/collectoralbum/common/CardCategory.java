@@ -2,7 +2,6 @@ package team.tnt.collectoralbum.common;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
@@ -25,7 +24,7 @@ public class CardCategory implements ICardCategory, Comparable<ICardCategory> {
         this.id = id;
         this.formatting = formatting;
         String identifier = id.toString().replaceAll(":", ".");
-        this.translatedName = new TranslatableComponent("card.category." + identifier);
+        this.translatedName = Component.translatable("card.category." + identifier);
     }
 
     @Override

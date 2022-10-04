@@ -13,7 +13,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.Registry;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -37,7 +38,7 @@ public class CardOpenScreen extends Screen {
     private int flipsRemaining;
 
     public CardOpenScreen(List<ItemStack> drops) {
-        super(new TextComponent("Card Open Screen"));
+        super(Component.literal("Card Open Screen"));
         this.drops = drops;
         Collections.shuffle(this.drops);
     }
@@ -121,7 +122,7 @@ public class CardOpenScreen extends Screen {
         private int flipTimer, flipTimerOld, flipTimeTotal = 20;
 
         public CardWidget(int x, int y, int width, int height, int targetX, int targetY, ItemStack stack) {
-            super(x, y, width, height, TextComponent.EMPTY);
+            super(x, y, width, height, CommonComponents.EMPTY);
             this.startX = x;
             this.startY = y;
             this.targetX = targetX;
