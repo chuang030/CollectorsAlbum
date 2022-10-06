@@ -2,7 +2,6 @@ package team.tnt.collectoralbum.common;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.common.init.ItemRegistry;
 import team.tnt.collectoralbum.config.ModConfig;
 import team.tnt.collectoralbum.util.math.WeightedRandom;
