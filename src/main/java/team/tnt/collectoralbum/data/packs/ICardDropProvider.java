@@ -1,6 +1,6 @@
 package team.tnt.collectoralbum.data.packs;
 
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.item.ItemStack;
 
 import java.util.List;
 

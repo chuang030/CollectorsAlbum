@@ -4,8 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.JSONUtils;
+import net.minecraft.util.ResourceLocation;
 import team.tnt.collectoralbum.common.init.CardBoostConditionRegistry;
 import team.tnt.collectoralbum.util.JsonHelper;
 
@@ -25,7 +25,7 @@ public final class CardBoostConditionType<C extends ICardBoostCondition> {
 
     public static <C extends ICardBoostCondition> C fromJson(JsonElement element) throws JsonParseException {
         JsonObject object = JsonHelper.asObject(element);
-        ResourceLocation location = new ResourceLocation(GsonHelper.getAsString(object, "type"));
+        ResourceLocation location = new ResourceLocation(JSONUtils.getAsString(object, "type"));
         CardBoostConditionType<C> type = CardBoostConditionRegistry.lookup(location);
         if (type == null) {
             throw new JsonSyntaxException("Unknown condition type: " + location);

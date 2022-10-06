@@ -4,8 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.JSONUtils;
 import team.tnt.collectoralbum.util.JsonHelper;
 
 import java.util.ArrayList;
@@ -40,9 +40,9 @@ public class RepeatedDropProvider implements ICardDropProvider {
         @Override
         public RepeatedDropProvider fromJson(JsonElement data) throws JsonParseException {
             JsonObject object = JsonHelper.asObject(data);
-            int min = GsonHelper.getAsInt(object, "min", 1);
-            int max = GsonHelper.getAsInt(object, "max", min);
-            JsonObject providerJson = GsonHelper.getAsJsonObject(object, "provider");
+            int min = JSONUtils.getAsInt(object, "min", 1);
+            int max = JSONUtils.getAsInt(object, "max", min);
+            JsonObject providerJson = JSONUtils.getAsJsonObject(object, "provider");
             ICardDropProvider provider = CardDropProviderType.fromJson(providerJson);
             if (min <= 0) {
                 throw new JsonSyntaxException("Min run count cannot be smaller or equal to 0. Got " + min);

@@ -1,7 +1,7 @@
 package team.tnt.collectoralbum.api;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.text.ITextComponent;
 import team.tnt.collectoralbum.client.screen.AlbumScreen;
 import team.tnt.collectoralbum.common.menu.AlbumMenu;
 
@@ -10,5 +10,5 @@ public interface IAlbumScreenFactory {
 
     IAlbumScreenFactory DEFAULT = AlbumScreen::new;
 
-    AlbumScreen createAlbumScreen(AlbumMenu menu, Inventory inventory, Component component);
+    AlbumScreen createAlbumScreen(AlbumMenu menu, PlayerInventory inventory, ITextComponent component);
 }

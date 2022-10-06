@@ -1,24 +1,23 @@
 package team.tnt.collectoralbum.client.screen;
 
-import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.core.Registry;
-import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.audio.SimpleSound;
+import net.minecraft.client.audio.SoundHandler;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.lwjgl.opengl.GL11;
 import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.common.item.ICard;
@@ -38,7 +37,7 @@ public class CardOpenScreen extends Screen {
     private int flipsRemaining;
 
     public CardOpenScreen(List<ItemStack> drops) {
-        super(Component.literal("Card Open Screen"));
+        super(new StringTextComponent("Card Open Screen"));
         this.drops = drops;
         Collections.shuffle(this.drops);
     }
@@ -83,7 +82,7 @@ public class CardOpenScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void render(MatrixStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTick);
     }
@@ -94,7 +93,7 @@ public class CardOpenScreen extends Screen {
     }
 
     @Override
-    protected <T extends AbstractWidget> T addButton(T widget) {
+    protected <T extends Widget> T addButton(T widget) {
         if (widget instanceof ITickableWidget) {
             tickableWidgets.add((ITickableWidget) widget);
         }
@@ -105,7 +104,7 @@ public class CardOpenScreen extends Screen {
         --flipsRemaining;
     }
 
-    private static final class CardWidget extends AbstractWidget implements ITickableWidget {
+    private static final class CardWidget extends Widget implements ITickableWidget {
 
         private final int targetX;
         private final int targetY;
@@ -122,12 +121,12 @@ public class CardOpenScreen extends Screen {
         private int flipTimer, flipTimerOld, flipTimeTotal = 20;
 
         public CardWidget(int x, int y, int width, int height, int targetX, int targetY, ItemStack stack) {
-            super(x, y, width, height, CommonComponents.EMPTY);
+            super(x, y, width, height, StringTextComponent.EMPTY);
             this.startX = x;
             this.startY = y;
             this.targetX = targetX;
             this.targetY = targetY;
-            ResourceLocation itemId = Registry.ITEM.getKey(stack.getItem());
+            ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());
             this.itemTexture = new ResourceLocation(itemId.getNamespace(), "textures/item/" + itemId.getPath() + ".png");
             if (stack.getItem() instanceof ICard) {
                 ICard card = (ICard) stack.getItem();
@@ -154,12 +153,12 @@ public class CardOpenScreen extends Screen {
             widgetConsumer.accept(this);
             flipping = true;
             if (discoverySound != null) {
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(discoverySound, 1.0F));
+                Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(discoverySound, 1.0F));
             }
         }
 
         @Override
-        public void playDownSound(SoundManager handler) {
+        public void playDownSound(SoundHandler handler) {
         }
 
         @Override
@@ -174,11 +173,11 @@ public class CardOpenScreen extends Screen {
         }
 
         @Override
-        public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        public void renderButton(MatrixStack poseStack, int mouseX, int mouseY, float partialTick) {
             int scale = isHovered ? 8 : 0;
             float actual = timer / (float) animTime;
             float old = prevTimer / (float) animTime;
-            float rawProgress = Mth.lerp(partialTick, old, actual);
+            float rawProgress = MathHelper.lerp(partialTick, old, actual);
             float progress = 1.0F - (float) Math.pow(1 - rawProgress, 3);
             int diffX = targetX - startX;
             int diffY = targetY - startY;
@@ -186,16 +185,16 @@ public class CardOpenScreen extends Screen {
             float renderY = startY + (diffY * progress);
             this.x = (int) renderX;
             this.y = (int) renderY;
-            Lighting.setupForFlatItems();
+            RenderHelper.setupForFlatItems();
             Minecraft.getInstance().getTextureManager().bind(flipped ? itemTexture : CARD_BACK);
             actuallyRender(poseStack, renderX - scale, renderY - scale, renderX + width + scale, renderY + height + scale, partialTick);
         }
 
-        private void actuallyRender(PoseStack stack, float x1, float y1, float x2, float y2, float partialTicks) {
+        private void actuallyRender(MatrixStack stack, float x1, float y1, float x2, float y2, float partialTicks) {
             if (flipping) {
                 float flipActual = flipTimer / (float) flipTimeTotal;
                 float flipOld = flipTimerOld / (float) flipTimeTotal;
-                float flipProgressRaw = Mth.lerp(partialTicks, flipOld, flipActual);
+                float flipProgressRaw = MathHelper.lerp(partialTicks, flipOld, flipActual);
                 float flipProgress = flipProgressRaw < 0.5 ? 4 * flipProgressRaw * flipProgressRaw * flipProgressRaw : 1 - (float) Math.pow(-2 * flipProgressRaw + 2, 3) / 2;
                 if (flipProgress >= 0.5) {
                     flipped = true;
@@ -229,11 +228,11 @@ public class CardOpenScreen extends Screen {
     }
 
     public static void renderTexture(Matrix4f pose, float x1, float y1, float x2, float y2) {
-        Tesselator tesselator = Tesselator.getInstance();
+        Tessellator tesselator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tesselator.getBuilder();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         bufferBuilder.vertex(pose, x1, y1, 0).uv(0.0F, 0.0F).endVertex();
         bufferBuilder.vertex(pose, x1, y2, 0).uv(0.0F, 1.0F).endVertex();
         bufferBuilder.vertex(pose, x2, y2, 0).uv(1.0F, 1.0F).endVertex();

@@ -1,12 +1,12 @@
 package team.tnt.collectoralbum.common.container;
 
-import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.world.Container;
-import net.minecraft.world.ContainerListener;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.IInventoryChangedListener;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraftforge.common.util.Constants;
 import team.tnt.collectoralbum.common.AlbumStats;
 import team.tnt.collectoralbum.common.CardCategoryIndexPool;
 import team.tnt.collectoralbum.common.ICardCategory;
@@ -16,23 +16,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class AlbumContainer extends SimpleContainer {
-    private final Map<ICardCategory, SimpleContainer> inventoriesByCategory = new HashMap<>();
+public class AlbumContainer extends Inventory {
+    private final Map<ICardCategory, Inventory> inventoriesByCategory = new HashMap<>();
 
     public AlbumContainer(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
-        CompoundTag inventories = tag.getCompound("inventories");
+        CompoundNBT tag = stack.getOrCreateTag();
+        CompoundNBT inventories = tag.getCompound("inventories");
         CardCategoryRegistry.getValues().forEach(category -> {
-            SimpleContainer container = new SimpleContainer(category.getCapacity());
+            Inventory container = new Inventory(category.getCapacity());
             container.addListener(ref -> this.setChanged());
             inventoriesByCategory.put(category, container);
         });
         for (ICardCategory category : CardCategoryRegistry.getValues()) {
-            ListTag slots = inventories.getList(category.getId().toString(), NbtType.COMPOUND);
+            ListNBT slots = inventories.getList(category.getId().toString(), Constants.NBT.TAG_COMPOUND);
             for (int i = 0; i < slots.size(); i++) {
-                CompoundTag slotDef = slots.getCompound(i);
+                CompoundNBT slotDef = slots.getCompound(i);
                 int slotIndex = slotDef.getInt("slotIndex");
-                CompoundTag itemTag = slotDef.getCompound("itemStack");
+                CompoundNBT itemTag = slotDef.getCompound("itemStack");
                 ItemStack item = ItemStack.of(itemTag);
                 inventoriesByCategory.get(category).setItem(slotIndex, item);
             }
@@ -40,7 +40,7 @@ public class AlbumContainer extends SimpleContainer {
         this.addListener(new Listener(stack, inventoriesByCategory::get));
     }
 
-    public SimpleContainer forCategory(ICardCategory category) {
+    public Inventory forCategory(ICardCategory category) {
         return inventoriesByCategory.get(category);
     }
 
@@ -52,29 +52,29 @@ public class AlbumContainer extends SimpleContainer {
         return new AlbumStats(this);
     }
 
-    private static class Listener implements ContainerListener {
+    private static class Listener implements IInventoryChangedListener {
 
         private final ItemStack itemRef;
-        private final Function<ICardCategory, SimpleContainer> containerFetcher;
+        private final Function<ICardCategory, Inventory> containerFetcher;
 
-        public Listener(ItemStack itemRef, Function<ICardCategory, SimpleContainer> containerFetcher) {
+        public Listener(ItemStack itemRef, Function<ICardCategory, Inventory> containerFetcher) {
             this.itemRef = itemRef;
             this.containerFetcher = containerFetcher;
         }
 
         @Override
-        public void containerChanged(Container invBasic) {
-            CompoundTag tag = itemRef.getOrCreateTag();
-            CompoundTag inventoryTag = new CompoundTag();
+        public void containerChanged(IInventory invBasic) {
+            CompoundNBT tag = itemRef.getOrCreateTag();
+            CompoundNBT inventoryTag = new CompoundNBT();
             for (ICardCategory category : CardCategoryRegistry.getValues()) {
-                ListTag listTag = new ListTag();
-                SimpleContainer container = containerFetcher.apply(category);
+                ListNBT listTag = new ListNBT();
+                Inventory container = containerFetcher.apply(category);
                 for (int i = 0; i < container.getContainerSize(); i++) {
                     ItemStack stack = container.getItem(i);
                     if (stack.isEmpty()) continue;
-                    CompoundTag slotDef = new CompoundTag();
+                    CompoundNBT slotDef = new CompoundNBT();
                     slotDef.putInt("slotIndex", i);
-                    slotDef.put("itemStack", stack.save(new CompoundTag()));
+                    slotDef.put("itemStack", stack.save(new CompoundNBT()));
                     listTag.add(slotDef);
                 }
                 inventoryTag.put(category.getId().toString(), listTag);

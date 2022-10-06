@@ -1,64 +1,24 @@
 package team.tnt.collectoralbum.config;
 
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import team.tnt.collectoralbum.CollectorsAlbum;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class MobDropConfig {
 
-    @ConfigEntry.Category("main")
-    public int noDropWeight = 5700;
+    public final ForgeConfigSpec.ConfigValue<Integer> noDropWeight;
+    public final ForgeConfigSpec.ConfigValue<Integer> commonDropWeight;
+    public final ForgeConfigSpec.ConfigValue<Integer> uncommonDropWeight;
+    public final ForgeConfigSpec.ConfigValue<Integer> rareDropWeight;
+    public final ForgeConfigSpec.ConfigValue<Integer> epicDropWeight;
+    public final ForgeConfigSpec.ConfigValue<Integer> legendaryDropWeight;
+    public final ForgeConfigSpec.ConfigValue<Integer> mythicalDropWeight;
 
-    @ConfigEntry.Category("main")
-    public int commonDropWeight = 480;
-
-    @ConfigEntry.Category("main")
-    public int uncommonDropWeight = 320;
-
-    @ConfigEntry.Category("main")
-    public int rareDropWeight = 230;
-
-    @ConfigEntry.Category("main")
-    public int epicDropWeight = 145;
-
-    @ConfigEntry.Category("main")
-    public int legendaryDropWeight = 90;
-
-    @ConfigEntry.Category("main")
-    public int mythicalDropWeight = 70;
-
-    void validatePostLoad() throws ConfigData.ValidationException {
-        if (noDropWeight <= 0) {
-            noDropWeight = 1;
-            logCorrectionMessage("noDropWeight");
-        }
-        if (commonDropWeight <= 0) {
-            commonDropWeight = 1;
-            logCorrectionMessage("commonDropWeight");
-        }
-        if (uncommonDropWeight <= 0) {
-            uncommonDropWeight = 1;
-            logCorrectionMessage("uncommonDropWeight");
-        }
-        if (rareDropWeight <= 0) {
-            rareDropWeight = 1;
-            logCorrectionMessage("rareDropWeight");
-        }
-        if (epicDropWeight <= 0) {
-            epicDropWeight = 1;
-            logCorrectionMessage("epicDropWeight");
-        }
-        if (legendaryDropWeight <= 0) {
-            legendaryDropWeight = 1;
-            logCorrectionMessage("legendaryDropWeight");
-        }
-        if (mythicalDropWeight <= 0) {
-            mythicalDropWeight = 1;
-            logCorrectionMessage("mythicalDropWeight");
-        }
-    }
-
-    private void logCorrectionMessage(String field) {
-        CollectorsAlbum.LOGGER.warn("Corrected \"{}\" value to 1", field);
+    public MobDropConfig(ForgeConfigSpec.Builder builder) {
+        noDropWeight = builder.define("No Drop Weight", 5700);
+        commonDropWeight = builder.define("Common Drop Weight", 480);
+        uncommonDropWeight = builder.define("Uncommon Drop Weight", 320);
+        rareDropWeight = builder.define("Rare Drop Weight", 230);
+        epicDropWeight = builder.define("Epic Drop Weight", 145);
+        legendaryDropWeight = builder.define("Legendary Drop Weight", 90);
+        mythicalDropWeight = builder.define("Mythical Drop Weight", 70);
     }
 }

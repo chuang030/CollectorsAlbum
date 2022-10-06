@@ -4,8 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.JSONUtils;
+import net.minecraft.util.ResourceLocation;
 import team.tnt.collectoralbum.common.AlbumStats;
 import team.tnt.collectoralbum.common.ICardCategory;
 import team.tnt.collectoralbum.common.init.CardCategoryRegistry;
@@ -72,7 +72,7 @@ public class CardsCondition implements ICardBoostCondition {
                     throw new JsonSyntaxException("Unknown card category: " + categoryId);
                 }
             }
-            int requiredCount = GsonHelper.getAsInt(object, "count");
+            int requiredCount = JSONUtils.getAsInt(object, "count");
             return new CardsCondition(category, rarity, requiredCount);
         }
     }

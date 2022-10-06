@@ -3,24 +3,24 @@ package team.tnt.collectoralbum.data.boosts;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.core.Registry;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.Effect;
+import net.minecraft.util.JSONUtils;
+import net.minecraftforge.registries.ForgeRegistries;
 import team.tnt.collectoralbum.util.JsonHelper;
 
 public class ClearEffectsAction implements IAction {
 
-    private final MobEffect[] effects;
+    private final Effect[] effects;
 
-    public ClearEffectsAction(MobEffect[] effects) {
+    public ClearEffectsAction(Effect[] effects) {
         this.effects = effects;
     }
 
     @Override
     public void apply(IBoostContext context) {
-        Player player = context.get(SimpleBoostContext.PLAYER, Player.class);
-        for (MobEffect effect : effects) {
+        PlayerEntity player = context.get(SimpleBoostContext.PLAYER, PlayerEntity.class);
+        for (Effect effect : effects) {
             player.removeEffect(effect);
         }
     }
@@ -29,8 +29,8 @@ public class ClearEffectsAction implements IAction {
 
         @Override
         public ClearEffectsAction fromJson(JsonObject data, OpType opType) throws JsonParseException {
-            JsonArray array = GsonHelper.getAsJsonArray(data, "effects");
-            MobEffect[] effects = JsonHelper.resolveRegistryObjectsFromIdArray(array, Registry.MOB_EFFECT, MobEffect[]::new);
+            JsonArray array = JSONUtils.getAsJsonArray(data, "effects");
+            Effect[] effects = JsonHelper.resolveRegistryObjectsFromIdArray(array, ForgeRegistries.POTIONS, Effect[]::new);
             return new ClearEffectsAction(effects);
         }
     }

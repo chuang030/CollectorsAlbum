@@ -1,32 +1,28 @@
 package team.tnt.collectoralbum.common.init;
 
-import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.common.ICardCategory;
 import team.tnt.collectoralbum.common.container.AlbumContainer;
 import team.tnt.collectoralbum.common.menu.AlbumMenu;
 
-public class MenuTypes {
+public final class MenuTypes {
 
-    public static final ExtendedScreenHandlerType<AlbumMenu> ALBUM = new ExtendedScreenHandlerType<>((syncId, inventory, buf) -> {
-        ItemStack stack = buf.readItem();
-        boolean flag = buf.readBoolean();
+    public static final DeferredRegister<ContainerType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.CONTAINERS, CollectorsAlbum.MODID);
+
+    public static final RegistryObject<ContainerType<AlbumMenu>> ALBUM = REGISTRY.register("album", () -> IForgeContainerType.create((windowId, inv, data) -> {
+        ItemStack stack = data.readItem();
+        boolean flag = data.readBoolean();
         ICardCategory category = null;
         if (flag) {
-            category = CardCategoryRegistry.getByKey(buf.readResourceLocation());
+            category = CardCategoryRegistry.getByKey(data.readResourceLocation());
         }
         AlbumContainer container = new AlbumContainer(stack);
-        return new AlbumMenu(container, inventory, syncId, category);
-    });
-
-    public static void registerMenus() {
-        registerMenuType("album", ALBUM);
-    }
-
-    private static void registerMenuType(String id, ExtendedScreenHandlerType<?> extendedScreenHandlerType) {
-        Registry.register(Registry.MENU, new ResourceLocation(CollectorsAlbum.MODID, id), extendedScreenHandlerType);
-    }
+        return new AlbumMenu(container, inv, windowId, category);
+    }));
 }

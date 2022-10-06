@@ -1,12 +1,12 @@
 package team.tnt.collectoralbum.mixins;
 
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.util.DamageSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,8 +19,8 @@ public abstract class LivingDeathMixin {
     @Inject(method = "die", at = @At("TAIL"))
     private void collectorsalbum$onDeathInject(DamageSource cause, CallbackInfo ci) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
-        if (!livingEntity.level.isClientSide && livingEntity instanceof Monster) {
-            Monster monster = (Monster) livingEntity;
+        if (!livingEntity.level.isClientSide && livingEntity instanceof MonsterEntity) {
+            MonsterEntity monster = (MonsterEntity) livingEntity;
             MobDrops drops = MobDrops.instance();
             Item item = drops.get();
             if (item == Items.AIR) {

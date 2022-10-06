@@ -4,22 +4,19 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.client.resources.JsonReloadListener;
+import net.minecraft.profiler.IProfiler;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import team.tnt.collectoralbum.CollectorsAlbum;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class CardPackLootManager extends SimpleJsonResourceReloadListener implements IdentifiableResourceReloadListener {
+public class CardPackLootManager extends JsonReloadListener {
 
-    private static final ResourceLocation FABRIC_ID = new ResourceLocation(CollectorsAlbum.MODID, "card_pack_loot_manager");
     private static final Logger LOGGER = LogManager.getLogger(CardPackLootManager.class);
 
     private static final Gson GSON = new GsonBuilder().create();
@@ -34,12 +31,7 @@ public class CardPackLootManager extends SimpleJsonResourceReloadListener implem
     }
 
     @Override
-    public ResourceLocation getFabricId() {
-        return FABRIC_ID;
-    }
-
-    @Override
-    protected void apply(Map<ResourceLocation, JsonElement> resources, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void apply(Map<ResourceLocation, JsonElement> resources, IResourceManager resourceManager, IProfiler profiler) {
         LOGGER.info("Loading card pack drops");
         providerMap.clear();
         for (Map.Entry<ResourceLocation, JsonElement> entry : resources.entrySet()) {

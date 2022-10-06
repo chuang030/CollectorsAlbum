@@ -4,12 +4,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.util.JSONUtils;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
 import team.tnt.collectoralbum.util.JsonHelper;
 
 import java.util.Collections;
@@ -34,8 +34,8 @@ public class ItemCardProvider implements ICardDropProvider {
         @Override
         public ItemCardProvider fromJson(JsonElement data) throws JsonParseException {
             JsonObject object = JsonHelper.asObject(data);
-            ResourceLocation identifier = new ResourceLocation(GsonHelper.getAsString(object, "item"));
-            Item item = Registry.ITEM.get(identifier);
+            ResourceLocation identifier = new ResourceLocation(JSONUtils.getAsString(object, "item"));
+            Item item = ForgeRegistries.ITEMS.getValue(identifier);
             if (item == Items.AIR) {
                 throw new JsonSyntaxException("Unknown item: " + identifier);
             }

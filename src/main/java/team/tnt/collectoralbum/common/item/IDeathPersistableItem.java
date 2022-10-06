@@ -1,9 +1,9 @@
 package team.tnt.collectoralbum.common.item;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 
 public interface IDeathPersistableItem {
 
-    boolean shouldKeepItem(Player player, ItemStack stack);
+    boolean shouldKeepItem(PlayerEntity player, ItemStack stack);
 }

@@ -1,6 +1,6 @@
 package team.tnt.collectoralbum.common.init;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ResourceLocation;
 import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.data.boosts.*;
 

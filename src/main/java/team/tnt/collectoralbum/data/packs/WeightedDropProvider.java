@@ -4,8 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.JSONUtils;
 import team.tnt.collectoralbum.util.JsonHelper;
 import team.tnt.collectoralbum.util.math.WeightedRandom;
 
@@ -47,8 +47,8 @@ public class WeightedDropProvider implements ICardDropProvider {
 
         static Entry fromJson(JsonElement element) throws JsonParseException {
             JsonObject data = JsonHelper.asObject(element);
-            int weight = GsonHelper.getAsInt(data, "weight", 1);
-            JsonObject provider = GsonHelper.getAsJsonObject(data, "provider");
+            int weight = JSONUtils.getAsInt(data, "weight", 1);
+            JsonObject provider = JSONUtils.getAsJsonObject(data, "provider");
             ICardDropProvider cardDropProvider = CardDropProviderType.fromJson(provider);
             return new Entry(weight, cardDropProvider);
         }
@@ -59,7 +59,7 @@ public class WeightedDropProvider implements ICardDropProvider {
         @Override
         public WeightedDropProvider fromJson(JsonElement data) throws JsonParseException {
             JsonObject object = JsonHelper.asObject(data);
-            JsonArray array = GsonHelper.getAsJsonArray(object, "providers");
+            JsonArray array = JSONUtils.getAsJsonArray(object, "providers");
             Entry[] entries = JsonHelper.resolveArray(array, Entry[]::new, Entry::fromJson);
             return new WeightedDropProvider(entries);
         }

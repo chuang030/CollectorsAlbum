@@ -3,8 +3,8 @@ package team.tnt.collectoralbum.data.boosts;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.JSONUtils;
+import net.minecraft.util.ResourceLocation;
 import team.tnt.collectoralbum.common.init.ActionTypeRegistry;
 
 import java.util.function.Predicate;
@@ -26,7 +26,7 @@ public final class ActionType<A extends IAction> {
     }
 
     public static <A extends IAction> A fromJson(OpType type, JsonObject data) throws JsonParseException {
-        ResourceLocation id = new ResourceLocation(GsonHelper.getAsString(data, "type"));
+        ResourceLocation id = new ResourceLocation(JSONUtils.getAsString(data, "type"));
         ActionType<A> actionType = ActionTypeRegistry.get(id);
         if (actionType == null)
             throw new JsonSyntaxException("Unknown action type: " + id);

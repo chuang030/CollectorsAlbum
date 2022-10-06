@@ -1,14 +1,15 @@
 package team.tnt.collectoralbum.network.api;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 public interface IPacket<T> {
 
-    ResourceLocation getPacketId();
+    void encode(PacketBuffer buffer);
 
-    T getPacketData();
+    T decode(PacketBuffer buffer);
 
-    IPacketEncoder<T> getEncoder();
-
-    IPacketDecoder<T> getDecoder();
+    void handle(Supplier<NetworkEvent.Context> supplier);
 }

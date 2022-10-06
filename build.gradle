@@ -14,9 +14,9 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = "${version.mod}"
+version = "${mod_version}"
 group = 'team.tnt.collectoralbum'
-archivesBaseName = "collectorsalbum-${loader}-${version.minecraft}"
+archivesBaseName = "collectorsalbum-${loader}-${minecraft_version}"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 

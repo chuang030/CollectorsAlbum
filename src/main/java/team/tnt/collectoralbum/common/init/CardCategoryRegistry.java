@@ -1,7 +1,7 @@
 package team.tnt.collectoralbum.common.init;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.common.CardCategory;
 import team.tnt.collectoralbum.common.ICardCategory;
@@ -14,11 +14,11 @@ public class CardCategoryRegistry {
 
     private static final Map<ResourceLocation, ICardCategory> REGISTRY = new HashMap<>();
 
-    public static final ICardCategory TOOLS = internalRegister("tools", ChatFormatting.YELLOW);
-    public static final ICardCategory ARMOR = internalRegister("armor", ChatFormatting.BLUE);
-    public static final ICardCategory MOBS = internalRegister("mobs", ChatFormatting.RED);
-    public static final ICardCategory NATURE = internalRegister("nature", ChatFormatting.GREEN);
-    public static final ICardCategory ITEMS = internalRegister("items", ChatFormatting.WHITE);
+    public static final ICardCategory TOOLS = internalRegister("tools", TextFormatting.YELLOW);
+    public static final ICardCategory ARMOR = internalRegister("armor", TextFormatting.BLUE);
+    public static final ICardCategory MOBS = internalRegister("mobs", TextFormatting.RED);
+    public static final ICardCategory NATURE = internalRegister("nature", TextFormatting.GREEN);
+    public static final ICardCategory ITEMS = internalRegister("items", TextFormatting.WHITE);
 
     public static void register(ICardCategory category) {
         if (REGISTRY.put(category.getId(), category) != null) {
@@ -42,7 +42,7 @@ public class CardCategoryRegistry {
         return REGISTRY.values().stream().filter(cat -> cat.getIndex() == index).findFirst().orElse(null);
     }
 
-    private static ICardCategory internalRegister(String id, ChatFormatting formatting) {
+    private static ICardCategory internalRegister(String id, TextFormatting formatting) {
         ICardCategory category = new CardCategory(new ResourceLocation(CollectorsAlbum.MODID, id), formatting);
         register(category);
         return category;

@@ -4,8 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.JSONUtils;
 import team.tnt.collectoralbum.util.JsonHelper;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class MultiDropProvider implements ICardDropProvider {
         @Override
         public MultiDropProvider fromJson(JsonElement data) throws JsonParseException {
             JsonObject object = JsonHelper.asObject(data);
-            JsonArray array = GsonHelper.getAsJsonArray(object, "providers");
+            JsonArray array = JSONUtils.getAsJsonArray(object, "providers");
             ICardDropProvider[] providers = JsonHelper.resolveArray(array, ICardDropProvider[]::new, CardDropProviderType::fromJson);
             return new MultiDropProvider(providers);
         }

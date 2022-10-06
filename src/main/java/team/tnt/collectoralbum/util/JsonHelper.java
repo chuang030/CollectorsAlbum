@@ -4,8 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.function.Function;
 
@@ -39,16 +40,16 @@ public final class JsonHelper {
         return result;
     }
 
-    public static <R> R[] resolveRegistryObjectsFromIdArray(JsonArray array, Registry<R> registry, Function<Integer, R[]> arrayFactory) {
+    public static <V extends IForgeRegistryEntry<V>> V[] resolveRegistryObjectsFromIdArray(JsonArray array, IForgeRegistry<V> registry, Function<Integer, V[]> arrayFactory) {
         return resolveRegistryObjectsFromIdArray(array, registry, arrayFactory, null);
     }
 
-    public static <R> R[] resolveRegistryObjectsFromIdArray(JsonArray array, Registry<R> registry, Function<Integer, R[]> arrayFactory, R nullType) {
-        R[] result = arrayFactory.apply(array.size());
+    public static <V extends IForgeRegistryEntry<V>> V[] resolveRegistryObjectsFromIdArray(JsonArray array, IForgeRegistry<V> registry, Function<Integer, V[]> arrayFactory, V nullType) {
+        V[] result = arrayFactory.apply(array.size());
         int i = 0;
         for (JsonElement element : array) {
             ResourceLocation id = new ResourceLocation(element.getAsString());
-            R r = registry.get(id);
+            V r = registry.getValue(id);
             if (r == nullType) {
                 throw new JsonSyntaxException("Unknown id: " + id);
             }

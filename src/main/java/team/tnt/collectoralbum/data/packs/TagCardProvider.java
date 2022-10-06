@@ -3,12 +3,12 @@ package team.tnt.collectoralbum.data.packs;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.SerializationTags;
-import net.minecraft.tags.Tag;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.TagCollectionManager;
+import net.minecraft.util.JSONUtils;
+import net.minecraft.util.ResourceLocation;
 import team.tnt.collectoralbum.util.JsonHelper;
 
 import java.util.Collections;
@@ -17,9 +17,9 @@ import java.util.Random;
 
 public class TagCardProvider implements ICardDropProvider {
 
-    private final Tag<Item> tag;
+    private final ITag<Item> tag;
 
-    private TagCardProvider(Tag<Item> tag) {
+    private TagCardProvider(ITag<Item> tag) {
         this.tag = tag;
     }
 
@@ -37,8 +37,8 @@ public class TagCardProvider implements ICardDropProvider {
         @Override
         public TagCardProvider fromJson(JsonElement data) throws JsonParseException {
             JsonObject object = JsonHelper.asObject(data);
-            ResourceLocation id = new ResourceLocation(GsonHelper.getAsString(object, "tag"));
-            Tag<Item> tagKey = SerializationTags.getInstance().getItems().getTag(id);
+            ResourceLocation id = new ResourceLocation(JSONUtils.getAsString(object, "tag"));
+            ITag<Item> tagKey = TagCollectionManager.getInstance().getItems().getTag(id);
             return new TagCardProvider(tagKey);
         }
     }

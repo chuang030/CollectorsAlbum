@@ -1,11 +1,11 @@
 package team.tnt.collectoralbum.common;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Slot;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import team.tnt.collectoralbum.api.CardSlotDefinition;
 import team.tnt.collectoralbum.api.ICategorySlotDistributor;
 import team.tnt.collectoralbum.api.ISlotAppender;
@@ -17,14 +17,14 @@ public class CardCategory implements ICardCategory, Comparable<ICardCategory> {
     public static final ICategorySlotDistributor DISTRIBUTOR = new SlotDistributor();
     private final int categoryIndex = CardCategoryIndexPool.assignUniqueIndex();
     private final ResourceLocation id;
-    private final ChatFormatting formatting;
-    private final Component translatedName;
+    private final TextFormatting formatting;
+    private final ITextComponent translatedName;
 
-    public CardCategory(ResourceLocation id, ChatFormatting formatting) {
+    public CardCategory(ResourceLocation id, TextFormatting formatting) {
         this.id = id;
         this.formatting = formatting;
         String identifier = id.toString().replaceAll(":", ".");
-        this.translatedName = Component.translatable("card.category." + identifier);
+        this.translatedName = new TranslationTextComponent("card.category." + identifier);
     }
 
     @Override
@@ -48,12 +48,12 @@ public class CardCategory implements ICardCategory, Comparable<ICardCategory> {
     }
 
     @Override
-    public ChatFormatting getTooltipFormat() {
+    public TextFormatting getTooltipFormat() {
         return formatting;
     }
 
     @Override
-    public Component getTranslatedName() {
+    public ITextComponent getTranslatedName() {
         return translatedName;
     }
 
@@ -71,7 +71,7 @@ public class CardCategory implements ICardCategory, Comparable<ICardCategory> {
     }
 
     @Override
-    public int compareTo(@NotNull ICardCategory o) {
+    public int compareTo(ICardCategory o) {
         return categoryIndex - o.getIndex();
     }
 
@@ -86,7 +86,7 @@ public class CardCategory implements ICardCategory, Comparable<ICardCategory> {
         }
 
         @Override
-        public void addPlayerSlots(ISlotAppender<Slot> appender, Inventory inventory) {
+        public void addPlayerSlots(ISlotAppender<Slot> appender, PlayerInventory inventory) {
             for (int y = 0; y < 3; y++) {
                 for (int x = 0; x < 9; x++) {
                     int slotId = x + (y * 9) + 9;

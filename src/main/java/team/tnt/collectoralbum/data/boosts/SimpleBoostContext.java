@@ -1,6 +1,6 @@
 package team.tnt.collectoralbum.data.boosts;
 
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ public class SimpleBoostContext implements IBoostContext {
     public static final String PLAYER = "player";
     private final Map<String, Object> paramMap = new HashMap<>();
 
-    public SimpleBoostContext(Player player) {
+    public SimpleBoostContext(PlayerEntity player) {
         set(PLAYER, player);
     }
 

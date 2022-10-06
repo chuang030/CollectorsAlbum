@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.JSONUtils;
 import team.tnt.collectoralbum.util.JsonHelper;
 
 public class FirstValidAction implements IAction {
@@ -29,7 +29,7 @@ public class FirstValidAction implements IAction {
 
         @Override
         public FirstValidAction fromJson(JsonObject data, OpType opType) throws JsonParseException {
-            JsonArray valuesArr = GsonHelper.getAsJsonArray(data, "values");
+            JsonArray valuesArr = JSONUtils.getAsJsonArray(data, "values");
             Entry[] entries = JsonHelper.resolveArray(valuesArr, Entry[]::new, element -> Entry.fromJson(element, opType));
             return new FirstValidAction(entries);
         }
@@ -60,8 +60,8 @@ public class FirstValidAction implements IAction {
 
         static Entry fromJson(JsonElement element, OpType opType) throws JsonParseException {
             JsonObject object = JsonHelper.asObject(element);
-            JsonObject applyAction = GsonHelper.getAsJsonObject(object, "apply");
-            JsonArray conditionsArray = GsonHelper.getAsJsonArray(object, "conditions", new JsonArray());
+            JsonObject applyAction = JSONUtils.getAsJsonObject(object, "apply");
+            JsonArray conditionsArray = JSONUtils.getAsJsonArray(object, "conditions", new JsonArray());
             IAction action = ActionType.fromJson(opType, applyAction);
             ICardBoostCondition[] conditions = JsonHelper.resolveArray(conditionsArray, ICardBoostCondition[]::new, CardBoostConditionType::fromJson);
             return new Entry(conditions, action);

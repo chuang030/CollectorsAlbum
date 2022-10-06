@@ -1,10 +1,10 @@
 package team.tnt.collectoralbum.common;
 
-import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraftforge.common.util.Constants;
 import team.tnt.collectoralbum.common.container.AlbumContainer;
 import team.tnt.collectoralbum.common.init.CardCategoryRegistry;
 import team.tnt.collectoralbum.common.init.CardRegistry;
@@ -26,7 +26,7 @@ public class AlbumStats {
         int collected = 0;
         int pointCounter = 0;
         for (ICardCategory category : CardCategoryRegistry.getValues()) {
-            SimpleContainer categoryContainer = container.forCategory(category);
+            Inventory categoryContainer = container.forCategory(category);
             for (int i = 0; i < categoryContainer.getContainerSize(); i++) {
                 ItemStack stack = categoryContainer.getItem(i);
                 if (stack.getItem() instanceof ICard) {
@@ -52,15 +52,15 @@ public class AlbumStats {
     }
 
     public static AlbumStats createSimplifiedWithoutContainer(ItemStack album) {
-        CompoundTag tag = album.getOrCreateTag();
-        CompoundTag inventories = tag.getCompound("inventories");
+        CompoundNBT tag = album.getOrCreateTag();
+        CompoundNBT inventories = tag.getCompound("inventories");
         int cardCounter = 0;
         int pointCounter = 0;
         Map<ICardCategory, List<ICard>> byCategory = new HashMap<>();
         for (ICardCategory category : CardCategoryRegistry.getValues()) {
-            ListTag slots = inventories.getList(category.getId().toString(), NbtType.COMPOUND);
+            ListNBT slots = inventories.getList(category.getId().toString(), Constants.NBT.TAG_COMPOUND);
             for (int i = 0; i < slots.size(); i++) {
-                CompoundTag slotDef = slots.getCompound(i);
+                CompoundNBT slotDef = slots.getCompound(i);
                 ItemStack item = ItemStack.of(slotDef.getCompound("itemStack"));
                 if (item.getItem() instanceof ICard) {
                     ICard card = (ICard) item.getItem();

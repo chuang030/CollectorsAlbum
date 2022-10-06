@@ -4,23 +4,20 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.client.resources.JsonReloadListener;
+import net.minecraft.profiler.IProfiler;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.util.JSONUtils;
+import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.util.JsonHelper;
 
 import java.util.*;
 
-public class AlbumCardBoostManager extends SimpleJsonResourceReloadListener implements IdentifiableResourceReloadListener {
+public class AlbumCardBoostManager extends JsonReloadListener {
 
     private static final Logger LOGGER = LogManager.getLogger(AlbumCardBoostManager.class);
-    private static final ResourceLocation FABRIC_ID = new ResourceLocation(CollectorsAlbum.MODID, "album_card_boost_manager");
     private static final Gson GSON = new Gson();
 
     private AlbumCardBoostCollection collection;
@@ -34,12 +31,7 @@ public class AlbumCardBoostManager extends SimpleJsonResourceReloadListener impl
     }
 
     @Override
-    public ResourceLocation getFabricId() {
-        return FABRIC_ID;
-    }
-
-    @Override
-    protected void apply(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void apply(Map<ResourceLocation, JsonElement> object, IResourceManager resourceManager, IProfiler profiler) {
         LOGGER.info("Loading album boosts");
         Map<OpType, List<IAction>> loaded = new EnumMap<>(OpType.class);
         for (Map.Entry<ResourceLocation, JsonElement> entry : object.entrySet()) {
@@ -47,10 +39,10 @@ public class AlbumCardBoostManager extends SimpleJsonResourceReloadListener impl
             JsonElement fileData = entry.getValue();
             try {
                 JsonObject data = JsonHelper.asObject(fileData);
-                String opTypeId = GsonHelper.getAsString(data, "op");
+                String opTypeId = JSONUtils.getAsString(data, "op");
                 OpType type = OpType.valueOf(opTypeId);
                 List<IAction> values = loaded.computeIfAbsent(type, k -> new ArrayList<>());
-                IAction action = ActionType.fromJson(type, GsonHelper.getAsJsonObject(data, "action"));
+                IAction action = ActionType.fromJson(type, JSONUtils.getAsJsonObject(data, "action"));
                 values.add(action);
             } catch (IllegalArgumentException | JsonParseException e) {
                 LOGGER.error("Error loading {} file: {}", filePath, e);

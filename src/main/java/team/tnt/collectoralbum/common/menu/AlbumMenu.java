@@ -1,13 +1,12 @@
 package team.tnt.collectoralbum.common.menu;
 
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemStack;
 import team.tnt.collectoralbum.api.CardSlotDefinition;
 import team.tnt.collectoralbum.api.ICategorySlotDistributor;
 import team.tnt.collectoralbum.api.ISlotAppender;
@@ -18,22 +17,21 @@ import team.tnt.collectoralbum.common.container.AlbumContainer;
 import team.tnt.collectoralbum.common.init.MenuTypes;
 import team.tnt.collectoralbum.common.item.ICard;
 
-public class AlbumMenu extends AbstractContainerMenu {
+public class AlbumMenu extends Container {
 
     private final AlbumContainer container;
-    @Nullable
     private final ICardCategory category;
 
-    public AlbumMenu(AlbumContainer container, Inventory playerInventory, int id) {
+    public AlbumMenu(AlbumContainer container, PlayerInventory playerInventory, int id) {
         this(container, playerInventory, id, null);
     }
 
-    public AlbumMenu(AlbumContainer container, Inventory playerInventory, int id, @Nullable ICardCategory category) {
-        super(MenuTypes.ALBUM, id);
+    public AlbumMenu(AlbumContainer container, PlayerInventory playerInventory, int id, ICardCategory category) {
+        super(MenuTypes.ALBUM.get(), id);
         this.container = container;
         this.category = category;
 
-        SimpleContainer categoryContainer = container.forCategory(category);
+        Inventory categoryContainer = container.forCategory(category);
         ICategorySlotDistributor slotDistributor = category != null ? category.getMenuSlotDistributor() : CardCategory.DISTRIBUTOR;
         ISlotAppender<Slot> playerSlotAppender = this::addSlot;
         slotDistributor.addPlayerSlots(playerSlotAppender, playerInventory);
@@ -46,12 +44,12 @@ public class AlbumMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int index) {
+    public ItemStack quickMoveStack(PlayerEntity player, int index) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(PlayerEntity player) {
         return true;
     }
 
@@ -75,7 +73,7 @@ public class AlbumMenu extends AbstractContainerMenu {
 
         private final int cardNumber;
 
-        public CardSlot(Container container, int slotIndex, int slotX, int slotY, int cardNumber) {
+        public CardSlot(IInventory container, int slotIndex, int slotX, int slotY, int cardNumber) {
             super(container, slotIndex, slotX, slotY);
             this.cardNumber = cardNumber;
         }

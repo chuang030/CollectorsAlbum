@@ -1,21 +1,17 @@
 package team.tnt.collectoralbum.client.screen;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.math.Matrix4f;
-import net.minecraft.ChatFormatting;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Slot;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.text.*;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import team.tnt.collectoralbum.CollectorsAlbum;
@@ -34,7 +30,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
+public class AlbumScreen extends ContainerScreen<AlbumMenu> {
 
     private static final ResourceLocation TITLE = new ResourceLocation(CollectorsAlbum.MODID, "textures/screen/album_title.png");
     private static final ResourceLocation BACKGROUND = new ResourceLocation(CollectorsAlbum.MODID, "textures/screen/album.png");
@@ -42,16 +38,16 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
     private static final ResourceLocation ARROW_RIGHT = new ResourceLocation(CollectorsAlbum.MODID, "textures/screen/album_next.png");
 
     // Localizations
-    private static final MutableComponent TEXT_HEADER = new TranslatableComponent("text.collectorsalbum.album.header").withStyle(ChatFormatting.BOLD);
-    private static final MutableComponent TEXT_CATEGORIES = new TranslatableComponent("text.collectorsalbum.album.categories").withStyle(ChatFormatting.UNDERLINE);
-    private static final MutableComponent TEXT_RARITIES = new TranslatableComponent("text.collectorsalbum.album.rarities").withStyle(ChatFormatting.UNDERLINE);
-    private static final Function<Integer, TranslatableComponent> TEXT_POINTS = points -> new TranslatableComponent("text.collectorsalbum.album.points", points);
-    private static final BiFunction<Integer, Integer, TranslatableComponent> TEXT_TOTAL_CARDS = (cards, total) -> new TranslatableComponent("text.collectorsalbum.album.total_cards", cards, total);
+    private static final IFormattableTextComponent TEXT_HEADER = new TranslationTextComponent("text.collectorsalbum.album.header").withStyle(TextFormatting.BOLD);
+    private static final IFormattableTextComponent TEXT_CATEGORIES = new TranslationTextComponent("text.collectorsalbum.album.categories").withStyle(TextFormatting.UNDERLINE);
+    private static final IFormattableTextComponent TEXT_RARITIES = new TranslationTextComponent("text.collectorsalbum.album.rarities").withStyle(TextFormatting.UNDERLINE);
+    private static final Function<Integer, TranslationTextComponent> TEXT_POINTS = points -> new TranslationTextComponent("text.collectorsalbum.album.points", points);
+    private static final BiFunction<Integer, Integer, TranslationTextComponent> TEXT_TOTAL_CARDS = (cards, total) -> new TranslationTextComponent("text.collectorsalbum.album.total_cards", cards, total);
 
     private final int pageIndex;
     private AlbumStats stats;
 
-    public AlbumScreen(AlbumMenu abstractContainerMenu, Inventory inventory, Component component) {
+    public AlbumScreen(AlbumMenu abstractContainerMenu, PlayerInventory inventory, ITextComponent component) {
         super(abstractContainerMenu, inventory, component);
         this.imageWidth = 306;
         this.imageHeight = 257;
@@ -86,12 +82,12 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(MatrixStack poseStack, float partialTick, int mouseX, int mouseY) {
         minecraft.getTextureManager().bind(menu.isTitle() ? TITLE : BACKGROUND);
         Matrix4f pose = poseStack.last().pose();
-        Tesselator tesselator = Tesselator.getInstance();
+        Tessellator tesselator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tesselator.getBuilder();
-        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         bufferBuilder.vertex(pose, leftPos, topPos, 0).uv(0.0F, 0.0F).endVertex();
         bufferBuilder.vertex(pose, leftPos, topPos + imageHeight, 0).uv(0.0F, 1.0F).endVertex();
         bufferBuilder.vertex(pose, leftPos + imageWidth, topPos + imageHeight, 0).uv(1.0F, 1.0F).endVertex();
@@ -100,7 +96,7 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderLabels(MatrixStack poseStack, int mouseX, int mouseY) {
         if (this.menu.isTitle()) {
             // left page
             // header
@@ -131,7 +127,7 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
             Map<ICardCategory, List<ICard>> map = stats.getCardsByCategory();
             for (ICardCategory category : CardCategoryRegistry.getValues().stream().sorted().toArray(ICardCategory[]::new)) {
                 int value = Optional.ofNullable(map.get(category)).map(List::size).orElse(0);
-                Component displayName = category.getTranslatedName();
+                ITextComponent displayName = category.getTranslatedName();
                 String count = value + " / " + category.getCapacity();
                 String text = displayName.getString() + " - " + count;
                 font.draw(poseStack, text, 167, 47 + j++ * 10, 0x7C5D4D);
@@ -147,12 +143,12 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
             }
         }
         ICardCategory category = menu.getCategory();
-        MutableComponent component = new TextComponent(category.getTranslatedName().getString()).withStyle(ChatFormatting.ITALIC);
+        IFormattableTextComponent component = new StringTextComponent(category.getTranslatedName().getString()).withStyle(TextFormatting.ITALIC);
         font.draw(poseStack, component, 40, 10, 0x7C5D4D);
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void render(MatrixStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTick);
         renderTooltip(poseStack, mouseX, mouseY);
@@ -173,14 +169,14 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
         Networking.dispatchServerPacket(new RequestAlbumPagePacket(category));
     }
 
-    protected static final class ArrowWidget extends AbstractWidget {
+    protected static final class ArrowWidget extends Widget {
 
         private final ResourceLocation location;
         private ClickResponder clickResponder = widget -> {
         };
 
         public ArrowWidget(int x, int y, int width, int height, ResourceLocation location) {
-            super(x, y, width, height, TextComponent.EMPTY);
+            super(x, y, width, height, StringTextComponent.EMPTY);
             this.location = location;
         }
 
@@ -189,12 +185,12 @@ public class AlbumScreen extends AbstractContainerScreen<AlbumMenu> {
         }
 
         @Override
-        public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        public void renderButton(MatrixStack poseStack, int mouseX, int mouseY, float partialTick) {
             Minecraft.getInstance().getTextureManager().bind(location);
             Matrix4f pose = poseStack.last().pose();
-            Tesselator tesselator = Tesselator.getInstance();
+            Tessellator tesselator = Tessellator.getInstance();
             BufferBuilder bufferBuilder = tesselator.getBuilder();
-            bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
+            bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
             bufferBuilder.vertex(pose, x, y, 0).uv(0.0F, 0.0F).endVertex();
             bufferBuilder.vertex(pose, x, y + width, 0).uv(0.0F, 1.0F).endVertex();
             bufferBuilder.vertex(pose, x + height, y + width, 0).uv(1.0F, 1.0F).endVertex();

@@ -1,6 +1,6 @@
 package team.tnt.collectoralbum.common.item;
 
-import net.minecraft.world.item.Item;
+import net.minecraft.item.Item;
 
 public class CardAlbumItem extends Item {
 

@@ -4,8 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.JSONUtils;
+import net.minecraft.util.ResourceLocation;
 import team.tnt.collectoralbum.common.init.CardDropProviderRegistry;
 import team.tnt.collectoralbum.util.JsonHelper;
 
@@ -29,7 +29,7 @@ public class CardDropProviderType<P extends ICardDropProvider> {
 
     public static <P extends ICardDropProvider> P fromJson(JsonElement entry) throws JsonParseException {
         JsonObject object = JsonHelper.asObject(entry);
-        ResourceLocation id = new ResourceLocation(GsonHelper.getAsString(object, "type"));
+        ResourceLocation id = new ResourceLocation(JSONUtils.getAsString(object, "type"));
         CardDropProviderType<P> type = CardDropProviderRegistry.findInRegistry(id);
         if (type == null) throw new JsonSyntaxException("Unknown card provider: " + id);
         ICardDropSerializer<P> serializer = type.serializer();

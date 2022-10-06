@@ -1,18 +1,18 @@
 package team.tnt.collectoralbum;
 
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackType;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import team.tnt.collectoralbum.common.AlbumBoostHandler;
+import team.tnt.collectoralbum.client.CollectorsAlbumClient;
 import team.tnt.collectoralbum.common.init.ItemRegistry;
 import team.tnt.collectoralbum.common.init.MenuTypes;
 import team.tnt.collectoralbum.common.init.SoundRegistry;
@@ -21,40 +21,46 @@ import team.tnt.collectoralbum.data.boosts.AlbumCardBoostManager;
 import team.tnt.collectoralbum.data.packs.CardPackLootManager;
 import team.tnt.collectoralbum.network.Networking;
 
-public class CollectorsAlbum implements ModInitializer {
+@Mod(CollectorsAlbum.MODID)
+public class CollectorsAlbum {
 
     public static final Logger LOGGER = LogManager.getLogger(CollectorsAlbum.class);
     public static final String MODID = "collectorsalbum";
 
-    public static ModConfig config;
-
-    public static final CreativeModeTab TAB = FabricItemGroupBuilder.build(
-            new ResourceLocation(MODID, "tab"),
-            () -> new ItemStack(ItemRegistry.ALBUM)
-    );
+    public static final ItemGroup TAB = new ItemGroup("collectorsalbum.tab") {
+        @Override
+        public ItemStack makeIcon() {
+            return new ItemStack(ItemRegistry.ALBUM.get());
+        }
+    };
 
     public static final CardPackLootManager CARD_PACK_MANAGER = new CardPackLootManager();
     public static final AlbumCardBoostManager ALBUM_CARD_BOOST_MANAGER = new AlbumCardBoostManager();
 
-    // event handlers
-    private final AlbumBoostHandler boostHandler = new AlbumBoostHandler();
+    public CollectorsAlbum() {
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        eventBus.addListener(this::loadCommon);
+        eventBus.addListener(this::loadClient);
 
-    @Override
-    public void onInitialize() {
-        // config
-        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
-        config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
-        // registries
-        ItemRegistry.registerItems();
-        SoundRegistry.registerSounds();
-        MenuTypes.registerMenus();
-        // datapacks
-        ResourceManagerHelper resourceManagerHelper = ResourceManagerHelper.get(PackType.SERVER_DATA);
-        resourceManagerHelper.registerReloadListener(CARD_PACK_MANAGER);
-        resourceManagerHelper.registerReloadListener(ALBUM_CARD_BOOST_MANAGER);
-        // network
-        Networking.registerServerReceivers();
-        // callbacks
-        ServerTickEvents.END_SERVER_TICK.register(boostHandler::onServerTick);
+        ItemRegistry.REGISTRY.register(eventBus);
+        SoundRegistry.REGISTRY.register(eventBus);
+        MenuTypes.REGISTRY.register(eventBus);
+
+        MinecraftForge.EVENT_BUS.addListener(this::registerReloadListener);
+
+        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.CONFIG_SPEC);
+    }
+
+    private void loadCommon(FMLCommonSetupEvent event) {
+        Networking.registerPackets();
+    }
+
+    private void loadClient(FMLClientSetupEvent event) {
+        CollectorsAlbumClient.getClient().init(event);
+    }
+
+    private void registerReloadListener(AddReloadListenerEvent event) {
+        event.addListener(CARD_PACK_MANAGER);
+        event.addListener(ALBUM_CARD_BOOST_MANAGER);
     }
 }

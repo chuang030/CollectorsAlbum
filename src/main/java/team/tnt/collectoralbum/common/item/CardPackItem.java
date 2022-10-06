@@ -1,16 +1,16 @@
 package team.tnt.collectoralbum.common.item;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemCooldowns;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
-import net.minecraft.world.level.Level;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.UseAction;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.CooldownTracker;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.common.init.SoundRegistry;
 import team.tnt.collectoralbum.data.packs.ICardDropProvider;
@@ -31,8 +31,8 @@ public class CardPackItem extends Item {
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack stack) {
-        return UseAnim.BOW;
+    public UseAction getUseAnimation(ItemStack stack) {
+        return UseAction.BOW;
     }
 
     @Override
@@ -41,9 +41,9 @@ public class CardPackItem extends Item {
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
-        if (livingEntity instanceof ServerPlayer) {
-            ServerPlayer player = (ServerPlayer) livingEntity;
+    public ItemStack finishUsingItem(ItemStack stack, World level, LivingEntity livingEntity) {
+        if (livingEntity instanceof ServerPlayerEntity) {
+            ServerPlayerEntity player = (ServerPlayerEntity) livingEntity;
             if (!player.isCreative()) {
                 stack.shrink(1);
             }
@@ -53,22 +53,22 @@ public class CardPackItem extends Item {
                 OpenCardPackContextHolder.store(player, itemStacks);
                 Networking.dispatchClientPacket(player, new OpenCardScreenPacket(itemStacks));
             });
-            ItemCooldowns cooldowns = player.getCooldowns();
+            CooldownTracker cooldowns = player.getCooldowns();
             cooldowns.addCooldown(stack.getItem(), 10);
         } else {
-            livingEntity.playSound(SoundRegistry.OPEN, 0.8f, 1.0f);
+            livingEntity.playSound(SoundRegistry.OPEN.get(), 0.8f, 1.0f);
         }
         return stack;
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+    public ActionResult<ItemStack> use(World level, PlayerEntity player, Hand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
-        ItemCooldowns cooldowns = player.getCooldowns();
+        CooldownTracker cooldowns = player.getCooldowns();
         if (cooldowns.isOnCooldown(stack.getItem())) {
-            return InteractionResultHolder.pass(stack);
+            return ActionResult.pass(stack);
         }
         player.startUsingItem(usedHand);
-        return InteractionResultHolder.consume(stack);
+        return ActionResult.consume(stack);
     }
 }
