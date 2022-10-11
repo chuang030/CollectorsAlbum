@@ -1,5 +1,8 @@
 package team.tnt.collectoralbum.data.boosts;
 
+import net.minecraft.util.text.ITextComponent;
+
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -19,5 +22,18 @@ public final class AlbumCardBoostCollection {
                 action.apply(ctx);
             }
         }
+    }
+
+    public ITextComponent[] getDescription() {
+        IAction[] actions = byOps.get(OpType.ACTIVE);
+        if (actions == null || actions.length == 0) {
+            return new ITextComponent[0];
+        }
+        return Arrays.stream(actions)
+                .sorted(IDescriptionProvider::compareTo)
+                .map(IDescriptionProvider::getDescription)
+                .filter(components -> components.length > 0)
+                .flatMap(Arrays::stream)
+                .toArray(ITextComponent[]::new);
     }
 }

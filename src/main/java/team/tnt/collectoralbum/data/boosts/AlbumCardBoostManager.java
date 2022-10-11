@@ -9,6 +9,7 @@ import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import team.tnt.collectoralbum.util.JsonHelper;
@@ -21,6 +22,7 @@ public class AlbumCardBoostManager extends JsonReloadListener {
     private static final Gson GSON = new Gson();
 
     private AlbumCardBoostCollection collection;
+    private ITextComponent[] boostsDescription;
 
     public AlbumCardBoostManager() {
         super(GSON, "card_boosts");
@@ -28,6 +30,14 @@ public class AlbumCardBoostManager extends JsonReloadListener {
 
     public Optional<AlbumCardBoostCollection> getBoosts() {
         return Optional.ofNullable(collection);
+    }
+
+    public ITextComponent[] getBoostsDescription() {
+        return boostsDescription;
+    }
+
+    public void loadDescriptionFromList(List<ITextComponent> list) {
+        this.boostsDescription = list.toArray(new ITextComponent[0]);
     }
 
     @Override
@@ -49,6 +59,7 @@ public class AlbumCardBoostManager extends JsonReloadListener {
             }
         }
         this.collection = new AlbumCardBoostCollection(loaded.get(OpType.CLEANUP).toArray(new IAction[0]), loaded.get(OpType.ACTIVE).toArray(new IAction[0]));
+        this.boostsDescription = collection.getDescription();
         LOGGER.info("Album boosts loaded");
     }
 }

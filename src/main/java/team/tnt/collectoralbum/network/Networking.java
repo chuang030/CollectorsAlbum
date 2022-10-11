@@ -10,6 +10,7 @@ import team.tnt.collectoralbum.network.api.IPacket;
 import team.tnt.collectoralbum.network.packet.OpenCardScreenPacket;
 import team.tnt.collectoralbum.network.packet.RequestAlbumPagePacket;
 import team.tnt.collectoralbum.network.packet.RequestCardPackDropPacket;
+import team.tnt.collectoralbum.network.packet.SendBoostsDescriptionPacket;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -42,6 +43,7 @@ public class Networking {
         registerPacket(OpenCardScreenPacket.class);
         registerPacket(RequestAlbumPagePacket.class);
         registerPacket(RequestCardPackDropPacket.class);
+        registerPacket(SendBoostsDescriptionPacket.class);
     }
 
     // Internal

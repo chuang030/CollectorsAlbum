@@ -6,6 +6,7 @@ import com.google.gson.JsonParseException;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.util.JSONUtils;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 import team.tnt.collectoralbum.util.JsonHelper;
 
@@ -23,6 +24,11 @@ public class ClearEffectsAction implements IAction {
         for (Effect effect : effects) {
             player.removeEffect(effect);
         }
+    }
+
+    @Override
+    public ITextComponent[] getDescription() {
+        return new ITextComponent[0];
     }
 
     public static final class Serializer implements IActionSerializer<ClearEffectsAction> {

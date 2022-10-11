@@ -7,15 +7,18 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 import team.tnt.collectoralbum.util.JsonHelper;
 
 public class GiveMissingEffectAction implements IAction {
 
     private final GiveEffectsAction.IEffectFactory[] factories;
+    private final ITextComponent[] description;
 
     public GiveMissingEffectAction(GiveEffectsAction.IEffectFactory[] factories) {
         this.factories = factories;
+        this.description = GiveEffectsAction.generateDescriptionForEffects(factories);
     }
 
     @Override
@@ -29,6 +32,11 @@ public class GiveMissingEffectAction implements IAction {
                 player.addEffect(instance);
             }
         }
+    }
+
+    @Override
+    public ITextComponent[] getDescription() {
+        return description;
     }
 
     public static final class Serializer implements IActionSerializer<GiveMissingEffectAction> {

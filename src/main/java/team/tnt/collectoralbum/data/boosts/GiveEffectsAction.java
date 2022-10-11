@@ -7,15 +7,35 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 import team.tnt.collectoralbum.util.JsonHelper;
+import team.tnt.collectoralbum.util.TextHelper;
 
 public class GiveEffectsAction implements IAction {
 
     private final IEffectFactory[] effects;
+    private final ITextComponent[] description;
 
     private GiveEffectsAction(IEffectFactory[] effects) {
         this.effects = effects;
+        this.description = generateDescriptionForEffects(effects);
+    }
+
+    public static ITextComponent[] generateDescriptionForEffects(IEffectFactory[] factories) {
+        ITextComponent[] res = new ITextComponent[factories.length];
+        int index = 0;
+        for (IEffectFactory factory : factories) {
+            EffectInstance instance = factory.makeEffect();
+            ITextComponent displayText = instance.getEffect().getDisplayName();
+            String amplifier = TextHelper.toRomanNumberString(instance.getAmplifier() + 1);
+            ITextComponent effectValue = new StringTextComponent(displayText.getString() + " " + amplifier).withStyle(TextFormatting.GREEN);
+            res[index++] = new TranslationTextComponent("text.collectorsalbum.album.boost.effect_instance", effectValue).withStyle(TextFormatting.YELLOW);
+        }
+        return res;
     }
 
     @Override
@@ -25,6 +45,11 @@ public class GiveEffectsAction implements IAction {
             EffectInstance instance = factory.makeEffect();
             player.addEffect(instance);
         }
+    }
+
+    @Override
+    public ITextComponent[] getDescription() {
+        return description;
     }
 
     @FunctionalInterface
