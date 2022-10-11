@@ -4,14 +4,18 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import org.jetbrains.annotations.NotNull;
 import team.tnt.collectoralbum.common.AlbumStats;
 import team.tnt.collectoralbum.common.ICardCategory;
 import team.tnt.collectoralbum.common.init.CardCategoryRegistry;
 import team.tnt.collectoralbum.common.item.CardRarity;
 import team.tnt.collectoralbum.common.item.ICard;
 import team.tnt.collectoralbum.util.JsonHelper;
+import team.tnt.collectoralbum.util.TextHelper;
 
 import java.util.*;
 
@@ -20,11 +24,13 @@ public class CardsCondition implements ICardBoostCondition {
     private final ICardCategory category;
     private final CardRarity rarity;
     private final int count;
+    private final Component[] description;
 
     private CardsCondition(ICardCategory category, CardRarity rarity, int count) {
         this.category = category;
         this.rarity = rarity;
         this.count = count;
+        this.description = new Component[] { this.createFullDescription() };
     }
 
     @Override
@@ -44,6 +50,45 @@ public class CardsCondition implements ICardBoostCondition {
             cardList = cardList.stream().filter(card -> card.getCardRarity() == rarity).toList();
         }
         return cardList.size() >= count;
+    }
+
+    @Override
+    public Component[] getDescription() {
+        return description;
+    }
+
+    private Component createFullDescription() {
+        Component wildcard = Component.translatable("text.collectorsalbum.album.boost.condition.cards.wildcard");
+        Component count = Component.translatable(String.valueOf(this.count)).withStyle(ChatFormatting.AQUA);
+        Component categoryText = category != null ?
+                Component.literal(category.getTranslatedName().getString()).withStyle(category.getTooltipFormat()) :
+                wildcard;
+        Component rarityText = rarity != null ?
+                Component.literal(TextHelper.splitAndCapitalizeFirstWords(rarity.name(), "_+")).withStyle(rarity.getColor()):
+                wildcard;
+        return Component.translatable("text.collectorsalbum.album.boost.condition.cards", count, rarityText, categoryText).withStyle(ChatFormatting.GRAY);
+    }
+
+    @Override
+    public int compareTo(@NotNull IDescriptionProvider o) {
+        if (o instanceof PointsCondition) {
+            return 1;
+        }
+        if (o instanceof CardsCondition c) {
+            CardRarity oRarity = c.rarity;
+            int oCount = c.count;
+            if (oCount == count) {
+                if (Objects.equals(rarity, oRarity)) {
+                    if (category == null && Objects.equals(category, c.category)) {
+                        return 0;
+                    }
+                    return category.getIndex() - c.category.getIndex();
+                }
+                return rarity == null || oRarity == null ? TextHelper.nullSortFirst(rarity, oRarity) : rarity.ordinal() - oRarity.ordinal();
+            }
+            return count - oCount;
+        }
+        return 0;
     }
 
     public static final class Serializer implements ICardBoostConditionSerializer<CardsCondition> {

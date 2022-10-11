@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
@@ -23,6 +24,11 @@ public class ClearEffectsAction implements IAction {
         for (MobEffect effect : effects) {
             player.removeEffect(effect);
         }
+    }
+
+    @Override
+    public Component[] getDescription() {
+        return new Component[0];
     }
 
     public static final class Serializer implements IActionSerializer<ClearEffectsAction> {

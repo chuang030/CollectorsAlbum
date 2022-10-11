@@ -3,16 +3,21 @@ package team.tnt.collectoralbum.data.boosts;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.GsonHelper;
+import org.jetbrains.annotations.NotNull;
 import team.tnt.collectoralbum.common.AlbumStats;
 import team.tnt.collectoralbum.util.JsonHelper;
 
 public class PointsCondition implements ICardBoostCondition {
 
     private final int minPoints;
+    private final Component[] description;
 
     private PointsCondition(int minPoints) {
         this.minPoints = minPoints;
+        this.description = new Component[] { this.getDescriptionText() };
     }
 
     @Override
@@ -20,6 +25,27 @@ public class PointsCondition implements ICardBoostCondition {
         AlbumStats stats = context.get(ActiveBoostContext.STATS, AlbumStats.class);
         int points = stats.getPoints();
         return points >= minPoints;
+    }
+
+    @Override
+    public Component[] getDescription() {
+        return description;
+    }
+
+    @Override
+    public int compareTo(@NotNull IDescriptionProvider o) {
+        if (o instanceof CardsCondition) {
+            return -1;
+        }
+        if (o instanceof PointsCondition c) {
+            return minPoints - c.minPoints;
+        }
+        return 0;
+    }
+
+    private Component getDescriptionText() {
+        Component points = Component.literal(String.valueOf(minPoints)).withStyle(ChatFormatting.AQUA);
+        return Component.translatable("text.collectorsalbum.album.boost.condition.points", points).withStyle(ChatFormatting.GRAY);
     }
 
     public static final class Serializer implements ICardBoostConditionSerializer<PointsCondition> {
