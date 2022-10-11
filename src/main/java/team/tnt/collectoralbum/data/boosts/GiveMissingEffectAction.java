@@ -2,6 +2,7 @@ package team.tnt.collectoralbum.data.boosts;
 
 import com.google.gson.*;
 import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
@@ -13,9 +14,11 @@ import team.tnt.collectoralbum.util.JsonHelper;
 public class GiveMissingEffectAction implements IAction {
 
     private final GiveEffectsAction.IEffectFactory[] factories;
+    private final Component[] description;
 
     public GiveMissingEffectAction(GiveEffectsAction.IEffectFactory[] factories) {
         this.factories = factories;
+        this.description = GiveEffectsAction.generateDescriptionForEffects(factories);
     }
 
     @Override
@@ -29,6 +32,11 @@ public class GiveMissingEffectAction implements IAction {
                 player.addEffect(instance);
             }
         }
+    }
+
+    @Override
+    public Component[] getDescription() {
+        return description;
     }
 
     public static final class Serializer implements IActionSerializer<GiveMissingEffectAction> {
