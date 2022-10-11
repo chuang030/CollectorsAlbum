@@ -1,7 +1,11 @@
 package team.tnt.collectoralbum.data.boosts;
 
+import net.minecraft.network.chat.Component;
+
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 
 public final class AlbumCardBoostCollection {
 
@@ -19,5 +23,18 @@ public final class AlbumCardBoostCollection {
                 action.apply(ctx);
             }
         }
+    }
+
+    public Component[] getDescription() {
+        IAction[] actions = byOps.get(OpType.ACTIVE);
+        if (actions == null || actions.length == 0) {
+            return new Component[0];
+        }
+        return Arrays.stream(actions)
+                .sorted(IDescriptionProvider::compareTo)
+                .map(IDescriptionProvider::getDescription)
+                .filter(components -> components.length > 0)
+                .flatMap(Arrays::stream)
+                .toArray(Component[]::new);
     }
 }

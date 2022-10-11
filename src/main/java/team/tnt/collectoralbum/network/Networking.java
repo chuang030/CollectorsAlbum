@@ -14,6 +14,7 @@ import team.tnt.collectoralbum.network.api.*;
 import team.tnt.collectoralbum.network.packet.OpenCardScreenPacket;
 import team.tnt.collectoralbum.network.packet.RequestAlbumPagePacket;
 import team.tnt.collectoralbum.network.packet.RequestCardPackDropPacket;
+import team.tnt.collectoralbum.network.packet.SendBoostsDescriptionPacket;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.BiConsumer;
@@ -37,6 +38,7 @@ public class Networking {
     @Environment(EnvType.CLIENT)
     public static void registerClientReceivers() {
         registerServer2ClientReceiver(OpenCardScreenPacket.class);
+        registerServer2ClientReceiver(SendBoostsDescriptionPacket.class);
     }
 
     public static void registerServerReceivers() {

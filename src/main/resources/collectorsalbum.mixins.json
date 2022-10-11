@@ -5,7 +5,8 @@
   "mixins": [
     "LivingDeathMixin",
     "PlayerMixin",
-    "ServerPlayerMixin"
+    "ServerPlayerMixin",
+    "PlayerListMixin"
   ],
   "injectors": {
     "defaultRequire": 1
