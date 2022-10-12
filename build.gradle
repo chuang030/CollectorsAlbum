@@ -20,7 +20,7 @@ apply plugin: 'org.spongepowered.mixin'
 
 version = "${mod_version}"
 group = 'team.tnt.collectoralbum'
-archivesBaseName = 'collectorsalbum-${loader}-${minecraft_version}'
+archivesBaseName = "collectorsalbum-${loader}-${minecraft_version}"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 

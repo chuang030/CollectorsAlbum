@@ -27,7 +27,7 @@ public class AlbumBoostHandler {
         data.ifPresent(ops -> {
             boolean hasAlbum = false;
             for (ItemStack stack : inventory.getItems()) {
-                if (stack.getItem() == ItemRegistry.ALBUM) {
+                if (stack.getItem() == ItemRegistry.ALBUM.get()) {
                     applyBoosts(stack, player, ops);
                     hasAlbum = true;
                     break;

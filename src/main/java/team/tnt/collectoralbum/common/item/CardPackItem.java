@@ -55,7 +55,7 @@ public class CardPackItem extends Item {
             ItemCooldowns cooldowns = player.getCooldowns();
             cooldowns.addCooldown(stack.getItem(), 10);
         } else {
-            livingEntity.playSound(SoundRegistry.OPEN, 0.8f, 1.0f);
+            livingEntity.playSound(SoundRegistry.OPEN.get(), 0.8f, 1.0f);
         }
         return stack;
     }

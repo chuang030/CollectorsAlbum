@@ -1,76 +1,52 @@
 package team.tnt.collectoralbum.network.packet;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.network.NetworkEvent;
 import team.tnt.collectoralbum.client.screen.CardOpenScreen;
-import team.tnt.collectoralbum.network.Networking;
-import team.tnt.collectoralbum.network.api.IClientPacket;
-import team.tnt.collectoralbum.network.api.IPacketDecoder;
-import team.tnt.collectoralbum.network.api.IPacketEncoder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class OpenCardScreenPacket implements IClientPacket<OpenCardScreenPacket.Data> {
+public class OpenCardScreenPacket extends AbstractNetworkPacket<OpenCardScreenPacket> {
 
-    private static final ResourceLocation PACKET_ID = Networking.generateUniquePacketId(OpenCardScreenPacket.class);
-
-    private final Data data;
+    private final List<ItemStack> drops;
 
     public OpenCardScreenPacket() {
-        data = null;
+        this.drops = Collections.emptyList();
     }
 
     public OpenCardScreenPacket(List<ItemStack> drops) {
-        this.data = new Data(drops);
+        this.drops = drops;
     }
 
     @Override
-    public ResourceLocation getPacketId() {
-        return PACKET_ID;
+    public void encode(FriendlyByteBuf buffer) {
+        buffer.writeInt(drops.size());
+        for (ItemStack stack : drops) {
+            buffer.writeItem(stack);
+        }
     }
 
     @Override
-    public Data getPacketData() {
-        return data;
+    public OpenCardScreenPacket decode(FriendlyByteBuf buffer) {
+        int count = buffer.readInt();
+        List<ItemStack> list = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) {
+            ItemStack stack = buffer.readItem();
+            list.add(stack);
+        }
+        return new OpenCardScreenPacket(list);
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
-    public IPacketEncoder<Data> getEncoder() {
-        return (packetData, buffer) -> {
-            List<ItemStack> list = packetData.drops();
-            buffer.writeInt(list.size());
-            for (ItemStack stack : list) {
-                buffer.writeItem(stack);
-            }
-        };
-    }
-
-    @Override
-    public IPacketDecoder<Data> getDecoder() {
-        return buffer -> {
-            int count = buffer.readInt();
-            List<ItemStack> list = new ArrayList<>(count);
-            for (int i = 0; i < count; i++) {
-                ItemStack stack = buffer.readItem();
-                list.add(stack);
-            }
-            return new Data(list);
-        };
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public void handleClientsidePacket(Minecraft client, ClientPacketListener listener, Data packetData, PacketSender dispatcher) {
-        CardOpenScreen screen = new CardOpenScreen(packetData.drops());
-        client.setScreen(screen);
-    }
-
-    record Data(List<ItemStack> drops) {
+    protected void handlePacket(NetworkEvent.Context context) {
+        CardOpenScreen screen = new CardOpenScreen(drops);
+        Minecraft.getInstance().setScreen(screen);
     }
 }

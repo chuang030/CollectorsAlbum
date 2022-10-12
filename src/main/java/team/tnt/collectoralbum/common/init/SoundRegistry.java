@@ -1,35 +1,21 @@
 package team.tnt.collectoralbum.common.init;
 
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import team.tnt.collectoralbum.CollectorsAlbum;
 
 public final class SoundRegistry {
 
-    public static final SoundEvent FLIP_COMMON = new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "flip_common"));
-    public static final SoundEvent FLIP_UNCOMMON = new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "flip_uncommon"));
-    public static final SoundEvent FLIP_RARE = new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "flip_rare"));
-    public static final SoundEvent FLIP_EPIC = new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "flip_epic"));
-    public static final SoundEvent FLIP_LEGENDARY = new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "flip_legendary"));
-    public static final SoundEvent FLIP_MYTHICAL = new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "flip_mythical"));
-    public static final SoundEvent OPEN = new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "open"));
+    public static final DeferredRegister<SoundEvent> REGISTRY = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, CollectorsAlbum.MODID);
 
-    public static void registerSounds() {
-        registerSound(FLIP_COMMON);
-        registerSound(FLIP_UNCOMMON);
-        registerSound(FLIP_RARE);
-        registerSound(FLIP_EPIC);
-        registerSound(FLIP_LEGENDARY);
-        registerSound(FLIP_MYTHICAL);
-        registerSound(OPEN);
-    }
-
-    private static void registerSound(SoundEvent event) {
-        registerSound(event.getLocation(), event);
-    }
-
-    private static void registerSound(ResourceLocation id, SoundEvent event) {
-        Registry.register(Registry.SOUND_EVENT, id, event);
-    }
+    public static final RegistryObject<SoundEvent> FLIP_COMMON = REGISTRY.register("flip_common", () -> new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "flip_common")));
+    public static final RegistryObject<SoundEvent> FLIP_UNCOMMON = REGISTRY.register("flip_uncommon", () -> new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "flip_uncommon")));
+    public static final RegistryObject<SoundEvent> FLIP_RARE = REGISTRY.register("flip_rare", () -> new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "flip_rare")));
+    public static final RegistryObject<SoundEvent> FLIP_EPIC = REGISTRY.register("flip_epic", () -> new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "flip_epic")));
+    public static final RegistryObject<SoundEvent> FLIP_LEGENDARY = REGISTRY.register("flip_legendary", () -> new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "flip_legendary")));
+    public static final RegistryObject<SoundEvent> FLIP_MYTHICAL = REGISTRY.register("flip_mythical", () -> new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "flip_mythical")));
+    public static final RegistryObject<SoundEvent> OPEN = REGISTRY.register("open", () -> new SoundEvent(new ResourceLocation(CollectorsAlbum.MODID, "open")));
 }

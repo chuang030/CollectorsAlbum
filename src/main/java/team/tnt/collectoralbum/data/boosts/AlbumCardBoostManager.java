@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -13,15 +12,13 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.util.JsonHelper;
 
 import java.util.*;
 
-public class AlbumCardBoostManager extends SimpleJsonResourceReloadListener implements IdentifiableResourceReloadListener {
+public class AlbumCardBoostManager extends SimpleJsonResourceReloadListener {
 
     private static final Logger LOGGER = LogManager.getLogger(AlbumCardBoostManager.class);
-    private static final ResourceLocation FABRIC_ID = new ResourceLocation(CollectorsAlbum.MODID, "album_card_boost_manager");
     private static final Gson GSON = new Gson();
 
     private AlbumCardBoostCollection collection;
@@ -41,11 +38,6 @@ public class AlbumCardBoostManager extends SimpleJsonResourceReloadListener impl
 
     public void loadDescriptionFromList(List<Component> list) {
         this.boostsDescription = list.toArray(Component[]::new);
-    }
-
-    @Override
-    public ResourceLocation getFabricId() {
-        return FABRIC_ID;
     }
 
     @Override

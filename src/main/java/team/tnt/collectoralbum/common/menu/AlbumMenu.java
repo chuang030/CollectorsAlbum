@@ -29,7 +29,7 @@ public class AlbumMenu extends AbstractContainerMenu {
     }
 
     public AlbumMenu(AlbumContainer container, Inventory playerInventory, int id, @Nullable ICardCategory category) {
-        super(MenuTypes.ALBUM, id);
+        super(MenuTypes.ALBUM.get(), id);
         this.container = container;
         this.category = category;
 
