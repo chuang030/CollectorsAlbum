@@ -1,87 +1,114 @@
-plugins {
-	id 'fabric-loom' version '0.12-SNAPSHOT'
-	id 'maven-publish'
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+    }
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+}
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
 
-archivesBaseName = project.archives_base_name + "-${project.minecraft_version}"
-version = project.mod_version
-group = project.maven_group
+
+version = "${mod_version}"
+group = 'team.tnt.collectoralbum'
+archivesBaseName = 'collectorsalbum-${loader}-${minecraft_version}'
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: 'official', version: '1.18.2'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'info'
+            property 'forge.enabledGameTestNamespaces', 'collectorsalbum'
+            properties 'mixin.env.remapRefMap': 'true'
+            property 'mixin.env.refMapRemappingFile', "${project.projectDir}/build/createSrgToMcp/output.srg"
+            arg "-mixin.config=collectorsalbum.mixins.json"
+
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'info'
+            property 'forge.enabledGameTestNamespaces', 'collectorsalbum'
+            properties 'mixin.env.remapRefMap': 'true'
+            property 'mixin.env.refMapRemappingFile', "${project.projectDir}/build/createSrgToMcp/output.srg"
+            arg "-mixin.config=collectorsalbum.mixins.json"
+
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-	maven { url "https://maven.parchmentmc.org" }
-	maven { url "https://maven.shedaniel.me/" }
-	maven { url = "https://maven.terraformersmc.com/releases" }
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	// Mappings
-	mappings loom.layered() {
-		officialMojangMappings() // we want mojang mappins
-		parchment("org.parchmentmc.data:parchment-1.18.2:${project.parchment_version}@zip") // and layered with community variable names
-	}
-	// Fabric loader
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	// Modmenu
-	modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
-	// Cloth Config API
-	modApi("me.shedaniel.cloth:cloth-config-fabric:${project.config_version}") {
-		exclude(group: "net.fabricmc.fabric-api")
-	}
-
-	// JUnit
-	testImplementation("org.junit.jupiter:junit-jupiter:${project.junit_version}")
-}
-
-processResources {
-	inputs.property "version", project.version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
-}
-
-tasks.withType(JavaCompile).configureEach {
-	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
-	it.options.release = 17
-}
-
-java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
+    minecraft 'net.minecraftforge:forge:1.18.2-40.1.80'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
 
 jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
-	}
+    manifest {
+        attributes([
+                "Specification-Title"     : "collectorsalbum",
+                "Specification-Vendor"    : "Toma",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.jar.archiveVersion,
+                "Implementation-Vendor"   : "Toma",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs": "collectorsalbum.mixins.json"
+        ])
+    }
 }
 
-test {
-	useJUnitPlatform()
+mixin {
+    add sourceSets.main, "collectorsalbum.refmap.json"
 }
 
-// configure the maven publication
+jar.finalizedBy('reobfJar')
+
 publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-		}
-	}
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/mcmodsrepo"
+        }
+    }
+}
 
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
-	}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }
