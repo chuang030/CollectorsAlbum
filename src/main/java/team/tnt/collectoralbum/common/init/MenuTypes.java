@@ -13,7 +13,7 @@ import team.tnt.collectoralbum.common.menu.AlbumMenu;
 
 public final class MenuTypes {
 
-    public static final DeferredRegister<MenuType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.CONTAINERS, CollectorsAlbum.MODID);
+    public static final DeferredRegister<MenuType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.MENU_TYPES, CollectorsAlbum.MODID);
 
     public static final RegistryObject<MenuType<AlbumMenu>> ALBUM = REGISTRY.register("album", () -> IForgeMenuType.create((windowId, inv, data) -> {
         ItemStack stack = data.readItem();

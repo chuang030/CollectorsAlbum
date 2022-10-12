@@ -5,8 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.GsonHelper;
 import org.jetbrains.annotations.NotNull;
 import team.tnt.collectoralbum.common.AlbumStats;
@@ -46,8 +44,8 @@ public class PointsCondition implements ICardBoostCondition {
     }
 
     private Component getDescriptionText() {
-        Component points = new TextComponent(String.valueOf(minPoints)).withStyle(ChatFormatting.AQUA);
-        return new TranslatableComponent("text.collectorsalbum.album.boost.condition.points", points).withStyle(ChatFormatting.GRAY);
+        Component points = Component.literal(String.valueOf(minPoints)).withStyle(ChatFormatting.AQUA);
+        return Component.translatable("text.collectorsalbum.album.boost.condition.points", points).withStyle(ChatFormatting.GRAY);
     }
 
     public static final class Serializer implements ICardBoostConditionSerializer<PointsCondition> {

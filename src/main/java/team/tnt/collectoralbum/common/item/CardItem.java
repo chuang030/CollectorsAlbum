@@ -2,8 +2,6 @@ package team.tnt.collectoralbum.common.item;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -47,13 +45,13 @@ public class CardItem extends Item implements ICard {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
         CardItem cardItem = (CardItem) stack.getItem();
         CardDefinition definition = cardItem.getCard();
-        Component numberComponent = new TextComponent("#" + cardNumber).withStyle(ChatFormatting.YELLOW);
-        Component categoryComponent = new TextComponent(definition.category().getTranslatedName().getString()).withStyle(definition.category().getTooltipFormat());
-        Component rarityComponent = new TextComponent(rarity.name()).withStyle(rarity.getColor());
-        Component valueComponent = new TextComponent(rarity.getValue() + " pts").withStyle(ChatFormatting.WHITE);
-        tooltipComponents.add(new TranslatableComponent(TEXT_CARD_NUMBER, numberComponent).withStyle(ChatFormatting.GRAY));
-        tooltipComponents.add(new TranslatableComponent(TEXT_CARD_CATEGORY, categoryComponent).withStyle(ChatFormatting.GRAY));
-        tooltipComponents.add(new TranslatableComponent(TEXT_CARD_RARITY, rarityComponent).withStyle(ChatFormatting.GRAY));
-        tooltipComponents.add(new TranslatableComponent(TEXT_CARD_VALUE, valueComponent).withStyle(ChatFormatting.GRAY));
+        Component numberComponent = Component.literal("#" + cardNumber).withStyle(ChatFormatting.YELLOW);
+        Component categoryComponent = Component.literal(definition.category().getTranslatedName().getString()).withStyle(definition.category().getTooltipFormat());
+        Component rarityComponent = Component.literal(rarity.name()).withStyle(rarity.getColor());
+        Component valueComponent = Component.literal(rarity.getValue() + " pts").withStyle(ChatFormatting.WHITE);
+        tooltipComponents.add(Component.translatable(TEXT_CARD_NUMBER, numberComponent).withStyle(ChatFormatting.GRAY));
+        tooltipComponents.add(Component.translatable(TEXT_CARD_CATEGORY, categoryComponent).withStyle(ChatFormatting.GRAY));
+        tooltipComponents.add(Component.translatable(TEXT_CARD_RARITY, rarityComponent).withStyle(ChatFormatting.GRAY));
+        tooltipComponents.add(Component.translatable(TEXT_CARD_VALUE, valueComponent).withStyle(ChatFormatting.GRAY));
     }
 }

@@ -2,9 +2,8 @@ package team.tnt.collectoralbum.common.item;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -26,7 +25,7 @@ import java.util.List;
 
 public class AlbumItem extends Item implements IDeathPersistableItem {
 
-    private static final Component SHOW_BOOSTS = new TranslatableComponent("text.collectorsalbum.album.boost.show").withStyle(ChatFormatting.GRAY);
+    private static final Component SHOW_BOOSTS = Component.translatable("text.collectorsalbum.album.boost.show").withStyle(ChatFormatting.GRAY);
 
     public AlbumItem() {
         super(new Properties().tab(CollectorsAlbum.TAB).stacksTo(1));
@@ -42,7 +41,7 @@ public class AlbumItem extends Item implements IDeathPersistableItem {
         ItemStack itemStack = player.getItemInHand(usedHand);
         if (!level.isClientSide) {
             ServerPlayer serverPlayer = (ServerPlayer) player;
-            NetworkHooks.openGui(serverPlayer, new SimpleMenuProvider((id, inv, owner) -> new AlbumMenu(new AlbumContainer(itemStack), inv, id), TextComponent.EMPTY), buffer -> {
+            NetworkHooks.openScreen(serverPlayer, new SimpleMenuProvider((id, inv, owner) -> new AlbumMenu(new AlbumContainer(itemStack), inv, id), CommonComponents.EMPTY), buffer -> {
                 buffer.writeItem(itemStack);
                 buffer.writeInt(0);
             });

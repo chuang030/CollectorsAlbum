@@ -4,8 +4,6 @@ import com.google.gson.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
@@ -32,8 +30,8 @@ public class GiveEffectsAction implements IAction {
             MobEffectInstance instance = factory.makeEffect();
             Component displayText = instance.getEffect().getDisplayName();
             String amplifier = TextHelper.toRomanNumberString(instance.getAmplifier() + 1);
-            Component effectValue = new TextComponent(displayText.getString() + " " + amplifier).withStyle(ChatFormatting.GREEN);
-            res[index++] = new TranslatableComponent("text.collectorsalbum.album.boost.effect_instance", effectValue).withStyle(ChatFormatting.YELLOW);
+            Component effectValue = Component.literal(displayText.getString() + " " + amplifier).withStyle(ChatFormatting.GREEN);
+            res[index++] = Component.translatable("text.collectorsalbum.album.boost.effect_instance", effectValue).withStyle(ChatFormatting.YELLOW);
         }
         return res;
     }

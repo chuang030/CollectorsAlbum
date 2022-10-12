@@ -6,8 +6,6 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import org.jetbrains.annotations.NotNull;
@@ -60,15 +58,15 @@ public class CardsCondition implements ICardBoostCondition {
     }
 
     private Component createFullDescription() {
-        Component wildcard = new TranslatableComponent("text.collectorsalbum.album.boost.condition.cards.wildcard");
-        Component count = new TextComponent(String.valueOf(this.count)).withStyle(ChatFormatting.AQUA);
+        Component wildcard = Component.translatable("text.collectorsalbum.album.boost.condition.cards.wildcard");
+        Component count = Component.literal(String.valueOf(this.count)).withStyle(ChatFormatting.AQUA);
         Component categoryText = category != null ?
-                new TextComponent(category.getTranslatedName().getString()).withStyle(category.getTooltipFormat()) :
+                Component.literal(category.getTranslatedName().getString()).withStyle(category.getTooltipFormat()) :
                 wildcard;
         Component rarityText = rarity != null ?
-                new TextComponent(TextHelper.splitAndCapitalizeFirstWords(rarity.name(), "_+")).withStyle(rarity.getColor()):
+                Component.literal(TextHelper.splitAndCapitalizeFirstWords(rarity.name(), "_+")).withStyle(rarity.getColor()):
                 wildcard;
-        return new TranslatableComponent("text.collectorsalbum.album.boost.condition.cards", count, rarityText, categoryText).withStyle(ChatFormatting.GRAY);
+        return Component.translatable("text.collectorsalbum.album.boost.condition.cards", count, rarityText, categoryText).withStyle(ChatFormatting.GRAY);
     }
 
     @Override

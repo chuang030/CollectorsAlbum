@@ -1,7 +1,7 @@
 package team.tnt.collectoralbum.network.packet;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
@@ -50,7 +50,7 @@ public class RequestAlbumPagePacket extends AbstractNetworkPacket<RequestAlbumPa
         }
         AlbumContainer container = new AlbumContainer(stack);
         ICardCategory category = this.category;
-        NetworkHooks.openGui(context.getSender(), new SimpleMenuProvider((id, inv, player) -> new AlbumMenu(container, inv, id, category), TextComponent.EMPTY), buffer -> {
+        NetworkHooks.openScreen(context.getSender(), new SimpleMenuProvider((id, inv, player) -> new AlbumMenu(container, inv, id, category), CommonComponents.EMPTY), buffer -> {
             buffer.writeItem(stack);
             buffer.writeBoolean(category != null);
             if (category != null) {
