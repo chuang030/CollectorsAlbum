@@ -3,15 +3,19 @@ package team.tnt.collectoralbum.common.item;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.common.CardCategoryIndexPool;
 import team.tnt.collectoralbum.common.CardDefinition;
+import team.tnt.collectoralbum.integration.IntegrationsHelper;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class CardItem extends Item implements ICard {
@@ -30,6 +34,12 @@ public class CardItem extends Item implements ICard {
         this.card = card;
         this.rarity = rarity;
         this.cardNumber = CardCategoryIndexPool.getIndexOffset(card.category()) + card.cardNumber();
+    }
+
+    @Nullable
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+        return IntegrationsHelper.getCardCapabilityProvider(stack, nbt);
     }
 
     @Override
