@@ -14,7 +14,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = "${mod_version}"
+version = "${mod_version}-alpha"
 group = 'team.tnt.collectoralbum'
 archivesBaseName = "collectorsalbum-${loader}-${minecraft_version}"
 
@@ -58,10 +58,23 @@ minecraft {
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
+repositories {
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+}
+
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.39'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+
+    // Integrations
+    implementation fg.deobf("curse.maven:${quark_group}:${quark_file}") // Quark
+    implementation fg.deobf("curse.maven:${autoreg_group}:${autoreg_file}") // Quark dependency - autoreglib
 }
 
 jar {
