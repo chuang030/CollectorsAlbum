@@ -931,6 +931,7 @@
   "text.collectorsalbum.album.points": "Points: %s",
   "text.collectorsalbum.album.total_cards": "Cards: %s/%s",
   "text.collectorsalbum.album.boost.show": "* Hold Control key to show boosts *",
+  "text.collectorsalbum.album.boost.paging": "Page %s/%s",
   "text.collectorsalbum.album.boost.effect_instance": "- %s",
   "text.collectorsalbum.album.boost.condition.cards": "%s %s cards from %s category give",
   "text.collectorsalbum.album.boost.condition.cards.wildcard": "Any",
