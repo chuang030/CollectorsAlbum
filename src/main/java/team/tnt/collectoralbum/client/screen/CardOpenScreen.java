@@ -22,6 +22,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.common.item.ICard;
+import team.tnt.collectoralbum.config.ModConfig;
 import team.tnt.collectoralbum.network.Networking;
 import team.tnt.collectoralbum.network.packet.RequestCardPackDropPacket;
 
@@ -72,7 +73,8 @@ public class CardOpenScreen extends Screen {
     @Override
     public void onClose() {
         super.onClose();
-        if (flipsRemaining == 0) {
+        boolean requireAll = ModConfig.INSTANCE.requireTurnAllCards.get();
+        if (!requireAll || flipsRemaining == 0) {
             Networking.dispatchServerPacket(new RequestCardPackDropPacket());
         }
     }
