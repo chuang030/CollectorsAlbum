@@ -14,6 +14,9 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Category("main")
     public boolean persistAlbumThroughDeath = true;
 
+    @ConfigEntry.Category("main")
+    public boolean requireTurnAllCards = false;
+
     @Override
     public void validatePostLoad() throws ValidationException {
         mobDrops.validatePostLoad();
