@@ -15,6 +15,7 @@ import team.tnt.collectoralbum.common.CardCategoryIndexPool;
 import team.tnt.collectoralbum.common.ICardCategory;
 import team.tnt.collectoralbum.common.container.AlbumContainer;
 import team.tnt.collectoralbum.common.init.MenuTypes;
+import team.tnt.collectoralbum.common.item.CardRarity;
 import team.tnt.collectoralbum.common.item.ICard;
 
 public class AlbumMenu extends Container {
@@ -45,6 +46,59 @@ public class AlbumMenu extends Container {
 
     @Override
     public ItemStack quickMoveStack(PlayerEntity player, int index) {
+        ItemStack itemStack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack slotItem = slot.getItem();
+            itemStack = slotItem.copy();
+            if (category != null) {
+                int categorySize = category.getCapacity();
+                // inventory to album
+                if (index >= 0 && index < 36) {
+                    if (this.isValidCard(slotItem)) {
+                        ICard card = (ICard) slotItem.getItem();
+                        int targetSlotIndex = card.getCard().cardNumber() + 35;
+                        Slot targetSlot = this.slots.get(targetSlotIndex);
+                        if (slot != null) {
+                            ItemStack stack = targetSlot.getItem();
+                            if (stack.isEmpty()) {
+                                if (!this.moveItemStackTo(slotItem, targetSlotIndex, targetSlotIndex + 1, false)) {
+                                    return ItemStack.EMPTY;
+                                }
+                            } else {
+                                if (!(stack.getItem() instanceof ICard)) {
+                                    return ItemStack.EMPTY;
+                                }
+                                ICard targetCard = (ICard) stack.getItem();
+                                CardRarity usedRarity = targetCard.getCardRarity();
+                                CardRarity newRarity = card.getCardRarity();
+                                if (newRarity.ordinal() <= usedRarity.ordinal()) {
+                                    return ItemStack.EMPTY;
+                                }
+                                ItemStack temp = stack.copy();
+                                targetSlot.set(itemStack);
+                                slot.set(temp);
+                            }
+                        }
+                    }
+                } else if (index >= 36 && index < 36 + categorySize) {
+                    if (!this.moveItemStackTo(slotItem, 0, 36, true)) {
+                        return ItemStack.EMPTY;
+                    }
+                }
+            } else {
+                if (index >= 0 && index < 27) {
+                    if (this.moveItemStackTo(slotItem, 27, 36, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (index >= 27 && index < 36) {
+                    if (this.moveItemStackTo(slotItem, 0, 27, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                }
+            }
+        }
+
         return ItemStack.EMPTY;
     }
 
@@ -67,6 +121,14 @@ public class AlbumMenu extends Container {
 
     public ICardCategory getCategory() {
         return category;
+    }
+
+    private boolean isValidCard(ItemStack stack) {
+        if (stack.getItem() instanceof ICard) {
+            ICard card = (ICard) stack.getItem();
+            return card.getCard().category().equals(this.category);
+        }
+        return false;
     }
 
     public static class CardSlot extends Slot {
