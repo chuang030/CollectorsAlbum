@@ -52,7 +52,7 @@ public class ClearEffectsAction implements IAction {
         public void networkEncode(ClearEffectsAction action, FriendlyByteBuf buffer) {
             buffer.writeInt(action.effects.length);
             for (MobEffect effect : action.effects) {
-                buffer.writeResourceLocation(effect.getRegistryName());
+                buffer.writeResourceLocation(ForgeRegistries.MOB_EFFECTS.getKey(effect));
             }
         }
 

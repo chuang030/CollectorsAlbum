@@ -61,7 +61,7 @@ public class GiveEffectsAction implements IAction {
     public static void encodeEffectFactory(IEffectFactory factory, FriendlyByteBuf buffer) {
         MobEffectInstance instance = factory.makeEffect();
         MobEffect type = instance.getEffect();
-        ResourceLocation effectId = type.getRegistryName();
+        ResourceLocation effectId = ForgeRegistries.MOB_EFFECTS.getKey(type);
 
         buffer.writeResourceLocation(effectId);
         buffer.writeInt(instance.getDuration());

@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -22,7 +21,6 @@ public class AlbumCardBoostManager extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = new Gson();
 
     private AlbumCardBoostCollection collection;
-    private Component[] boostsDescription;
 
     public AlbumCardBoostManager() {
         super(GSON, "card_boosts");
@@ -30,14 +28,6 @@ public class AlbumCardBoostManager extends SimpleJsonResourceReloadListener {
 
     public Optional<AlbumCardBoostCollection> getBoosts() {
         return Optional.ofNullable(collection);
-    }
-
-    public Component[] getBoostsDescription() {
-        return boostsDescription;
-    }
-
-    public void loadDescriptionFromList(List<Component> list) {
-        this.boostsDescription = list.toArray(Component[]::new);
     }
 
     @Override
@@ -58,8 +48,7 @@ public class AlbumCardBoostManager extends SimpleJsonResourceReloadListener {
                 LOGGER.error("Error loading {} file: {}", filePath, e);
             }
         }
-        this.collection = new AlbumCardBoostCollection(loaded.get(OpType.CLEANUP).toArray(IAction[]::new), loaded.get(OpType.ACTIVE).toArray(IAction[]::new));
-        this.boostsDescription = collection.getDescription();
+        this.collection = new AlbumCardBoostCollection(loaded.get(OpType.CLEANUP).toArray(new IAction[0]), loaded.get(OpType.ACTIVE).toArray(new IAction[0]));
         LOGGER.info("Album boosts loaded");
     }
 }

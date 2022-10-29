@@ -3,10 +3,7 @@ package team.tnt.collectoralbum.data.boosts;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public final class AlbumCardBoostCollection {
 
@@ -24,15 +21,20 @@ public final class AlbumCardBoostCollection {
                 .forEach(action -> action.apply(ctx));
     }
 
-    public Component[] getDescription() {
-        return Optional.ofNullable(byOps.get(OpType.ACTIVE))
-                .stream()
-                .flatMap(Arrays::stream)
-                .sorted(IDescriptionProvider::compareTo)
-                .map(IDescriptionProvider::getDescription)
-                .filter(components -> components.length > 0)
-                .flatMap(Arrays::stream)
-                .toArray(Component[]::new);
+    public int getActionsCount(OpType type) {
+        IAction[] actions = byOps.get(type);
+        return actions != null ? actions.length : 0;
+    }
+
+    public Component[] getPagedDescription(int index) {
+        IAction[] actions = byOps.get(OpType.ACTIVE);
+        if (actions == null || actions.length == 0 || index >= actions.length) {
+            return new Component[0];
+        }
+        List<IAction> sortedActions = Arrays.asList(actions);
+        sortedActions.sort(IDescriptionProvider::compareTo);
+        IAction action = sortedActions.get(index);
+        return action.getDescription();
     }
 
     public void encode(FriendlyByteBuf buffer) {

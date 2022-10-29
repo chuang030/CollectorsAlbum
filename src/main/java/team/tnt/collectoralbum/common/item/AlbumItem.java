@@ -13,9 +13,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 import team.tnt.collectoralbum.CollectorsAlbum;
+import team.tnt.collectoralbum.client.CollectorsAlbumClient;
 import team.tnt.collectoralbum.common.container.AlbumContainer;
 import team.tnt.collectoralbum.common.menu.AlbumMenu;
 import team.tnt.collectoralbum.config.ModConfig;
@@ -26,6 +29,7 @@ import java.util.List;
 public class AlbumItem extends Item implements IDeathPersistableItem {
 
     private static final Component SHOW_BOOSTS = Component.translatable("text.collectorsalbum.album.boost.show").withStyle(ChatFormatting.GRAY);
+    private static final String PAGE_INFO_TRANSLATION_KEY = "text.collectorsalbum.album.boost.paging";
 
     public AlbumItem() {
         super(new Properties().tab(CollectorsAlbum.TAB).stacksTo(1));
@@ -49,12 +53,19 @@ public class AlbumItem extends Item implements IDeathPersistableItem {
         return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
         if (Screen.hasControlDown()) {
-            Component[] text = CollectorsAlbum.ALBUM_CARD_BOOST_MANAGER.getBoostsDescription();
-            if (text == null) return;
-            tooltipComponents.addAll(Arrays.asList(text));
+            CollectorsAlbumClient client = CollectorsAlbumClient.getClient();
+            int pageIndex = client.getAlbumPageIndex();
+            int pageSize = client.getPageCount();
+            Component[] pagedText = CollectorsAlbum.ALBUM_CARD_BOOST_MANAGER.getBoosts()
+                    .map(coll -> coll.getPagedDescription(pageIndex))
+                    .orElse(new Component[0]);
+            if (pagedText == null) return;
+            tooltipComponents.addAll(Arrays.asList(pagedText));
+            tooltipComponents.add(Component.translatable(PAGE_INFO_TRANSLATION_KEY, pageIndex + 1, pageSize).withStyle(ChatFormatting.DARK_GRAY));
         } else {
             tooltipComponents.add(SHOW_BOOSTS);
         }
