@@ -3,6 +3,7 @@ package team.tnt.collectoralbum.data.boosts;
 import com.google.gson.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -12,6 +13,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
+import team.tnt.collectoralbum.common.init.ActionTypeRegistry;
 import team.tnt.collectoralbum.util.JsonHelper;
 import team.tnt.collectoralbum.util.TextHelper;
 
@@ -23,6 +25,11 @@ public class GiveEffectsAction implements IAction {
     private GiveEffectsAction(IEffectFactory[] effects) {
         this.effects = effects;
         this.description = generateDescriptionForEffects(effects);
+    }
+
+    @Override
+    public ActionType<?> getType() {
+        return ActionTypeRegistry.GIVE_EFFECTS;
     }
 
     public static Component[] generateDescriptionForEffects(IEffectFactory[] factories) {
@@ -52,6 +59,30 @@ public class GiveEffectsAction implements IAction {
         return description;
     }
 
+    public static void encodeEffectFactory(IEffectFactory factory, FriendlyByteBuf buffer) {
+        MobEffectInstance instance = factory.makeEffect();
+        MobEffect type = instance.getEffect();
+        ResourceLocation effectId = Registry.MOB_EFFECT.getKey(type);
+
+        buffer.writeResourceLocation(effectId);
+        buffer.writeInt(instance.getDuration());
+        buffer.writeInt(instance.getAmplifier());
+        buffer.writeBoolean(instance.isAmbient());
+        buffer.writeBoolean(instance.isVisible());
+        buffer.writeBoolean(instance.showIcon());
+    }
+
+    public static IEffectFactory decodeEffectFactory(FriendlyByteBuf buffer) {
+        ResourceLocation effectId = buffer.readResourceLocation();
+        MobEffect type = Registry.MOB_EFFECT.get(effectId);
+        int duration = buffer.readInt();
+        int amplifier = buffer.readInt();
+        boolean ambient = buffer.readBoolean();
+        boolean visible = buffer.readBoolean();
+        boolean icon = buffer.readBoolean();
+        return () -> new MobEffectInstance(type, duration, amplifier, ambient, visible, icon);
+    }
+
     @FunctionalInterface
     interface IEffectFactory {
         MobEffectInstance makeEffect();
@@ -77,6 +108,23 @@ public class GiveEffectsAction implements IAction {
                 boolean visible = GsonHelper.getAsBoolean(effectJson, "visible", true);
                 boolean showIcon = GsonHelper.getAsBoolean(effectJson, "showIcon", true);
                 factories[i++] = () -> new MobEffectInstance(effect, duration, amplifier, ambient, visible, showIcon);
+            }
+            return new GiveEffectsAction(factories);
+        }
+
+        @Override
+        public void networkEncode(GiveEffectsAction action, FriendlyByteBuf buffer) {
+            buffer.writeInt(action.effects.length);
+            for (IEffectFactory factory : action.effects) {
+                encodeEffectFactory(factory, buffer);
+            }
+        }
+
+        @Override
+        public GiveEffectsAction networkDecode(ActionType<GiveEffectsAction> type, FriendlyByteBuf buffer) {
+            IEffectFactory[] factories = new IEffectFactory[buffer.readInt()];
+            for (int i = 0; i < factories.length; i++) {
+                factories[i] = decodeEffectFactory(buffer);
             }
             return new GiveEffectsAction(factories);
         }
