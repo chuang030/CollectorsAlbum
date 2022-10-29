@@ -7,7 +7,10 @@ import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.network.api.IPacket;
-import team.tnt.collectoralbum.network.packet.*;
+import team.tnt.collectoralbum.network.packet.OpenCardScreenPacket;
+import team.tnt.collectoralbum.network.packet.RequestAlbumPagePacket;
+import team.tnt.collectoralbum.network.packet.RequestCardPackDropPacket;
+import team.tnt.collectoralbum.network.packet.SendAlbumBoostsPacket;
 
 import java.lang.reflect.InvocationTargetException;
 

@@ -3,7 +3,10 @@ package team.tnt.collectoralbum.data.boosts;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.ITextComponent;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 public final class AlbumCardBoostCollection {
 
