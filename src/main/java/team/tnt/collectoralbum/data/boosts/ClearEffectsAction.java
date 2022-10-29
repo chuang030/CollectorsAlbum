@@ -4,10 +4,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.potion.Effect;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
+import team.tnt.collectoralbum.common.init.ActionTypeRegistry;
 import team.tnt.collectoralbum.util.JsonHelper;
 
 public class ClearEffectsAction implements IAction {
@@ -16,6 +18,11 @@ public class ClearEffectsAction implements IAction {
 
     public ClearEffectsAction(Effect[] effects) {
         this.effects = effects;
+    }
+
+    @Override
+    public ActionType<?> getType() {
+        return ActionTypeRegistry.CLEAR_EFFECTS;
     }
 
     @Override
@@ -37,6 +44,24 @@ public class ClearEffectsAction implements IAction {
         public ClearEffectsAction fromJson(JsonObject data, OpType opType) throws JsonParseException {
             JsonArray array = JSONUtils.getAsJsonArray(data, "effects");
             Effect[] effects = JsonHelper.resolveRegistryObjectsFromIdArray(array, ForgeRegistries.POTIONS, Effect[]::new);
+            return new ClearEffectsAction(effects);
+        }
+
+        @Override
+        public void networkEncode(ClearEffectsAction action, PacketBuffer buffer) {
+            buffer.writeInt(action.effects.length);
+            for (Effect effect : action.effects) {
+                buffer.writeResourceLocation(effect.getRegistryName());
+            }
+        }
+
+        @Override
+        public ClearEffectsAction networkDecode(ActionType<ClearEffectsAction> type, PacketBuffer buffer) {
+            int count = buffer.readInt();
+            Effect[] effects = new Effect[count];
+            for (int i = 0; i < count; i++) {
+                effects[i] = ForgeRegistries.POTIONS.getValue(buffer.readResourceLocation());
+            }
             return new ClearEffectsAction(effects);
         }
     }

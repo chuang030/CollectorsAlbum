@@ -3,12 +3,14 @@ package team.tnt.collectoralbum.data.boosts;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import team.tnt.collectoralbum.common.AlbumStats;
+import team.tnt.collectoralbum.common.init.CardBoostConditionRegistry;
 import team.tnt.collectoralbum.util.JsonHelper;
 
 public class PointsCondition implements ICardBoostCondition {
@@ -19,6 +21,11 @@ public class PointsCondition implements ICardBoostCondition {
     private PointsCondition(int minPoints) {
         this.minPoints = minPoints;
         this.description = new ITextComponent[] { this.getDescriptionText() };
+    }
+
+    @Override
+    public CardBoostConditionType<?> getType() {
+        return CardBoostConditionRegistry.POINTS;
     }
 
     @Override
@@ -57,6 +64,16 @@ public class PointsCondition implements ICardBoostCondition {
             JsonObject object = JsonHelper.asObject(element);
             int minPoints = JSONUtils.getAsInt(object, "points");
             return new PointsCondition(minPoints);
+        }
+
+        @Override
+        public void networkEncode(PointsCondition condition, PacketBuffer buffer) {
+            buffer.writeInt(condition.minPoints);
+        }
+
+        @Override
+        public PointsCondition networkDecode(CardBoostConditionType<PointsCondition> type, PacketBuffer buffer) {
+            return new PointsCondition(buffer.readInt());
         }
     }
 }

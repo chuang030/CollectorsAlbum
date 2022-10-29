@@ -4,8 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.text.ITextComponent;
+import team.tnt.collectoralbum.common.init.ActionTypeRegistry;
 import team.tnt.collectoralbum.util.JsonHelper;
 
 import java.util.Arrays;
@@ -18,6 +20,11 @@ public class FirstValidAction implements IAction {
     private FirstValidAction(Entry[] entries) {
         this.entries = entries;
         this.description = this.generateDescription(entries);
+    }
+
+    @Override
+    public ActionType<?> getType() {
+        return ActionTypeRegistry.FIRST_VALID;
     }
 
     @Override
@@ -72,6 +79,24 @@ public class FirstValidAction implements IAction {
             Entry[] entries = JsonHelper.resolveArray(valuesArr, Entry[]::new, element -> Entry.fromJson(element, opType));
             return new FirstValidAction(entries);
         }
+
+        @Override
+        public void networkEncode(FirstValidAction action, PacketBuffer buffer) {
+            buffer.writeInt(action.entries.length);
+            for (Entry entry : action.entries) {
+                entry.encode(buffer);
+            }
+        }
+
+        @Override
+        public FirstValidAction networkDecode(ActionType<FirstValidAction> type, PacketBuffer buffer) {
+            int i = buffer.readInt();
+            Entry[] entries = new Entry[i];
+            for (int j = 0; j < i; j++) {
+                entries[j] = Entry.decode(buffer);
+            }
+            return new FirstValidAction(entries);
+        }
     }
 
     public static final class Entry implements IDescriptionProvider {
@@ -116,6 +141,24 @@ public class FirstValidAction implements IAction {
             IAction action = ActionType.fromJson(opType, applyAction);
             ICardBoostCondition[] conditions = JsonHelper.resolveArray(conditionsArray, ICardBoostCondition[]::new, CardBoostConditionType::fromJson);
             return new Entry(conditions, action);
+        }
+
+        void encode(PacketBuffer buffer) {
+            ActionType.encode(action, buffer);
+            buffer.writeInt(conditions.length);
+            for (ICardBoostCondition condition : conditions) {
+                CardBoostConditionType.encode(condition, buffer);
+            }
+        }
+
+        static Entry decode(PacketBuffer buffer) {
+            IAction action = ActionType.decode(buffer);
+            int count = buffer.readInt();
+            ICardBoostCondition[] cardBoostConditions = new ICardBoostCondition[count];
+            for (int i = 0; i < count; i++) {
+                cardBoostConditions[i] = CardBoostConditionType.decode(buffer);
+            }
+            return new Entry(cardBoostConditions, action);
         }
     }
 }

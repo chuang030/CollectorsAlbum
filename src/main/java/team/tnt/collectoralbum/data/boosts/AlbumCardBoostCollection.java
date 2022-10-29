@@ -1,5 +1,6 @@
 package team.tnt.collectoralbum.data.boosts;
 
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.Arrays;
@@ -35,5 +36,25 @@ public final class AlbumCardBoostCollection {
                 .filter(components -> components.length > 0)
                 .flatMap(Arrays::stream)
                 .toArray(ITextComponent[]::new);
+    }
+
+    public void encode(PacketBuffer buffer) {
+        IAction[] actions = byOps.get(OpType.ACTIVE);
+        int length = actions != null ? actions.length : 0;
+        buffer.writeInt(length);
+        if (length > 0) {
+            for (IAction action : actions) {
+                ActionType.encode(action, buffer);
+            }
+        }
+    }
+
+    public void decode(PacketBuffer buffer) {
+        int count = buffer.readInt();
+        IAction[] actions = new IAction[count];
+        for (int i = 0; i < count; i++) {
+            actions[i] = ActionType.decode(buffer);
+        }
+        this.byOps.put(OpType.ACTIVE, actions);
     }
 }

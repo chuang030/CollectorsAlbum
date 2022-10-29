@@ -2,6 +2,7 @@ package team.tnt.collectoralbum.data.boosts;
 
 import com.google.gson.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.JSONUtils;
@@ -9,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
+import team.tnt.collectoralbum.common.init.ActionTypeRegistry;
 import team.tnt.collectoralbum.util.JsonHelper;
 
 public class GiveMissingEffectAction implements IAction {
@@ -19,6 +21,11 @@ public class GiveMissingEffectAction implements IAction {
     public GiveMissingEffectAction(GiveEffectsAction.IEffectFactory[] factories) {
         this.factories = factories;
         this.description = GiveEffectsAction.generateDescriptionForEffects(factories);
+    }
+
+    @Override
+    public ActionType<?> getType() {
+        return ActionTypeRegistry.GIVE_MISSING_EFFECTS;
     }
 
     @Override
@@ -59,6 +66,23 @@ public class GiveMissingEffectAction implements IAction {
                 boolean visible = JSONUtils.getAsBoolean(effectJson, "visible", true);
                 boolean showIcon = JSONUtils.getAsBoolean(effectJson, "showIcon", true);
                 factories[i++] = () -> new EffectInstance(effect, duration, amplifier, ambient, visible, showIcon);
+            }
+            return new GiveMissingEffectAction(factories);
+        }
+
+        @Override
+        public void networkEncode(GiveMissingEffectAction action, PacketBuffer buffer) {
+            buffer.writeInt(action.factories.length);
+            for (GiveEffectsAction.IEffectFactory factory : action.factories) {
+                GiveEffectsAction.encodeEffectFactory(factory, buffer);
+            }
+        }
+
+        @Override
+        public GiveMissingEffectAction networkDecode(ActionType<GiveMissingEffectAction> type, PacketBuffer buffer) {
+            GiveEffectsAction.IEffectFactory[] factories = new GiveEffectsAction.IEffectFactory[buffer.readInt()];
+            for (int i = 0; i < factories.length; i++) {
+                factories[i] = GiveEffectsAction.decodeEffectFactory(buffer);
             }
             return new GiveMissingEffectAction(factories);
         }
