@@ -3,9 +3,7 @@ package team.tnt.collectoralbum.data.boosts;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.ITextComponent;
 
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 
 public final class AlbumCardBoostCollection {
 
@@ -25,17 +23,20 @@ public final class AlbumCardBoostCollection {
         }
     }
 
-    public ITextComponent[] getDescription() {
+    public int getActionsCount(OpType type) {
+        IAction[] actions = byOps.get(type);
+        return actions != null ? actions.length : 0;
+    }
+
+    public ITextComponent[] getPagedDescription(int index) {
         IAction[] actions = byOps.get(OpType.ACTIVE);
-        if (actions == null || actions.length == 0) {
+        if (actions == null || actions.length == 0 || index >= actions.length) {
             return new ITextComponent[0];
         }
-        return Arrays.stream(actions)
-                .sorted(IDescriptionProvider::compareTo)
-                .map(IDescriptionProvider::getDescription)
-                .filter(components -> components.length > 0)
-                .flatMap(Arrays::stream)
-                .toArray(ITextComponent[]::new);
+        List<IAction> sortedActions = Arrays.asList(actions);
+        sortedActions.sort(IDescriptionProvider::compareTo);
+        IAction action = sortedActions.get(index);
+        return action.getDescription();
     }
 
     public void encode(PacketBuffer buffer) {

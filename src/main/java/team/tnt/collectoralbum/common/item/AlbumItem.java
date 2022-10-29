@@ -14,8 +14,11 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 import team.tnt.collectoralbum.CollectorsAlbum;
+import team.tnt.collectoralbum.client.CollectorsAlbumClient;
 import team.tnt.collectoralbum.common.container.AlbumContainer;
 import team.tnt.collectoralbum.common.menu.AlbumMenu;
 import team.tnt.collectoralbum.config.ModConfig;
@@ -26,6 +29,7 @@ import java.util.List;
 public class AlbumItem extends Item implements IDeathPersistableItem {
 
     private static final ITextComponent SHOW_BOOSTS = new TranslationTextComponent("text.collectorsalbum.album.boost.show").withStyle(TextFormatting.GRAY);
+    private static final String PAGE_INFO_TRANSLATION_KEY = "text.collectorsalbum.album.boost.paging";
 
     public AlbumItem() {
         super(new Properties().tab(CollectorsAlbum.TAB).stacksTo(1));
@@ -49,12 +53,19 @@ public class AlbumItem extends Item implements IDeathPersistableItem {
         return ActionResult.sidedSuccess(itemStack, level.isClientSide());
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, World level, List<ITextComponent> tooltipComponents, ITooltipFlag isAdvanced) {
         if (Screen.hasControlDown()) {
-            ITextComponent[] text = CollectorsAlbum.ALBUM_CARD_BOOST_MANAGER.getBoostsDescription();
-            if (text == null) return;
-            tooltipComponents.addAll(Arrays.asList(text));
+            CollectorsAlbumClient client = CollectorsAlbumClient.getClient();
+            int pageIndex = client.getAlbumPageIndex();
+            int pageSize = client.getPageCount();
+            ITextComponent[] pagedText = CollectorsAlbum.ALBUM_CARD_BOOST_MANAGER.getBoosts()
+                    .map(coll -> coll.getPagedDescription(pageIndex))
+                    .orElse(new ITextComponent[0]);
+            if (pagedText == null) return;
+            tooltipComponents.addAll(Arrays.asList(pagedText));
+            tooltipComponents.add(new TranslationTextComponent(PAGE_INFO_TRANSLATION_KEY, pageIndex + 1, pageSize).withStyle(TextFormatting.DARK_GRAY));
         } else {
             tooltipComponents.add(SHOW_BOOSTS);
         }
