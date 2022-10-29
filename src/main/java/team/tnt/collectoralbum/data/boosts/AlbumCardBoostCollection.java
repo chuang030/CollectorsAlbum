@@ -5,8 +5,8 @@ import net.minecraft.network.chat.Component;
 
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public final class AlbumCardBoostCollection {
 
@@ -26,17 +26,20 @@ public final class AlbumCardBoostCollection {
         }
     }
 
-    public Component[] getDescription() {
+    public int getActionsCount(OpType type) {
+        IAction[] actions = byOps.get(type);
+        return actions != null ? actions.length : 0;
+    }
+
+    public Component[] getPagedDescription(int index) {
         IAction[] actions = byOps.get(OpType.ACTIVE);
-        if (actions == null || actions.length == 0) {
+        if (actions == null || actions.length == 0 || index >= actions.length) {
             return new Component[0];
         }
-        return Arrays.stream(actions)
-                .sorted(IDescriptionProvider::compareTo)
-                .map(IDescriptionProvider::getDescription)
-                .filter(components -> components.length > 0)
-                .flatMap(Arrays::stream)
-                .toArray(Component[]::new);
+        List<IAction> sortedActions = Arrays.asList(actions);
+        sortedActions.sort(IDescriptionProvider::compareTo);
+        IAction action = sortedActions.get(index);
+        return action.getDescription();
     }
 
     public void encode(FriendlyByteBuf buffer) {

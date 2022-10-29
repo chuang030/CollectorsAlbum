@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -25,7 +24,6 @@ public class AlbumCardBoostManager extends SimpleJsonResourceReloadListener impl
     private static final Gson GSON = new Gson();
 
     private AlbumCardBoostCollection collection;
-    private Component[] boostsDescription;
 
     public AlbumCardBoostManager() {
         super(GSON, "card_boosts");
@@ -33,14 +31,6 @@ public class AlbumCardBoostManager extends SimpleJsonResourceReloadListener impl
 
     public Optional<AlbumCardBoostCollection> getBoosts() {
         return Optional.ofNullable(collection);
-    }
-
-    public Component[] getBoostsDescription() {
-        return boostsDescription;
-    }
-
-    public void loadDescriptionFromList(List<Component> list) {
-        this.boostsDescription = list.toArray(new Component[0]);
     }
 
     @Override
@@ -67,7 +57,6 @@ public class AlbumCardBoostManager extends SimpleJsonResourceReloadListener impl
             }
         }
         this.collection = new AlbumCardBoostCollection(loaded.get(OpType.CLEANUP).toArray(new IAction[0]), loaded.get(OpType.ACTIVE).toArray(new IAction[0]));
-        this.boostsDescription = collection.getDescription();
         LOGGER.info("Album boosts loaded");
     }
 }
