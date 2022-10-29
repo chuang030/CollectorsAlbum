@@ -14,7 +14,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = "${mod_version}-alpha"
+version = "${mod_version}"
 group = 'team.tnt.collectoralbum'
 archivesBaseName = "collectorsalbum-${loader}-${minecraft_version}"
 
