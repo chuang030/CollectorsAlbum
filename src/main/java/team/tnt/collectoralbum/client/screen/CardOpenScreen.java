@@ -72,7 +72,7 @@ public class CardOpenScreen extends Screen {
     @Override
     public void onClose() {
         super.onClose();
-        if (flipsRemaining == 0) {
+        if (!CollectorsAlbum.config.requireTurnAllCards || flipsRemaining == 0) {
             Networking.dispatchServerPacket(new RequestCardPackDropPacket());
         }
     }
