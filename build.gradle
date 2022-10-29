@@ -76,7 +76,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.2-40.1.80'
+    minecraft 'net.minecraftforge:forge:1.18.2-40.1.84'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 
