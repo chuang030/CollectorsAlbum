@@ -4,12 +4,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.GsonHelper;
 import org.jetbrains.annotations.NotNull;
 import team.tnt.collectoralbum.common.AlbumStats;
+import team.tnt.collectoralbum.common.init.CardBoostConditionRegistry;
 import team.tnt.collectoralbum.util.JsonHelper;
 
 public class PointsCondition implements ICardBoostCondition {
@@ -20,6 +22,11 @@ public class PointsCondition implements ICardBoostCondition {
     private PointsCondition(int minPoints) {
         this.minPoints = minPoints;
         this.description = new Component[] { this.getDescriptionText() };
+    }
+
+    @Override
+    public CardBoostConditionType<?> getType() {
+        return CardBoostConditionRegistry.POINTS;
     }
 
     @Override
@@ -58,6 +65,16 @@ public class PointsCondition implements ICardBoostCondition {
             JsonObject object = JsonHelper.asObject(element);
             int minPoints = GsonHelper.getAsInt(object, "points");
             return new PointsCondition(minPoints);
+        }
+
+        @Override
+        public void networkEncode(PointsCondition condition, FriendlyByteBuf buffer) {
+            buffer.writeInt(condition.minPoints);
+        }
+
+        @Override
+        public PointsCondition networkDecode(CardBoostConditionType<PointsCondition> type, FriendlyByteBuf buffer) {
+            return new PointsCondition(buffer.readInt());
         }
     }
 }

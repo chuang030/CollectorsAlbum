@@ -1,5 +1,6 @@
 package team.tnt.collectoralbum.data.boosts;
 
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 
 import java.util.Arrays;
@@ -36,5 +37,25 @@ public final class AlbumCardBoostCollection {
                 .filter(components -> components.length > 0)
                 .flatMap(Arrays::stream)
                 .toArray(Component[]::new);
+    }
+
+    public void encode(FriendlyByteBuf buffer) {
+        IAction[] actions = byOps.get(OpType.ACTIVE);
+        int length = actions != null ? actions.length : 0;
+        buffer.writeInt(length);
+        if (length > 0) {
+            for (IAction action : actions) {
+                ActionType.encode(action, buffer);
+            }
+        }
+    }
+
+    public void decode(FriendlyByteBuf buffer) {
+        int count = buffer.readInt();
+        IAction[] actions = new IAction[count];
+        for (int i = 0; i < count; i++) {
+            actions[i] = ActionType.decode(buffer);
+        }
+        this.byOps.put(OpType.ACTIVE, actions);
     }
 }

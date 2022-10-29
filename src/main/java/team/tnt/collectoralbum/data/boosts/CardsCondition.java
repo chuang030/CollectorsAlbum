@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -13,6 +14,7 @@ import net.minecraft.util.GsonHelper;
 import org.jetbrains.annotations.NotNull;
 import team.tnt.collectoralbum.common.AlbumStats;
 import team.tnt.collectoralbum.common.ICardCategory;
+import team.tnt.collectoralbum.common.init.CardBoostConditionRegistry;
 import team.tnt.collectoralbum.common.init.CardCategoryRegistry;
 import team.tnt.collectoralbum.common.item.CardRarity;
 import team.tnt.collectoralbum.common.item.ICard;
@@ -34,6 +36,11 @@ public class CardsCondition implements ICardBoostCondition {
         this.rarity = rarity;
         this.count = count;
         this.description = new Component[] { this.createFullDescription() };
+    }
+
+    @Override
+    public CardBoostConditionType<?> getType() {
+        return CardBoostConditionRegistry.CARDS;
     }
 
     @Override
@@ -122,6 +129,31 @@ public class CardsCondition implements ICardBoostCondition {
             }
             int requiredCount = GsonHelper.getAsInt(object, "count");
             return new CardsCondition(category, rarity, requiredCount);
+        }
+
+        @Override
+        public void networkEncode(CardsCondition condition, FriendlyByteBuf buffer) {
+            ICardCategory cardCategory = condition.category;
+            CardRarity rarity = condition.rarity;
+            buffer.writeBoolean(cardCategory != null);
+            if (cardCategory != null) {
+                buffer.writeResourceLocation(cardCategory.getId());
+            }
+            buffer.writeBoolean(rarity != null);
+            if (rarity != null) {
+                buffer.writeEnum(rarity);
+            }
+            buffer.writeInt(condition.count);
+        }
+
+        @Override
+        public CardsCondition networkDecode(CardBoostConditionType<CardsCondition> type, FriendlyByteBuf buffer) {
+            boolean hasCategory = buffer.readBoolean();
+            ICardCategory cardCategory = hasCategory ? CardCategoryRegistry.getByKey(buffer.readResourceLocation()) : null;
+            boolean hasRarity = buffer.readBoolean();
+            CardRarity rarity = hasRarity ? buffer.readEnum(CardRarity.class) : null;
+            int count = buffer.readInt();
+            return new CardsCondition(cardCategory, rarity, count);
         }
     }
 }
