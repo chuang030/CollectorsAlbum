@@ -17,6 +17,10 @@ public final class AlbumCardBoostCollection {
         byOps.put(OpType.ACTIVE, activeActions);
     }
 
+    public static AlbumCardBoostCollection empty() {
+        return new AlbumCardBoostCollection(new IAction[0], new IAction[0]);
+    }
+
     public void processOp(OpType type, IBoostContext ctx) {
         IAction[] actions = byOps.get(type);
         if (actions != null) {

@@ -23,7 +23,7 @@ public class AlbumCardBoostManager extends SimpleJsonResourceReloadListener impl
     private static final ResourceLocation FABRIC_ID = new ResourceLocation(CollectorsAlbum.MODID, "album_card_boost_manager");
     private static final Gson GSON = new Gson();
 
-    private AlbumCardBoostCollection collection;
+    private AlbumCardBoostCollection collection = AlbumCardBoostCollection.empty();
 
     public AlbumCardBoostManager() {
         super(GSON, "card_boosts");

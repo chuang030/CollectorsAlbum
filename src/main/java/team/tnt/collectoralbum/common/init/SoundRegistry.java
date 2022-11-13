@@ -26,7 +26,7 @@ public final class SoundRegistry {
     }
 
     private static void registerSound(SoundEvent event) {
-        registerSound(event.getLocation(), event);
+        registerSound(event.location, event);
     }
 
     private static void registerSound(ResourceLocation id, SoundEvent event) {
