@@ -1,5 +1,6 @@
 package team.tnt.collectoralbum.mixins;
 
+import com.google.common.collect.ImmutableSet;
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
@@ -7,13 +8,15 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 import java.util.List;
 import java.util.Set;
-import java.util.function.BooleanSupplier;
 
 public class MixinPlugin implements IMixinConfigPlugin {
 
-    private static final BooleanSupplier IS_YIGD_MOD_LOADED = () -> FabricLoader.getInstance().isModLoaded("yigd");
     private static final String SERVER_PLAYER_MIXIN = "team.tnt.collectoralbum.mixins.ServerPlayerMixin";
     private static final String PLAYER_MIXIN = "team.tnt.collectoralbum.mixins.PlayerMixin";
+    private static final Set<String> INCOMPATIBLE_MODS = new ImmutableSet.Builder<String>()
+            .add("yigd")
+            .add("forgottengraves")
+            .build();
 
     @Override
     public void onLoad(String mixinPackage) {
@@ -28,7 +31,14 @@ public class MixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (mixinClassName.equals(SERVER_PLAYER_MIXIN) || mixinClassName.equals(PLAYER_MIXIN)) {
-            return !IS_YIGD_MOD_LOADED.getAsBoolean();
+            boolean isValid = true;
+            for (String modId : INCOMPATIBLE_MODS) {
+                if (FabricLoader.getInstance().isModLoaded(modId)) {
+                    isValid = false;
+                    break;
+                }
+            }
+            return isValid;
         }
         return true;
     }
