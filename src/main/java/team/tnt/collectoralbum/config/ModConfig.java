@@ -1,24 +1,21 @@
 package team.tnt.collectoralbum.config;
 
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import dev.toma.configuration.config.Config;
+import dev.toma.configuration.config.Configurable;
+import team.tnt.collectoralbum.CollectorsAlbum;
 
-@Config(name = "CollectorsAlbum")
-public class ModConfig implements ConfigData {
+@Config(id = CollectorsAlbum.MODID)
+public class ModConfig {
 
-    @ConfigEntry.Category("main")
-    @ConfigEntry.Gui.CollapsibleObject
+    @Configurable
+    @Configurable.Comment("Configure card package drop chances from mobs")
     public MobDropConfig mobDrops = new MobDropConfig();
 
-    @ConfigEntry.Category("main")
+    @Configurable
+    @Configurable.Comment("Keep album in inventory through death")
     public boolean persistAlbumThroughDeath = true;
 
-    @ConfigEntry.Category("main")
+    @Configurable
+    @Configurable.Comment("When set to true no cards will be received from package unless you flip all cards")
     public boolean requireTurnAllCards = false;
-
-    @Override
-    public void validatePostLoad() throws ValidationException {
-        mobDrops.validatePostLoad();
-    }
 }

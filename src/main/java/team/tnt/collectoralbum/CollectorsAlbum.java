@@ -1,7 +1,7 @@
 package team.tnt.collectoralbum;
 
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import dev.toma.configuration.Configuration;
+import dev.toma.configuration.config.format.ConfigFormats;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -42,8 +42,7 @@ public class CollectorsAlbum implements ModInitializer {
     @Override
     public void onInitialize() {
         // config
-        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
-        config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+        config = Configuration.registerConfig(ModConfig.class, ConfigFormats.yaml()).getConfigInstance();
         // registries
         ItemRegistry.registerItems();
         SoundRegistry.registerSounds();
