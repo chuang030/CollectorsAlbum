@@ -12,7 +12,8 @@ group = project.maven_group
 
 repositories {
 	maven { url "https://maven.parchmentmc.org" }
-	maven { url = "https://maven.terraformersmc.com/releases" }
+	maven { url "https://maven.terraformersmc.com/releases" }
+	maven { url "https://www.cursemaven.com" }
 
 	// for integration testing purposes
 	flatDir {
@@ -32,7 +33,7 @@ dependencies {
 	// Modmenu
 	modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
 	// Configuration
-	modImplementation "dev.toma.configuration:configuration-fabric-1.16.5:2.0.0"
+	modImplementation "curse.maven:configuration-${project.configuration_project_id}:${project.configuration_file_id}"
 
 	// JUnit
 	testImplementation("org.junit.jupiter:junit-jupiter:${project.junit_version}")
