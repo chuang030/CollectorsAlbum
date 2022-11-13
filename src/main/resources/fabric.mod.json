@@ -5,6 +5,7 @@
   "name": "Collector's Album",
   "description": "Collect 150 custom cards to your album and gain extra bonuses",
   "icon": "logo.png",
+  "accessWidener": "collectorsalbum.accesswidener",
   "authors": [
     "Toma",
     "Tomano"
