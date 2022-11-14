@@ -20,7 +20,7 @@ public class AlbumCardBoostManager extends SimpleJsonResourceReloadListener {
     private static final Logger LOGGER = LogManager.getLogger(AlbumCardBoostManager.class);
     private static final Gson GSON = new Gson();
 
-    private AlbumCardBoostCollection collection;
+    private AlbumCardBoostCollection collection = AlbumCardBoostCollection.empty();
 
     public AlbumCardBoostManager() {
         super(GSON, "card_boosts");

@@ -1,5 +1,7 @@
 package team.tnt.collectoralbum;
 
+import dev.toma.configuration.Configuration;
+import dev.toma.configuration.config.format.ConfigFormats;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -7,7 +9,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -37,8 +38,10 @@ public class CollectorsAlbum {
 
     public static final CardPackLootManager CARD_PACK_MANAGER = new CardPackLootManager();
     public static final AlbumCardBoostManager ALBUM_CARD_BOOST_MANAGER = new AlbumCardBoostManager();
+    public static ModConfig config;
 
     public CollectorsAlbum() {
+        config = Configuration.registerConfig(ModConfig.class, ConfigFormats.yaml()).getConfigInstance();
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         eventBus.addListener(this::loadCommon);
 
@@ -48,9 +51,12 @@ public class CollectorsAlbum {
 
         MinecraftForge.EVENT_BUS.addListener(this::registerReloadListener);
 
-        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.CONFIG_SPEC);
 
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> eventBus.addListener(CollectorsAlbumClient.getClient()::synchInit));
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+            CollectorsAlbumClient client = CollectorsAlbumClient.getClient();
+            eventBus.addListener(client::synchInit);
+            MinecraftForge.EVENT_BUS.addListener(client::handleClientTick);
+        });
     }
 
     private void loadCommon(FMLCommonSetupEvent event) {
