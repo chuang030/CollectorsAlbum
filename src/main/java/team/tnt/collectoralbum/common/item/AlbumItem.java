@@ -21,7 +21,6 @@ import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.client.CollectorsAlbumClient;
 import team.tnt.collectoralbum.common.container.AlbumContainer;
 import team.tnt.collectoralbum.common.menu.AlbumMenu;
-import team.tnt.collectoralbum.config.ModConfig;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +36,7 @@ public class AlbumItem extends Item implements IDeathPersistableItem {
 
     @Override
     public boolean shouldKeepItem(PlayerEntity player, ItemStack stack) {
-        return ModConfig.INSTANCE.persistAlbumThroughDeath.get();
+        return CollectorsAlbum.config.persistAlbumThroughDeath;
     }
 
     @Override

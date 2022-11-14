@@ -54,3 +54,10 @@ Collect 150 custom cards to your album and gain extra bonuses
     versionRange="[1.16.5,1.17)"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.collectorsalbum]]
+    modId="configuration"
+    mandatory=true
+    versionRange="[2.0, 3.0)"
+    ordering="NONE"
+    side="BOTH"

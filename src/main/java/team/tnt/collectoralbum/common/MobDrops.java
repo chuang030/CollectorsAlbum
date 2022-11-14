@@ -2,6 +2,7 @@ package team.tnt.collectoralbum.common;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.common.init.ItemRegistry;
 import team.tnt.collectoralbum.config.ModConfig;
 import team.tnt.collectoralbum.util.math.WeightedRandom;
@@ -14,13 +15,13 @@ public final class MobDrops implements Supplier<Item> {
 
     private static final WeightedRandom<DropEntry> ENTRIES = WeightedRandom.Builder.<DropEntry>create()
             .provider(DropEntry::weight)
-            .append(new DropEntry(() -> Items.AIR, ModConfig.INSTANCE.mobDrops.noDropWeight.get()))
-            .append(new DropEntry(ItemRegistry.COMMON_CARD_PACKAGE, ModConfig.INSTANCE.mobDrops.commonDropWeight.get()))
-            .append(new DropEntry(ItemRegistry.UNCOMMON_CARD_PACKAGE, ModConfig.INSTANCE.mobDrops.uncommonDropWeight.get()))
-            .append(new DropEntry(ItemRegistry.RARE_CARD_PACKAGE, ModConfig.INSTANCE.mobDrops.rareDropWeight.get()))
-            .append(new DropEntry(ItemRegistry.EPIC_CARD_PACKAGE, ModConfig.INSTANCE.mobDrops.epicDropWeight.get()))
-            .append(new DropEntry(ItemRegistry.LEGENDARY_CARD_PACKAGE, ModConfig.INSTANCE.mobDrops.legendaryDropWeight.get()))
-            .append(new DropEntry(ItemRegistry.MYTHICAL_CARD_PACKAGE, ModConfig.INSTANCE.mobDrops.mythicalDropWeight.get()))
+            .append(new DropEntry(() -> Items.AIR, CollectorsAlbum.config.mobDrops.noDropWeight))
+            .append(new DropEntry(ItemRegistry.COMMON_CARD_PACKAGE, CollectorsAlbum.config.mobDrops.commonDropWeight))
+            .append(new DropEntry(ItemRegistry.UNCOMMON_CARD_PACKAGE, CollectorsAlbum.config.mobDrops.uncommonDropWeight))
+            .append(new DropEntry(ItemRegistry.RARE_CARD_PACKAGE, CollectorsAlbum.config.mobDrops.rareDropWeight))
+            .append(new DropEntry(ItemRegistry.EPIC_CARD_PACKAGE, CollectorsAlbum.config.mobDrops.epicDropWeight))
+            .append(new DropEntry(ItemRegistry.LEGENDARY_CARD_PACKAGE, CollectorsAlbum.config.mobDrops.legendaryDropWeight))
+            .append(new DropEntry(ItemRegistry.MYTHICAL_CARD_PACKAGE, CollectorsAlbum.config.mobDrops.mythicalDropWeight))
             .build(DropEntry[]::new);
 
     public static MobDrops instance() {

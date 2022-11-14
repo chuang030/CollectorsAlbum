@@ -1,28 +1,21 @@
 package team.tnt.collectoralbum.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import org.apache.commons.lang3.tuple.Pair;
+import dev.toma.configuration.config.Config;
+import dev.toma.configuration.config.Configurable;
+import team.tnt.collectoralbum.CollectorsAlbum;
 
-public final class ModConfig {
+@Config(id = CollectorsAlbum.MODID)
+public class ModConfig {
 
-    public static ModConfig INSTANCE;
-    public static ForgeConfigSpec CONFIG_SPEC;
-    public final ForgeConfigSpec.ConfigValue<Boolean> persistAlbumThroughDeath;
-    public final ForgeConfigSpec.ConfigValue<Boolean> requireTurnAllCards;
-    public final MobDropConfig mobDrops;
+    @Configurable
+    @Configurable.Comment("Configure card package drop chances from mobs")
+    public MobDropConfig mobDrops = new MobDropConfig();
 
-    public ModConfig(ForgeConfigSpec.Builder builder) {
-        persistAlbumThroughDeath = builder.define("Persist Album Through Death", true);
-        requireTurnAllCards = builder.comment("This will allow cards to be dropped even when not all cards are turned in package")
-                .define("Packages require turning of all cards", false);
-        builder.push("Mob Drop Chances");
-        this.mobDrops = new MobDropConfig(builder);
-        builder.pop();
-    }
+    @Configurable
+    @Configurable.Comment("Keep album in inventory through death")
+    public boolean persistAlbumThroughDeath = true;
 
-    static {
-        Pair<ModConfig, ForgeConfigSpec> pair = new ForgeConfigSpec.Builder().configure(ModConfig::new);
-        INSTANCE = pair.getKey();
-        CONFIG_SPEC = pair.getRight();
-    }
+    @Configurable
+    @Configurable.Comment("When set to true no cards will be received from package unless you flip all cards")
+    public boolean requireTurnAllCards = false;
 }

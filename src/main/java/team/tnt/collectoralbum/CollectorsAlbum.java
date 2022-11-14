@@ -1,5 +1,7 @@
 package team.tnt.collectoralbum;
 
+import dev.toma.configuration.Configuration;
+import dev.toma.configuration.config.format.ConfigFormats;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -36,8 +38,10 @@ public class CollectorsAlbum {
 
     public static final CardPackLootManager CARD_PACK_MANAGER = new CardPackLootManager();
     public static final AlbumCardBoostManager ALBUM_CARD_BOOST_MANAGER = new AlbumCardBoostManager();
+    public static ModConfig config;
 
     public CollectorsAlbum() {
+        config = Configuration.registerConfig(ModConfig.class, ConfigFormats.yaml()).getConfigInstance();
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         eventBus.addListener(this::loadCommon);
         eventBus.addListener(this::loadClient);
@@ -47,8 +51,6 @@ public class CollectorsAlbum {
         MenuTypes.REGISTRY.register(eventBus);
 
         MinecraftForge.EVENT_BUS.addListener(this::registerReloadListener);
-
-        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.CONFIG_SPEC);
     }
 
     private void loadCommon(FMLCommonSetupEvent event) {

@@ -75,6 +75,7 @@ dependencies {
     // Integrations
     implementation fg.deobf("curse.maven:${quark_group}:${quark_file}") // Quark
     implementation fg.deobf("curse.maven:${autoreg_group}:${autoreg_file}") // Quark dependency - autoreglib
+    implementation fg.deobf("curse.maven:${configuration_group}:${configuration_file}") // Configuration API
 }
 
 jar {
