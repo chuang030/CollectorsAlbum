@@ -21,9 +21,6 @@
     ],
     "client": [
       "team.tnt.collectoralbum.client.CollectorsAlbumClient"
-    ],
-    "modmenu": [
-      "team.tnt.collectoralbum.integration.ModMenuIntegration"
     ]
   },
   "mixins": [
@@ -36,7 +33,7 @@
     "minecraft": "~1.19",
     "java": ">=17",
 
-    "cloth-config": ">=8.0.75"
+    "configuration": "^2.0.0"
   },
   "suggests": {
   }

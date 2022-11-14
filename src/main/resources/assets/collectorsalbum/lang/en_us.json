@@ -937,14 +937,17 @@
   "text.collectorsalbum.album.boost.condition.cards.wildcard": "Any",
   "text.collectorsalbum.album.boost.condition.points": "%s or more points give:",
 
-  "text.autoconfig.CollectorsAlbum.title": "Collector's Album Config",
-  "text.autoconfig.CollectorsAlbum.option.persistAlbumThroughDeath": "Persist album through death",
-  "text.autoconfig.CollectorsAlbum.option.mobDrops": "Mob Card Pack Drops",
-  "text.autoconfig.CollectorsAlbum.option.mobDrops.noDropWeight": "No Item Drop Weight",
-  "text.autoconfig.CollectorsAlbum.option.mobDrops.commonDropWeight": "Common Drop Weight",
-  "text.autoconfig.CollectorsAlbum.option.mobDrops.uncommonDropWeight": "Uncommon Drop Weight",
-  "text.autoconfig.CollectorsAlbum.option.mobDrops.rareDropWeight": "Rare Drop Weight",
-  "text.autoconfig.CollectorsAlbum.option.mobDrops.epicDropWeight": "Epic Drop Weight",
-  "text.autoconfig.CollectorsAlbum.option.mobDrops.legendaryDropWeight": "Legendary Drop Weight",
-  "text.autoconfig.CollectorsAlbum.option.mobDrops.mythicalDropWeight": "Mythical Drop Weight"
+  "config.screen.collectorsalbum": "Collector's Album Config",
+  "config.collectorsalbum.option.persistAlbumThroughDeath": "Persist album through death",
+  "config.collectorsalbum.option.mobDrops": "Mob Card Pack Drops",
+  "config.collectorsalbum.option.noDropWeight": "No Item Drop Weight",
+  "config.collectorsalbum.option.commonDropWeight": "Common Drop Weight",
+  "config.collectorsalbum.option.uncommonDropWeight": "Uncommon Drop Weight",
+  "config.collectorsalbum.option.rareDropWeight": "Rare Drop Weight",
+  "config.collectorsalbum.option.epicDropWeight": "Epic Drop Weight",
+  "config.collectorsalbum.option.legendaryDropWeight": "Legendary Drop Weight",
+  "config.collectorsalbum.option.mythicalDropWeight": "Mythical Drop Weight",
+  "config.collectorsalbum.option.requireTurnAllCards": "Require flip of all cards",
+
+  "text.config.collectorsalbum.mob_drops.weight_warning": "Using 0 as value is potentionally dangerous. Make sure atleast one category is set to 1+ value"
 }
