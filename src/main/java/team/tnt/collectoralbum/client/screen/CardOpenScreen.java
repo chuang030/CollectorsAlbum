@@ -74,7 +74,7 @@ public class CardOpenScreen extends Screen {
     @Override
     public void onClose() {
         super.onClose();
-        boolean requireAll = ModConfig.INSTANCE.requireTurnAllCards.get();
+        boolean requireAll = CollectorsAlbum.config.requireTurnAllCards;
         if (!requireAll || flipsRemaining == 0) {
             Networking.dispatchServerPacket(new RequestCardPackDropPacket());
         }

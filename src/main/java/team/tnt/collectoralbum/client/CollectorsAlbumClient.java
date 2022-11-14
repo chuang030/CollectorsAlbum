@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import team.tnt.collectoralbum.CollectorsAlbum;
 import team.tnt.collectoralbum.api.IAlbumScreenFactory;
@@ -37,7 +38,6 @@ public final class CollectorsAlbumClient {
                 return factory.createAlbumScreen(menu, inventory, title);
             });
         });
-        MinecraftForge.EVENT_BUS.addListener(this::handleClientTick);
     }
 
     public void handleClientTick(TickEvent.ClientTickEvent event) {

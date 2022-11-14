@@ -1,24 +1,57 @@
 package team.tnt.collectoralbum.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import dev.toma.configuration.client.IValidationHandler;
+import dev.toma.configuration.config.Configurable;
+import dev.toma.configuration.config.validate.ValidationResult;
+import net.minecraft.network.chat.Component;
 
 public class MobDropConfig {
 
-    public final ForgeConfigSpec.ConfigValue<Integer> noDropWeight;
-    public final ForgeConfigSpec.ConfigValue<Integer> commonDropWeight;
-    public final ForgeConfigSpec.ConfigValue<Integer> uncommonDropWeight;
-    public final ForgeConfigSpec.ConfigValue<Integer> rareDropWeight;
-    public final ForgeConfigSpec.ConfigValue<Integer> epicDropWeight;
-    public final ForgeConfigSpec.ConfigValue<Integer> legendaryDropWeight;
-    public final ForgeConfigSpec.ConfigValue<Integer> mythicalDropWeight;
+    @Configurable
+    @Configurable.Range(min = 0)
+    @Configurable.Comment("Chance that no package is dropped on kill")
+    @Configurable.ValueUpdateCallback(method = "validateWeights")
+    public int noDropWeight = 5700;
 
-    public MobDropConfig(ForgeConfigSpec.Builder builder) {
-        noDropWeight = builder.define("No Drop Weight", 5700);
-        commonDropWeight = builder.define("Common Drop Weight", 480);
-        uncommonDropWeight = builder.define("Uncommon Drop Weight", 320);
-        rareDropWeight = builder.define("Rare Drop Weight", 230);
-        epicDropWeight = builder.define("Epic Drop Weight", 145);
-        legendaryDropWeight = builder.define("Legendary Drop Weight", 90);
-        mythicalDropWeight = builder.define("Mythical Drop Weight", 70);
+    @Configurable
+    @Configurable.Range(min = 0)
+    @Configurable.Comment("Chance that common package is dropped on kill")
+    @Configurable.ValueUpdateCallback(method = "validateWeights")
+    public int commonDropWeight = 480;
+
+    @Configurable
+    @Configurable.Range(min = 0)
+    @Configurable.Comment("Chance that uncommon package is dropped on kill")
+    @Configurable.ValueUpdateCallback(method = "validateWeights")
+    public int uncommonDropWeight = 320;
+
+    @Configurable
+    @Configurable.Range(min = 0)
+    @Configurable.Comment("Chance that rare package is dropped on kill")
+    @Configurable.ValueUpdateCallback(method = "validateWeights")
+    public int rareDropWeight = 230;
+
+    @Configurable
+    @Configurable.Range(min = 0)
+    @Configurable.Comment("Chance that epic package is dropped on kill")
+    @Configurable.ValueUpdateCallback(method = "validateWeights")
+    public int epicDropWeight = 145;
+
+    @Configurable
+    @Configurable.Range(min = 0)
+    @Configurable.Comment("Chance that legendary package is dropped on kill")
+    @Configurable.ValueUpdateCallback(method = "validateWeights")
+    public int legendaryDropWeight = 90;
+
+    @Configurable
+    @Configurable.Range(min = 0)
+    @Configurable.Comment("Chance that mythical package is dropped on kill")
+    @Configurable.ValueUpdateCallback(method = "validateWeights")
+    public int mythicalDropWeight = 70;
+
+    public void validateWeights(int weight, IValidationHandler handler) {
+        if (weight == 0) {
+            handler.setValidationResult(ValidationResult.warn(Component.translatable("text.config.collectorsalbum.mob_drops.weight_warning")));
+        }
     }
 }
