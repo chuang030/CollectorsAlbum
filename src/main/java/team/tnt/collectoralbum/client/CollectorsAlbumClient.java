@@ -52,7 +52,9 @@ public final class CollectorsAlbumClient {
         CollectorsAlbum.ALBUM_CARD_BOOST_MANAGER.getBoosts()
                 .ifPresent(collection -> {
                     this.pageCount = collection.getActionsCount(OpType.ACTIVE);
-                    this.albumPageIndex = (timer / 60) % this.pageCount;
+                    if (this.pageCount > 0) {
+                        this.albumPageIndex = (timer / 60) % this.pageCount;
+                    }
                 });
     }
 
