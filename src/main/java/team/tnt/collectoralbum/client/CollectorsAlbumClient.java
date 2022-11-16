@@ -43,7 +43,9 @@ public class CollectorsAlbumClient implements ClientModInitializer {
         CollectorsAlbum.ALBUM_CARD_BOOST_MANAGER.getBoosts()
                 .ifPresent(collection -> {
                     pageCount = collection.getActionsCount(OpType.ACTIVE);
-                    albumPageIndex = (timer / 60) % pageCount;
+                    if (pageCount > 0) {
+                        albumPageIndex = (timer / 60) % pageCount;
+                    }
                 });
     }
 
