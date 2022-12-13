@@ -1,5 +1,6 @@
 package team.tnt.collectoralbum.common.menu;
 
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -47,12 +48,18 @@ public class AlbumMenu extends AbstractContainerMenu {
         }
         this.addSlotListener(new ContainerListener() {
             @Override
-            public void slotChanged(AbstractContainerMenu containerToSend, int dataSlotIndex, ItemStack stack) {
-                categoryContainer.setChanged();
+            public void refreshContainer(AbstractContainerMenu abstractContainerMenu, NonNullList<ItemStack> nonNullList) {
+
             }
 
             @Override
-            public void dataChanged(AbstractContainerMenu containerMenu, int dataSlotIndex, int value) {
+            public void setContainerData(AbstractContainerMenu abstractContainerMenu, int i, int j) {
+
+            }
+
+            @Override
+            public void slotChanged(AbstractContainerMenu containerToSend, int dataSlotIndex, ItemStack stack) {
+                categoryContainer.setChanged();
             }
         });
     }
@@ -79,9 +86,10 @@ public class AlbumMenu extends AbstractContainerMenu {
                                     return ItemStack.EMPTY;
                                 }
                             } else {
-                                if (!(stack.getItem() instanceof ICard targetCard)) {
+                                if (!(stack.getItem() instanceof ICard)) {
                                     return ItemStack.EMPTY;
                                 }
+                                ICard targetCard = (ICard) stack.getItem();
                                 CardRarity usedRarity = targetCard.getCardRarity();
                                 CardRarity newRarity = card.getCardRarity();
                                 if (newRarity.ordinal() <= usedRarity.ordinal()) {
@@ -136,7 +144,8 @@ public class AlbumMenu extends AbstractContainerMenu {
     }
 
     private boolean isValidCard(ItemStack stack) {
-        if (stack.getItem() instanceof ICard card) {
+        if (stack.getItem() instanceof ICard) {
+            ICard card = (ICard) stack.getItem();
             return card.getCard().category().equals(this.category);
         }
         return false;
