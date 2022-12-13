@@ -5,6 +5,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -44,6 +45,16 @@ public class AlbumMenu extends AbstractContainerMenu {
         for (int i = 0; i < category.getCapacity(); i++) {
             slotDistributor.distributeSlot(appender, i, offset);
         }
+        this.addSlotListener(new ContainerListener() {
+            @Override
+            public void slotChanged(AbstractContainerMenu containerToSend, int dataSlotIndex, ItemStack stack) {
+                categoryContainer.setChanged();
+            }
+
+            @Override
+            public void dataChanged(AbstractContainerMenu containerMenu, int dataSlotIndex, int value) {
+            }
+        });
     }
 
     @Override
@@ -68,10 +79,9 @@ public class AlbumMenu extends AbstractContainerMenu {
                                     return ItemStack.EMPTY;
                                 }
                             } else {
-                                if (!(stack.getItem() instanceof ICard)) {
+                                if (!(stack.getItem() instanceof ICard targetCard)) {
                                     return ItemStack.EMPTY;
                                 }
-                                ICard targetCard = (ICard) stack.getItem();
                                 CardRarity usedRarity = targetCard.getCardRarity();
                                 CardRarity newRarity = card.getCardRarity();
                                 if (newRarity.ordinal() <= usedRarity.ordinal()) {
@@ -126,8 +136,7 @@ public class AlbumMenu extends AbstractContainerMenu {
     }
 
     private boolean isValidCard(ItemStack stack) {
-        if (stack.getItem() instanceof ICard) {
-            ICard card = (ICard) stack.getItem();
+        if (stack.getItem() instanceof ICard card) {
             return card.getCard().category().equals(this.category);
         }
         return false;
@@ -159,6 +168,11 @@ public class AlbumMenu extends AbstractContainerMenu {
                 return card.getCard().cardNumber() == (this.cardNumber - offset);
             }
             return false;
+        }
+
+        @Override
+        public void setChanged() {
+            super.setChanged();
         }
     }
 }
