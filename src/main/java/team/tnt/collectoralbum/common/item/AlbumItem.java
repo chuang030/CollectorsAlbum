@@ -36,7 +36,7 @@ public class AlbumItem extends Item implements IDeathPersistableItem {
 
     @Override
     public boolean shouldKeepItem(Player player, ItemStack stack) {
-        return CollectorsAlbum.config.persistAlbumThroughDeath;
+        return true;
     }
 
     @Override
