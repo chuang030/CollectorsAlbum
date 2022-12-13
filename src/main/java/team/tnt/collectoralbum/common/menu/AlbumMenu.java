@@ -5,8 +5,10 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import team.tnt.collectoralbum.api.CardSlotDefinition;
 import team.tnt.collectoralbum.api.ICategorySlotDistributor;
 import team.tnt.collectoralbum.api.ISlotAppender;
@@ -42,6 +44,23 @@ public class AlbumMenu extends Container {
         for (int i = 0; i < category.getCapacity(); i++) {
             slotDistributor.distributeSlot(appender, i, offset);
         }
+        this.addSlotListener(new IContainerListener() {
+
+            @Override
+            public void refreshContainer(Container p_71110_1_, NonNullList<ItemStack> p_71110_2_) {
+
+            }
+
+            @Override
+            public void slotChanged(Container p_71111_1_, int p_71111_2_, ItemStack p_71111_3_) {
+                categoryContainer.setChanged();
+            }
+
+            @Override
+            public void setContainerData(Container p_71112_1_, int p_71112_2_, int p_71112_3_) {
+
+            }
+        });
     }
 
     @Override
